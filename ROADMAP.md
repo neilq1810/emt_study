@@ -71,7 +71,10 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > IEC 60601-1-2; analog reference: Horowitz & Hill.
 
 ### Part VI — Data Conversion
-- [ ] Ch. 18 ADC architectures, ENOB/SNR, sampling & jitter
+- [x] Ch. 18 ADC architectures, ENOB/SNR, sampling & jitter — **DRAFT**
+
+> **Parts II–VI now fully drafted** (Part I partial). Next sequential: Part VII
+> (DSP, Ch. 19–22). ADC refs added: Walden 1999, IEEE Std 1241.
 
 ### Part VII — Digital Signal Processing
 - [ ] Ch. 19 Excitation/multiplexing (FDM/TDM/CDM/orthogonal)
