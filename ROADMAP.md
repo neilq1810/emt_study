@@ -39,14 +39,18 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 - [x] Ch. 4 Maxwell's equations, quasistatics & the magnetic dipole — **DRAFT**
 - [x] Ch. 5 Coil coupling, mutual inductance & magnetic moment — **DRAFT**
 - [x] Ch. 6 Distortion physics: conductors, ferromagnetics, eddy currents — **DRAFT**
-- [ ] Ch. 7 Numerical methods (FEA, BEM) & analytical models
+- [x] Ch. 7 Numerical methods (FEA, BEM) & analytical models — **DRAFT**
 
 ### Part III — Tracker Architecture
 - [x] Ch. 8 System architecture overview — **DRAFT**
-- [ ] Ch. 9 Field generators & sensor coils
-- [ ] Ch. 10 Timing, clocking, synchronization
-- [ ] Ch. 11 DSP pipeline & estimation
-- [ ] Ch. 12 Latency & real-time constraints
+- [x] Ch. 9 Field generators & sensor coils — **DRAFT**
+- [x] Ch. 10 Timing, clocking, synchronization — **DRAFT**
+- [x] Ch. 11 DSP pipeline & estimation — **DRAFT**
+- [x] Ch. 12 Latency & real-time constraints — **DRAFT**
+
+> **Parts II and III now fully drafted.** Next: Part IV (sensor engineering,
+> incl. the TMR/MR §14.3 treatment), or a Phase-5 simulation pass to back the
+> figures these chapters reference.
 
 ### Part IV — Sensor Engineering
 - [ ] Ch. 13 Sensor physics & geometries (induction vs. field sensors; 3/5/6 DOF)
