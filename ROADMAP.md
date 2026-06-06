@@ -102,8 +102,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > (Calibration, Ch. 26–27). Refs added: Poulin & Amiot 2002, Monteblanco et al. 2021.
 
 ### Part X — Calibration
-- [ ] Ch. 26 Sensor/generator/system calibration & field mapping
-- [ ] Ch. 27 Distortion compensation & ML approaches
+- [x] Ch. 26 Sensor/generator/system calibration & field mapping — **DRAFT**
+- [x] Ch. 27 Distortion compensation & ML approaches — **DRAFT**
+
+> **Parts II–X now fully drafted** (Part I partial). Remaining: Part I (Ch. 2–3),
+> and Parts XI–XIV (ecosystem, medical, frontiers, build-from-scratch). Refs added:
+> Cavaliere & Cantillon-Murphy 2023, Kindratenko & Sherman 2005.
 
 ### Part XI — Commercial Ecosystem
 - [ ] Ch. 28 Vendor survey (Polhemus, NDI/Aurora, Ascension, Biosense, …)
