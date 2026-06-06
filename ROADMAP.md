@@ -110,7 +110,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > Cavaliere & Cantillon-Murphy 2023, Kindratenko & Sherman 2005.
 
 ### Part XI — Commercial Ecosystem
-- [ ] Ch. 28 Vendor survey (Polhemus, NDI/Aurora, Ascension, Biosense, …)
+- [x] Ch. 28 Vendor survey (Polhemus, Ascension, NDI/Aurora, Biosense/CARTO,
+      Abbott EnSite, Boston Sci Rhythmia, superDimension, emerging) — **DRAFT**
+
+> **Parts II–XI now drafted** (Part I partial: Ch.1 done, Ch.2–3 pending). Next
+> sequential: Part XII (Medical Applications, Ch. 29). Refs added: Polhemus &
+> NDI history, Ascension/Roper, J&J/Biosense, Covidien/superDimension.
 
 ### Part XII — Medical Applications
 - [ ] Ch. 29 EP, bronchoscopy, ENT, IR, robotics, IGT
