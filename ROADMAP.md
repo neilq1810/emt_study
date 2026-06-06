@@ -11,8 +11,8 @@ change.
 | 1     | Repository structure + master outline + roadmap          | ✅ Done        |
 | 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
-| 4     | Figures & visualizations                                 | ⬜ Not started |
-| 5     | Simulations                                              | ⬜ Not started |
+| 4     | Figures & visualizations                                 | 🟡 5 computed figures (Ch.4/20/24); diagrams pending |
+| 5     | Simulations                                              | 🟡 Core suite done (emtrack lib + run_all.py) |
 | 6     | Interactive website (digital textbook + tools)           | 🟡 Scaffold done (Astro+Tailwind+KaTeX, Pages CI); tools pending |
 | 7     | Cross-referencing pass                                   | ⬜ Not started |
 | 8     | Technical review                                         | ⬜ Not started |

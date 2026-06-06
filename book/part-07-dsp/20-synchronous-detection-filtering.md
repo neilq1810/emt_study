@@ -44,7 +44,11 @@ The low-pass filter of time constant $\tau$ (or integration time $T$) has an
 **equivalent noise bandwidth** $\sim 1/(2\tau)$ (or $\sim 1/T$). Only noise within
 this tiny band *around $\omega_0$* survives; everything else — including the
 geomagnetic DC offset, mains lines, and broadband noise — is rejected
-[@scofield1994]. For $T=10\,\text{ms}$ the noise bandwidth is ~100 Hz, an
+[@scofield1994]. A Phase-5 simulation (`simulations/run_all.py`,
+`figures/ch20_lockin_snr_vs_T.png`) confirms the amplitude-error scaling:
+recovering a tone buried under noise 5× its amplitude, the lock-in estimate error
+falls as $T^{-0.49}$ (≈ the predicted $1/\sqrt{T}$). For $T=10\,\text{ms}$ the
+noise bandwidth is ~100 Hz, an
 enormous rejection of out-of-band interference, and longer $T$ narrows it further
 (at the cost of update rate/latency — the trilemma of Ch. 12). This is the
 quantitative reason EMT can recover sub-µT signals beneath a 50 µT geomagnetic
@@ -123,8 +127,9 @@ $\hat{\mathbf M}$ handed to the position solver (Part VIII).
 - Add the explicit equivalent-noise-bandwidth formula for the specific
   low-pass/decimation filter used, and reconcile with the Σ-Δ decimation of
   Ch. 18 to avoid double-counting bandwidth.
-- Provide a worked SNR-vs-integration-time curve (Phase 5 notebook) tying
-  Ch. 15/16/18 noise to amplitude SNR.
+- ✅ **Resolved (Phase 5):** SNR-vs-integration-time curve computed
+  (`figures/ch20_lockin_snr_vs_T.png`; error $\propto T^{-0.49}$, i.e. $1/\sqrt T$).
+  Remaining: tie absolute amplitude SNR to the Ch. 15/16/18 noise floor.
 - Source a primary description of pulsed-DC matched-filter detection (vendor or
   peer-reviewed) to firm up §20.3 (currently general principle).
 

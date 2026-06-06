@@ -116,12 +116,29 @@ The estimate is incomplete without its uncertainty. Two linked tools [@kay1993]:
   handed to the Kalman filter as $\mathbf R$/innovation weighting (Ch. 21) and to
   the error budget (Ch. 25).
 
+**Computed CRLB (Phase-5 simulation).** Evaluating (24.1) for a co-located
+transmitter triad and a sensor triad ($m_t=1$, field-referred measurement noise
+$\sigma_B=1\,\text{nT}$, `simulations/run_all.py`) gives on-axis position bounds
+of **0.017 / 0.086 / 0.66 mm at 0.2 / 0.3 / 0.5 m** — sub-millimetre across a
+0.5 m volume, consistent with the design target of Ch. 31. Critically, the
+on-axis CRLB grows as $\sigma_{\text{pos}}\propto z^{4.0}$ (fitted exponent
+$4.00$; `data/crlb_vs_range.csv`, `figures/ch24_crlb_vs_range.png`): the $1/r^3$
+field weakening contributes three powers and the flattening position-sensitivity
+a fourth, so **accuracy degrades as the fourth power of range** — the sharpest
+quantitative statement of the conditioning penalty of §24.2. The CRLB map over
+the working volume (`figures/ch24_crlb_map.png`) shows the best-conditioned
+region near the generator and rapid degradation toward the edges. (conf: high —
+computed; absolute values scale with the assumed $\sigma_B$.)
+
 **Consistency caveat.** The linearized covariance (24.1) is a *local* (Gaussian)
 approximation; near ambiguities, weak observability, or strong nonlinearity it
 **understates** true uncertainty (the posterior is non-Gaussian/multimodal —
 hence particle filters, Ch. 21 §21.4). A covariance that claims high confidence in
 a poorly observable region is dangerous; consistency checks (NIS, Ch. 21 §21.6)
-and the observability map (§24.1) guard against believing it.
+and the observability map (§24.1) guard against believing it. A Monte-Carlo check
+(`data/monte_carlo_vs_crlb.json`) confirms the LM solver's empirical error
+**matches the CRLB to within ~3%** at near/mid/far poses — i.e. the estimator is
+efficient and the bound is a usable predictor in the well-conditioned regime.
 
 ## 24.5 Synthesis: why accuracy varies across the volume
 Sections 24.1–24.4 are one causal chain:
@@ -141,9 +158,12 @@ budget.
 ---
 
 ## Open questions / to verify
-- Produce CRLB maps over a working volume for a concrete generator/sensor design
-  (Phase 5), and validate against Monte Carlo solver runs (Ch. 25) — the planned
-  "error propagation / uncertainty" interactive modules.
+- ✅ **Resolved (Phase 5):** CRLB maps + 1-D range curve produced
+  (`figures/ch24_crlb_map.png`, `ch24_crlb_vs_range.png`; `data/crlb_vs_range.csv`)
+  and validated against Monte-Carlo solver runs (`data/monte_carlo_vs_crlb.json`,
+  ~3% agreement). Finding: on-axis $\sigma_{\text{pos}}\propto z^{4}$. Remaining:
+  wrap these as the interactive "error-propagation / uncertainty" web modules
+  (Phase 6).
 - Quantify the conditioning improvement from a second (askew) sensor element vs.
   EM+IMU fusion for the 5→6 DOF case (ties Ch. 13, 21).
 - Add a worked preconditioning/SVD example showing the $\kappa$ reduction.

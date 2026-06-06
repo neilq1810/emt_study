@@ -206,18 +206,26 @@ of the planned simulations (Phase 5; `simulations/`).
 
 The fractional error of the dipole model relative to the exact loop field scales
 with $(a/r)^2$ for the leading correction (the next multipole, the
-"octupole"-type term, is the first nonzero correction for a symmetric loop). A
-practical rule of thumb used in system design:
+"octupole"-type term, is the first nonzero correction for a symmetric loop). The
+table below gives the **computed** error — maximum over polar angle
+$\theta\in[0,90°]$ — from the finite-loop vs. dipole simulation
+(`simulations/run_all.py`, data in `data/dipole_vs_loop_error.csv`):
 
-| $r/a$ | Approx. dipole error | Design implication |
-|------:|----------------------|--------------------|
-| 2     | tens of percent       | dipole model unsafe; use exact/elliptic or FEA |
-| 5     | a few percent         | acceptable for coarse work; calibrate residual |
-| 10    | $\lesssim 1\%$        | dipole model generally adequate |
+| $r/a$ | max error over $\theta$ [%] | mean error [%] | Design implication |
+|------:|----------------------------:|---------------:|--------------------|
+| 1.5   | 73.6                        | 40.9           | dipole model invalid; use exact/elliptic or FEA |
+| 2     | 39.8                        | 22.6           | dipole model unsafe; exact/elliptic or FEA |
+| 3     | 17.1                        | 9.9            | usable only with calibrated residual |
+| 5     | 6.1                         | 3.5            | acceptable for coarse work; calibrate residual |
+| 7     | 3.1                         | 1.8            | good for most work |
+| 10    | 1.5                         | 0.88           | dipole model generally adequate |
+| 15    | 0.67                        | 0.39           | dipole model very good |
+| 20    | 0.38                        | 0.22           | dipole model excellent |
 
-(conf: med — the $(a/r)^2$ scaling is exact for the leading multipole
-correction; the tabulated percentages are order-of-magnitude design guidance to
-be replaced by the numerical study in Phase 5.) The lesson for Chapter 9:
+(conf: high — computed numerically; the log–log slope confirms the $(a/r)^2$
+scaling. See `figures/ch04_dipole_vs_loop_error.png`.) Note the error is
+**worst near the dipole axis** (the $\theta$-max column exceeds the mean by
+~1.7×). The lesson for Chapter 9:
 **small generator coils** validate the point-dipole model over a larger fraction
 of the working volume, but **large moments** (which favor SNR) push toward
 physically large coils — a direct tension resolved by either keeping the sensor
@@ -262,8 +270,10 @@ range.)
 ## Open questions / to verify
 - Add Jackson and/or Griffiths (electrodynamics) to the bibliography with
   verified ISBNs to formally back §4.1–4.4.
-- Replace the §4.6 error table with results from the numerical dipole-vs-elliptic
-  simulation (Phase 5) and cite the notebook.
+- ✅ **Resolved (Phase 5):** §4.6 error table now holds computed values from
+  `simulations/run_all.py` (`data/dipole_vs_loop_error.csv`,
+  `figures/ch04_dipole_vs_loop_error.png`); the $(a/r)^2$ slope is confirmed.
+  Field streamlines: `figures/ch04_dipole_field.png`.
 - Confirm the exact next-order multipole correction coefficient for a circular
   loop for inclusion in Appendix C.
 
