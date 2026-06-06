@@ -132,7 +132,11 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > Barry et al. 2020.
 
 ### Part XIV — Building a System From Scratch
-- [ ] Ch. 31 End-to-end design worked example
+- [x] Ch. 31 End-to-end design worked example — **DRAFT**
+
+> **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
+> (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
+> figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
 
 ## Research quality control
 
