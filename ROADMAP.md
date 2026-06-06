@@ -118,7 +118,11 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > NDI history, Ascension/Roper, J&J/Biosense, Covidien/superDimension.
 
 ### Part XII — Medical Applications
-- [ ] Ch. 29 EP, bronchoscopy, ENT, IR, robotics, IGT
+- [x] Ch. 29 EP, bronchoscopy, ENT, IR, robotics, IGT + workflows & regulatory — **DRAFT**
+
+> **Parts II–XII now drafted** (Part I partial). Remaining: Part I (Ch.2–3),
+> Part XIII (frontiers, Ch.30), Part XIV (build-from-scratch, Ch.31). Ref added:
+> Folch 2019 (NAVIGATE).
 
 ### Part XIII — Research Frontiers
 - [ ] Ch. 30 SOTA, hybrid optical+EM, ML compensation, quantum sensing

@@ -606,6 +606,26 @@
       "verified": true
     },
     {
+      "id": "folch2019",
+      "type": "article",
+      "title": "Electromagnetic Navigation Bronchoscopy for Peripheral Pulmonary Lesions: One-Year Results of the Prospective, Multicenter NAVIGATE Study",
+      "authors": ["Folch, Erik E.", "Pritchett, Michael A.", "Nead, Matthew A.", "et al."],
+      "year": 2019,
+      "venue": "Journal of Thoracic Oncology",
+      "volume": "14",
+      "issue": "3",
+      "pages": "445-458",
+      "doi": "10.1016/j.jtho.2018.11.013",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30476574/",
+      "publisher": "Elsevier / IASLC",
+      "source_type": "journal",
+      "keywords": ["ENB", "navigation bronchoscopy", "diagnostic yield", "lung lesion", "superDimension", "clinical outcome"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "NAVIGATE one-year results: 12-month diagnostic yield ~73%; pneumothorax (grade >=2) 2.9%. PMID 30476574 verified; vol/issue/pages 14(3):445-458 to re-confirm against journal record. 'et al.' — full author list to expand.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
