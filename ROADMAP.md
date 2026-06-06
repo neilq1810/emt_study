@@ -53,10 +53,14 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > figures these chapters reference.
 
 ### Part IV — Sensor Engineering
-- [ ] Ch. 13 Sensor physics & geometries (induction vs. field sensors; 3/5/6 DOF)
-- [ ] Ch. 14 Construction & technologies — coils + solid-state MR (AMR/GMR/**TMR**
-      bridge), Hall, fluxgate, MEMS; sensor-selection matrix
-- [ ] Ch. 15 Manufacturing, tolerance & noise analysis
+- [x] Ch. 13 Sensor physics & geometries (induction vs. field sensors; 3/5/6 DOF) — **DRAFT**
+- [x] Ch. 14 Construction & technologies — coils + solid-state MR (AMR/GMR/**TMR**
+      bridge), Hall, fluxgate, MEMS; sensor-selection matrix — **DRAFT**
+- [x] Ch. 15 Manufacturing, tolerance & noise analysis — **DRAFT**
+
+> **Parts II, III, IV now fully drafted** (Part I partial). Next sequential: Part V
+> (analog front ends). TMR/MR content (Ch. 14.3) now backed by verified sources
+> (Lenz & Edelstein 2006; Davies et al. 2021).
 
 ### Part V — Analog Front Ends
 - [ ] Ch. 16 LNAs, instrumentation amps, noise budgeting
