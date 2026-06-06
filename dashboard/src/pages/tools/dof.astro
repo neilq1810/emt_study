@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import DofDemo from '../../components/DofDemo.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="5-DOF vs 6-DOF demonstration" toc={toc}>
+  <h1>5-DOF vs 6-DOF demonstration</h1>
+  <p>
+    A single sensing element measures only the field component along its own axis,
+    so rotating it about that axis changes nothing — the <em>roll null</em> that
+    makes a single coil intrinsically 5-DOF (Ch. 13 §13.1). Drag the roll slider
+    and watch; then add a second, perpendicular coil to recover the sixth DOF.
+  </p>
+  <DofDemo />
+</BookLayout>

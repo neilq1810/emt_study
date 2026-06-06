@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import AdcExplorer from '../../components/AdcExplorer.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="ADC performance explorer" toc={toc}>
+  <h1>ADC performance explorer</h1>
+  <p>
+    Why EMT favours Σ-Δ converters (Ch. 18): the ~100–120 dB dynamic range set by
+    the 1/r³ law needs ~17–20 effective bits, reached by oversampling and
+    noise-shaping rather than raw resolution. Vary bits, oversampling ratio, and
+    modulator order.
+  </p>
+  <AdcExplorer />
+</BookLayout>

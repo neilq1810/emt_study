@@ -66,3 +66,40 @@ export function gauss(rng: () => number = Math.random): number {
   const v = rng();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
+
+/** On-axis field of an N-turn circular loop [T] (Ch. 4, eq. 4.3). */
+export function loopFieldOnAxis(current: number, radius: number, z: number, turns = 1): number {
+  return (MU0 * turns * current * radius * radius) / (2 * Math.pow(radius * radius + z * z, 1.5));
+}
+
+/** Magnetic moment of an N-turn loop [A·m²]. */
+export function momentOfLoop(turns: number, current: number, radius: number): number {
+  return turns * current * Math.PI * radius * radius;
+}
+
+// --- ADC figures of merit (Ch. 18) ---
+/** Ideal quantization SNR for an N-bit converter [dB] (eq. 18.1). */
+export function adcSnrIdeal(bits: number): number {
+  return 6.02 * bits + 1.76;
+}
+/** ENOB from a measured SINAD [dB] (eq. 18.2). */
+export function enobFromSinad(sinad: number): number {
+  return (sinad - 1.76) / 6.02;
+}
+/**
+ * Quantization-SNR gain from oversampling + L-th-order noise shaping [dB]:
+ * (6L+3) dB per octave of OSR. L=0 gives plain oversampling (~3 dB/octave).
+ */
+export function oversamplingGainDb(osr: number, order: number): number {
+  return (6 * order + 3) * Math.log2(Math.max(osr, 1));
+}
+
+/**
+ * Inverse of the on-axis CRLB law: maximum range where position σ stays below a
+ * target (Ch. 24 / working-volume optimizer). target in metres, returns metres.
+ */
+export function crlbMaxRange(targetSigma: number, sigmaB: number, moment: number): number {
+  const C = 1.0628e7;
+  return Math.pow((targetSigma * moment) / (C * sigmaB), 0.25);
+}
+

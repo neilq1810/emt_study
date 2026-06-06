@@ -13,7 +13,7 @@ change.
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
 | 4     | Figures & visualizations                                 | 🟡 7 computed figures (Ch.4/6/20/24); schematic diagrams pending |
 | 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 7 sims incl. eddy/skin-depth) |
-| 6     | Interactive website (digital textbook + tools)           | 🟡 Scaffold + 4 interactive tools (dipole/CRLB/lock-in/noise); 16 of brief's 20 pending |
+| 6     | Interactive website (digital textbook + tools)           | 🟡 Scaffold + 9 interactive tools (dipole/coil/DOF/distortion/lock-in/noise/ADC/CRLB/working-volume); 11 of brief's 20 pending |
 | 7     | Cross-referencing pass                                   | ⬜ Not started |
 | 8     | Technical review                                         | ⬜ Not started |
 | 9     | Publication-ready version                                | ⬜ Not started |

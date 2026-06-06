@@ -1,0 +1,57 @@
+---
+// ADC performance explorer (Ch. 18): quantization SNR, oversampling + noise
+// shaping, ENOB, and the dynamic range an EMT receiver demands.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">bits N:
+      <input id="adc-bits" type="range" min="8" max="24" value="16" />
+      <span id="adc-bits-val" class="tabular-nums">16</span></label>
+    <label class="flex items-center gap-2">OSR:
+      <input id="adc-osr" type="range" min="0" max="10" value="0" />
+      <span id="adc-osr-val" class="tabular-nums">1×</span></label>
+    <label class="flex items-center gap-2">Σ-Δ order L:
+      <input id="adc-order" type="range" min="0" max="4" value="0" />
+      <span id="adc-order-val" class="tabular-nums">0</span></label>
+  </div>
+  <div id="adc-out" class="space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
+  <p class="mt-2 text-xs text-slate-400">
+    EMT needs ~100–120 dB dynamic range (the 1/r³ law); a Σ-Δ converter reaches it
+    via oversampling + noise shaping ((6L+3) dB/octave of OSR).
+  </p>
+</div>
+
+<script>
+  import { adcSnrIdeal, oversamplingGainDb, enobFromSinad } from '../lib/physics';
+
+  const bits = document.getElementById('adc-bits') as HTMLInputElement;
+  const osrI = document.getElementById('adc-osr') as HTMLInputElement;
+  const order = document.getElementById('adc-order') as HTMLInputElement;
+  const out = document.getElementById('adc-out')!;
+  const row = (l: string, v: string) =>
+    `<div class="flex justify-between"><span class="text-slate-500">${l}</span><b>${v}</b></div>`;
+
+  function update() {
+    const N = Number(bits.value);
+    const osr = Math.pow(2, Number(osrI.value)); // 1 .. 1024
+    const L = Number(order.value);
+    document.getElementById('adc-bits-val')!.textContent = String(N);
+    document.getElementById('adc-osr-val')!.textContent = `${osr}×`;
+    document.getElementById('adc-order-val')!.textContent = String(L);
+
+    const nyq = adcSnrIdeal(N);
+    const gain = oversamplingGainDb(osr, L);
+    const total = nyq + gain;
+    const enob = enobFromSinad(total);
+    const dr = total; // dynamic range ~ SNR for full-scale sine
+    out.innerHTML =
+      row('Nyquist quantization SNR', `${nyq.toFixed(1)} dB`) +
+      row(`Oversampling + shaping gain (OSR=${osr}, L=${L})`, `+${gain.toFixed(1)} dB`) +
+      row('Total SNR / dynamic range', `${total.toFixed(1)} dB`) +
+      row('Effective number of bits', `${enob.toFixed(1)} bits`) +
+      row('Covers EMT 100 dB target?', dr >= 100 ? '✅ yes' : '❌ no') +
+      row('Covers 120 dB target?', dr >= 120 ? '✅ yes' : '❌ no');
+  }
+  [bits, osrI, order].forEach((e) => e.addEventListener('input', update));
+  update();
+</script>

@@ -1,0 +1,66 @@
+---
+// Coil-geometry explorer (Ch. 4/9): moment, exact on-axis loop field vs the
+// dipole approximation, and where the dipole model is valid.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-4">
+    <label class="flex flex-col">radius a [cm]<input id="cg-a" type="range" min="1" max="20" value="5" /><span id="cg-a-val" class="text-xs tabular-nums">5</span></label>
+    <label class="flex flex-col">turns N<input id="cg-N" type="range" min="1" max="500" value="100" /><span id="cg-N-val" class="text-xs tabular-nums">100</span></label>
+    <label class="flex flex-col">current I [A]<input id="cg-I" type="range" min="0.1" max="20" step="0.1" value="10" /><span id="cg-I-val" class="text-xs tabular-nums">10</span></label>
+    <label class="flex flex-col">obs. z [cm]<input id="cg-z" type="range" min="2" max="80" value="30" /><span id="cg-z-val" class="text-xs tabular-nums">30</span></label>
+  </div>
+  <div id="cg-out" class="mb-3 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
+  <canvas id="cg-canvas" width="520" height="260" class="w-full max-w-[560px] rounded"></canvas>
+  <p class="mt-1 text-xs text-slate-400">Exact loop field (eq. 4.3) vs dipole approximation; they converge for z ≫ a.</p>
+</div>
+
+<script>
+  import { loopFieldOnAxis, momentOfLoop, MU0 } from '../lib/physics';
+
+  const els = ['cg-a', 'cg-N', 'cg-I', 'cg-z'].map((id) => document.getElementById(id) as HTMLInputElement);
+  const cv = document.getElementById('cg-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const out = document.getElementById('cg-out')!;
+  const row = (l: string, v: string) => `<div class="flex justify-between"><span class="text-slate-500">${l}</span><b>${v}</b></div>`;
+  const dipoleOnAxis = (m: number, z: number) => (MU0 * m) / (2 * Math.PI * z * z * z);
+
+  function draw() {
+    const a = Number(els[0].value) / 100, N = Number(els[1].value), I = Number(els[2].value), z = Number(els[3].value) / 100;
+    ['cg-a-val', 'cg-N-val', 'cg-I-val', 'cg-z-val'].forEach((id, k) => (document.getElementById(id)!.textContent = els[k].value));
+    const m = momentOfLoop(N, I, a);
+    const exact = loopFieldOnAxis(I, a, z, N);
+    const dip = dipoleOnAxis(m, z);
+    const err = (Math.abs(dip - exact) / exact) * 100;
+    out.innerHTML =
+      row('Magnetic moment m = NIπa²', `${m.toFixed(3)} A·m²`) +
+      row('Exact on-axis field', `${(exact * 1e6).toExponential(3)} µT`) +
+      row('Dipole approximation', `${(dip * 1e6).toExponential(3)} µT`) +
+      row('z / a', `${(z / a).toFixed(1)}`) +
+      row('Dipole-approx. error', `${err.toFixed(2)} %`);
+
+    // field vs z (log y)
+    const padL = 52, padB = 30, padT = 10, padR = 10, zmax = 0.8;
+    const ylo = -9, yhi = -3; // log10 T
+    const px = (zz: number) => padL + (zz / zmax) * (cv.width - padL - padR);
+    const py = (lg: number) => padT + (1 - (lg - ylo) / (yhi - ylo)) * (cv.height - padT - padB);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = '#64748b'; ctx.font = '10px system-ui';
+    for (let d = ylo; d <= yhi; d++) ctx.fillText(`1e${d} T`, 4, py(d) + 3);
+    for (const fn of [(zz: number) => loopFieldOnAxis(I, a, zz, N), (zz: number) => dipoleOnAxis(m, zz)]) {
+      ctx.strokeStyle = fn === undefined ? '#000' : ''; // placeholder
+    }
+    const plot = (fn: (z: number) => number, color: string) => {
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+      for (let i = 1; i <= 200; i++) { const zz = (i / 200) * zmax; const Y = py(Math.log10(Math.max(fn(zz), 1e-12))); i === 1 ? ctx.moveTo(px(zz), Y) : ctx.lineTo(px(zz), Y); }
+      ctx.stroke();
+    };
+    plot((zz) => loopFieldOnAxis(I, a, zz, N), '#0e7490');
+    plot((zz) => dipoleOnAxis(m, zz), '#ef4444');
+    // marker at observer z
+    ctx.strokeStyle = '#94a3b8'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(px(z), padT); ctx.lineTo(px(z), cv.height - padB); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#0e7490'; ctx.fillText('loop (exact)', cv.width - 110, 16);
+    ctx.fillStyle = '#ef4444'; ctx.fillText('dipole', cv.width - 110, 30);
+  }
+  els.forEach((e) => e.addEventListener('input', draw));
+  draw();
+</script>
