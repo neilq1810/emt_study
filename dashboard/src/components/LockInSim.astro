@@ -1,0 +1,85 @@
+---
+// Interactive lock-in / synchronous-detection simulator (Ch. 20).
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">
+      noise / signal: <input id="li-ns" type="range" min="0" max="10" step="0.5" value="5" />
+      <span id="li-ns-val" class="tabular-nums">5.0</span>
+    </label>
+    <label class="flex items-center gap-2">
+      integration T [ms]: <input id="li-t" type="range" min="1" max="100" step="1" value="10" />
+      <span id="li-t-val" class="tabular-nums">10</span>
+    </label>
+  </div>
+  <canvas id="li-canvas" width="520" height="200" class="w-full max-w-[560px] rounded bg-slate-900"></canvas>
+  <p id="li-readout" class="mt-2 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    True amplitude = 1 (red). The lock-in recovers it from the noisy trace (grey)
+    via quadrature demodulation; RMS error over 60 trials falls as 1/√T.
+  </p>
+</div>
+
+<script>
+  import { lockIn, gauss } from '../lib/physics';
+
+  const cv = document.getElementById('li-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const ns = document.getElementById('li-ns') as HTMLInputElement;
+  const tt = document.getElementById('li-t') as HTMLInputElement;
+  const nsVal = document.getElementById('li-ns-val')!;
+  const tVal = document.getElementById('li-t-val')!;
+  const readout = document.getElementById('li-readout')!;
+
+  const f0 = 1000, fs = 100000, A = 1, phi = 0.7;
+
+  function trace(noise: number, n: number): number[] {
+    const s: number[] = [];
+    for (let k = 0; k < n; k++)
+      s.push(A * Math.cos((2 * Math.PI * f0 * k) / fs + phi) + noise * gauss());
+    return s;
+  }
+
+  function draw() {
+    const noise = Number(ns.value);
+    const T = Number(tt.value) / 1000;
+    const n = Math.round(fs * T);
+
+    // one realization for display
+    const sample = trace(noise, n);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    const show = Math.min(n, 600);
+    const sc = cv.height / 2 / (A + 3 * noise + 0.5);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let k = 0; k < show; k++) {
+      const x = (k / show) * cv.width, y = cv.height / 2 - sample[k] * sc;
+      k === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // clean signal overlay
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let k = 0; k < show; k++) {
+      const x = (k / show) * cv.width;
+      const y = cv.height / 2 - A * Math.cos((2 * Math.PI * f0 * k) / fs + phi) * sc;
+      k === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // RMS error over trials
+    let se = 0;
+    const trials = 60;
+    for (let i = 0; i < trials; i++) {
+      const est = lockIn(trace(noise, n), f0, fs).amp;
+      se += (est - A) ** 2;
+    }
+    const rms = Math.sqrt(se / trials);
+    readout.innerHTML =
+      `Recovered amplitude (last trial): <b>${lockIn(sample, f0, fs).amp.toFixed(3)}</b> · ` +
+      `RMS error over ${trials} trials: <b>${rms.toFixed(4)}</b> ` +
+      `(noise/signal=${noise.toFixed(1)}, T=${tt.value} ms)`;
+  }
+
+  ns.addEventListener('input', () => { nsVal.textContent = Number(ns.value).toFixed(1); draw(); });
+  tt.addEventListener('input', () => { tVal.textContent = tt.value; draw(); });
+  draw();
+</script>

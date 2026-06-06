@@ -81,5 +81,13 @@
   "lockin": {
     "noise_to_signal": 5.0,
     "loglog_slope": -0.48776639715581627
+  },
+  "eddy_skin": {
+    "skin_depth_mm_at_10kHz": {
+      "Copper": 0.6609,
+      "Aluminium": 0.8507,
+      "Stainless 304 (non-mag)": 4.2536
+    },
+    "pulsed_dc_note": "single-time-constant illustrative model; real settling is multi-mode"
   }
 }

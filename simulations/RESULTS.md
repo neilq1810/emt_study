@@ -42,8 +42,13 @@ and the CRLB is a usable design predictor (Ch. 24).
 - amplitude error scales as T^-0.49 (expected ≈ −0.5, i.e. ∝1/√T)
   even with noise/signal = 5 (signal far below noise).
 
+## Sim 7 — Skin depth & pulsed-DC settling (Ch. 6)
+- skin depth at 10 kHz [mm]: {'Copper': 0.6609, 'Aluminium': 0.8507, 'Stainless 304 (non-mag)': 4.2536} (Cu value matches the Ch. 6 §6.2 hand calculation).
+- pulsed-DC settling figure is an illustrative single-τ model (labelled as such).
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
+- `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)
 - `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a
 - `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB
 - `figures/ch20_lockin_snr_vs_T.png` — lock-in error vs integration time

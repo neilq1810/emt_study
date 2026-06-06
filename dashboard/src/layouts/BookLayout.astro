@@ -36,6 +36,28 @@ const home = base.endsWith('/') ? base : base + '/';
           EM-Tracking<br />Definitive Guide
         </a>
         <p class="mt-1 text-xs text-slate-500">Digital textbook · draft</p>
+        <nav class="mt-5 text-sm">
+          <h2 class="mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400">
+            Interactive tools
+          </h2>
+          <ul class="space-y-0.5">
+            {
+              [
+                ['tools', 'All tools'],
+                ['tools/dipole', 'Dipole field visualizer'],
+                ['tools/crlb', 'CRLB / accuracy explorer'],
+                ['tools/lock-in', 'Lock-in simulator'],
+                ['tools/noise-budget', 'Noise-budget calculator'],
+              ].map(([path, label]) => (
+                <li>
+                  <a class="block rounded px-2 py-1 text-slate-700 hover:bg-slate-100" href={home + path}>
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
         <nav class="mt-6 space-y-5 text-sm">
           {
             toc.map((group) => (

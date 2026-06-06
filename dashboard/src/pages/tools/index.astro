@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+
+const toc = buildToc(await getCollection('book'));
+const base = import.meta.env.BASE_URL;
+const home = base.endsWith('/') ? base : base + '/';
+
+const tools = [
+  ['dipole', 'Dipole field visualizer', 'Ch. 4 — explore the 1/r³ near-field and its 2:1 axis/equator anisotropy.'],
+  ['crlb', 'CRLB / accuracy explorer', 'Ch. 24 — how position uncertainty grows as z⁴ with range, and with noise/moment.'],
+  ['lock-in', 'Lock-in simulator', 'Ch. 20 — recover a tone buried in noise; watch error fall as 1/√T.'],
+  ['noise-budget', 'Noise-budget calculator', 'Ch. 15–16 — coil Johnson noise, induced EMF, and amplitude SNR.'],
+];
+---
+
+<BookLayout title="Interactive tools" toc={toc}>
+  <h1>Interactive tools</h1>
+  <p class="lead">
+    Client-side modules backed by the validated <code>simulations/emtrack</code>
+    physics (their results agree with the Python suite). More of the 20 modules
+    from the project brief will be added here.
+  </p>
+  <ul>
+    {tools.map(([slug, name, desc]) => (
+      <li><a href={`${home}tools/${slug}`}><strong>{name}</strong></a> — {desc}</li>
+    ))}
+  </ul>
+</BookLayout>

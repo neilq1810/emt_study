@@ -258,6 +258,58 @@ def sim_dipole_field_plot() -> None:
     print("[sim6] dipole field figure written")
 
 
+# ---------------------------------------------------------------------------
+# Sim 7 — skin depth & pulsed-DC eddy-current settling (Ch. 6)
+# ---------------------------------------------------------------------------
+def sim_eddy_skin_depth() -> None:
+    # Skin depth delta = 1/sqrt(pi f mu sigma)  (Ch. 6, eq. 6.1) — exact.
+    materials = {
+        "Copper": (5.8e7, 1.0),
+        "Aluminium": (3.5e7, 1.0),
+        "Stainless 304 (non-mag)": (1.4e6, 1.0),
+    }
+    freqs = np.logspace(2, 5, 200)  # 100 Hz .. 100 kHz
+    fig, ax = plt.subplots(figsize=(6, 4))
+    table = {}
+    for name, (sigma, mur) in materials.items():
+        delta = 1.0 / np.sqrt(np.pi * freqs * (MU0 * mur) * sigma)
+        ax.loglog(freqs, delta * 1e3, label=name)
+        # value at 10 kHz (the book's worked frequency)
+        d10 = 1.0 / np.sqrt(np.pi * 1e4 * (MU0 * mur) * sigma)
+        table[name] = round(float(d10 * 1e3), 4)  # mm
+    ax.set_xlabel("frequency [Hz]")
+    ax.set_ylabel("skin depth $\\delta$ [mm]")
+    ax.set_title("Skin depth vs frequency (eq. 6.1)")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(FIG / "ch06_skin_depth.png", dpi=140)
+    plt.close(fig)
+
+    # Pulsed-DC settling (ILLUSTRATIVE single-time-constant model): after a step,
+    # eddy current ~ exp(-t/tau_e). Residual field error if sampled at delay t_s.
+    taus = [0.5e-3, 1e-3, 2e-3]  # eddy L/R time constants [s] (illustrative)
+    t_s = np.linspace(0, 12e-3, 200)
+    fig, ax = plt.subplots(figsize=(6, 4))
+    for tau in taus:
+        ax.semilogy(t_s * 1e3, np.exp(-t_s / tau) * 100, label=f"$\\tau_e$={tau*1e3:.1f} ms")
+    ax.axhline(1.0, color="gray", ls="--", lw=1, label="1% residual")
+    ax.set_xlabel("sample delay after step [ms]")
+    ax.set_ylabel("residual eddy error [%]")
+    ax.set_title("Pulsed-DC eddy settling (illustrative single-$\\tau$ model)")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(FIG / "ch06_pulsed_dc_settling.png", dpi=140)
+    plt.close(fig)
+
+    res = {"skin_depth_mm_at_10kHz": table,
+           "pulsed_dc_note": "single-time-constant illustrative model; real settling is multi-mode"}
+    (DATA / "skin_depth.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["eddy_skin"] = res
+    print("[sim7] skin depth @10kHz [mm]:", table)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -303,8 +355,14 @@ def write_results_md() -> None:
         f"- amplitude error scales as T^{d['lockin']['loglog_slope']:.2f} (expected ≈ −0.5, i.e. ∝1/√T)",  # type: ignore[index]
         f"  even with noise/signal = {d['lockin']['noise_to_signal']:.0f} (signal far below noise).",  # type: ignore[index]
         "",
+        "## Sim 7 — Skin depth & pulsed-DC settling (Ch. 6)",
+        f"- skin depth at 10 kHz [mm]: {d['eddy_skin']['skin_depth_mm_at_10kHz']}"  # type: ignore[index]
+        " (Cu value matches the Ch. 6 §6.2 hand calculation).",
+        "- pulsed-DC settling figure is an illustrative single-τ model (labelled as such).",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
+        "- `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)",
         "- `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a",
         "- `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB",
         "- `figures/ch20_lockin_snr_vs_T.png` — lock-in error vs integration time",
@@ -322,6 +380,7 @@ def main() -> None:
     sim_monte_carlo()
     sim_lockin()
     sim_dipole_field_plot()
+    sim_eddy_skin_depth()
     write_results_md()
 
 

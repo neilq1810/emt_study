@@ -1,0 +1,54 @@
+---
+// Interactive noise-budget calculator (Ch. 15–16). Coil Johnson noise, induced
+// EMF, and the resulting amplitude SNR over an integration bandwidth.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
+    <label class="flex flex-col">Coil resistance R [Ω]
+      <input id="nb-R" type="number" value="100" class="rounded border px-2 py-1" /></label>
+    <label class="flex flex-col">Temperature [K]
+      <input id="nb-T" type="number" value="300" class="rounded border px-2 py-1" /></label>
+    <label class="flex flex-col">Turns × area NA [m²·turns]
+      <input id="nb-NA" type="number" value="1e-3" class="rounded border px-2 py-1" /></label>
+    <label class="flex flex-col">Excitation f [Hz]
+      <input id="nb-f" type="number" value="10000" class="rounded border px-2 py-1" /></label>
+    <label class="flex flex-col">Field at sensor B [µT]
+      <input id="nb-B" type="number" value="0.8" class="rounded border px-2 py-1" /></label>
+    <label class="flex flex-col">Noise bandwidth [Hz]
+      <input id="nb-bw" type="number" value="100" class="rounded border px-2 py-1" /></label>
+  </div>
+  <div id="nb-out" class="mt-4 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
+  <p class="mt-2 text-xs text-slate-400">
+    Coil noise = √(4kᴮTR) (eq. 15.1); EMF = NA·2πf·B (eq. 5.2). The AFE must add
+    less than this coil floor to stay sensor-limited (Ch. 16).
+  </p>
+</div>
+
+<script>
+  import { johnsonNoise, inducedEmf } from '../lib/physics';
+
+  const ids = ['nb-R', 'nb-T', 'nb-NA', 'nb-f', 'nb-B', 'nb-bw'];
+  const get = (id: string) => Number((document.getElementById(id) as HTMLInputElement).value);
+  const out = document.getElementById('nb-out')!;
+
+  function row(label: string, value: string) {
+    return `<div class="flex justify-between"><span class="text-slate-500">${label}</span><b>${value}</b></div>`;
+  }
+
+  function update() {
+    const R = get('nb-R'), T = get('nb-T'), NA = get('nb-NA');
+    const f = get('nb-f'), B = get('nb-B') * 1e-6, bw = get('nb-bw');
+    const en = johnsonNoise(R, T); // V/sqrt(Hz)
+    const vNoise = en * Math.sqrt(bw); // V over bandwidth
+    const emf = inducedEmf(1, NA, f, B); // V (turns folded into NA)
+    const snr = emf / vNoise;
+    out.innerHTML =
+      row('Coil voltage-noise density', `${(en * 1e9).toFixed(3)} nV/√Hz`) +
+      row(`Noise over ${bw} Hz`, `${(vNoise * 1e9).toFixed(2)} nV RMS`) +
+      row('Induced EMF (signal)', `${(emf * 1e6).toFixed(3)} µV`) +
+      row('Amplitude SNR', `${snr.toFixed(0)}×  (${(20 * Math.log10(snr)).toFixed(1)} dB)`);
+  }
+
+  ids.forEach((id) => document.getElementById(id)!.addEventListener('input', update));
+  update();
+</script>
