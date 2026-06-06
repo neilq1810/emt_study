@@ -95,7 +95,11 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > (Error Sources, Ch. 25). Refs added: Marquardt 1963, Kay 1993, Nocedal & Wright 2006.
 
 ### Part IX — Error Sources
-- [ ] Ch. 25 Error taxonomy, budgets, sensitivity matrices, Monte Carlo
+- [x] Ch. 25 Error taxonomy, budgets, sensitivity matrices, Monte Carlo — **DRAFT**
+      (incl. Barkhausen, generator, ambient/EM-susceptibility, TMR bias-reference noise)
+
+> **Parts II–IX now fully drafted** (Part I partial). Next sequential: Part X
+> (Calibration, Ch. 26–27). Refs added: Poulin & Amiot 2002, Monteblanco et al. 2021.
 
 ### Part X — Calibration
 - [ ] Ch. 26 Sensor/generator/system calibration & field mapping
