@@ -37,12 +37,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 
 ### Part II — Electromagnetic Theory
 - [x] Ch. 4 Maxwell's equations, quasistatics & the magnetic dipole — **DRAFT**
-- [ ] Ch. 5 Coil coupling, mutual inductance & magnetic moment
-- [ ] Ch. 6 Distortion physics: conductors, ferromagnetics, eddy currents
+- [x] Ch. 5 Coil coupling, mutual inductance & magnetic moment — **DRAFT**
+- [x] Ch. 6 Distortion physics: conductors, ferromagnetics, eddy currents — **DRAFT**
 - [ ] Ch. 7 Numerical methods (FEA, BEM) & analytical models
 
 ### Part III — Tracker Architecture
-- [ ] Ch. 8 System architecture overview
+- [x] Ch. 8 System architecture overview — **DRAFT**
 - [ ] Ch. 9 Field generators & sensor coils
 - [ ] Ch. 10 Timing, clocking, synchronization
 - [ ] Ch. 11 DSP pipeline & estimation
