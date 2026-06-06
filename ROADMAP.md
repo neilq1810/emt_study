@@ -1,0 +1,115 @@
+# Project Roadmap & Progress Tracker
+
+This document is the single source of truth for *what exists*, *what is in
+progress*, and *what remains*. Update it in the same commit as any content
+change.
+
+## Execution phases
+
+| Phase | Description                                              | Status        |
+|-------|----------------------------------------------------------|---------------|
+| 1     | Repository structure + master outline + roadmap          | ✅ Done        |
+| 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
+| 3     | Chapter-by-chapter content (Parts I–XIV)                 | 🟡 In progress |
+| 4     | Figures & visualizations                                 | ⬜ Not started |
+| 5     | Simulations                                              | ⬜ Not started |
+| 6     | Interactive website (digital textbook + tools)           | ⬜ Not started |
+| 7     | Cross-referencing pass                                   | ⬜ Not started |
+| 8     | Technical review                                         | ⬜ Not started |
+| 9     | Publication-ready version                                | ⬜ Not started |
+
+## Chapter lifecycle
+
+Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIFIED`.
+
+- **RESEARCH** — sources gathered, outline of claims drafted.
+- **DRAFT** — prose written, citations attached.
+- **REVIEWED** — technical correctness, equations, and history checked against
+  sources; open questions logged.
+- **VERIFIED** — every claim cites a verifiable source; contradictions noted.
+
+## Chapter progress
+
+### Part I — Foundations
+- [x] Ch. 1 History of electromagnetic tracking — **DRAFT**
+- [ ] Ch. 2 Patent genealogy & academic genealogy
+- [ ] Ch. 3 Technology timeline & trees
+
+### Part II — Electromagnetic Theory
+- [x] Ch. 4 Maxwell's equations, quasistatics & the magnetic dipole — **DRAFT**
+- [ ] Ch. 5 Coil coupling, mutual inductance & magnetic moment
+- [ ] Ch. 6 Distortion physics: conductors, ferromagnetics, eddy currents
+- [ ] Ch. 7 Numerical methods (FEA, BEM) & analytical models
+
+### Part III — Tracker Architecture
+- [ ] Ch. 8 System architecture overview
+- [ ] Ch. 9 Field generators & sensor coils
+- [ ] Ch. 10 Timing, clocking, synchronization
+- [ ] Ch. 11 DSP pipeline & estimation
+- [ ] Ch. 12 Latency & real-time constraints
+
+### Part IV — Sensor Engineering
+- [ ] Ch. 13 Coil physics & sensor geometries (3/5/6 DOF)
+- [ ] Ch. 14 Miniaturization, catheter & PCB coils
+- [ ] Ch. 15 Manufacturing, tolerance & noise analysis
+
+### Part V — Analog Front Ends
+- [ ] Ch. 16 LNAs, instrumentation amps, noise budgeting
+- [ ] Ch. 17 Filtering, shielding, grounding, EMC, medical-grade power
+
+### Part VI — Data Conversion
+- [ ] Ch. 18 ADC architectures, ENOB/SNR, sampling & jitter
+
+### Part VII — Digital Signal Processing
+- [ ] Ch. 19 Excitation/multiplexing (FDM/TDM/CDM/orthogonal)
+- [ ] Ch. 20 Lock-in / synchronous detection; matched & adaptive filtering
+- [ ] Ch. 21 Kalman/particle filtering & sensor fusion
+- [ ] Ch. 22 Real-time implementations (FPGA/GPU/embedded)
+
+### Part VIII — Position Solvers
+- [ ] Ch. 23 Inverse problem, LM, MLE, Bayesian
+- [ ] Ch. 24 Observability, conditioning, convergence, uncertainty
+
+### Part IX — Error Sources
+- [ ] Ch. 25 Error taxonomy, budgets, sensitivity matrices, Monte Carlo
+
+### Part X — Calibration
+- [ ] Ch. 26 Sensor/generator/system calibration & field mapping
+- [ ] Ch. 27 Distortion compensation & ML approaches
+
+### Part XI — Commercial Ecosystem
+- [ ] Ch. 28 Vendor survey (Polhemus, NDI/Aurora, Ascension, Biosense, …)
+
+### Part XII — Medical Applications
+- [ ] Ch. 29 EP, bronchoscopy, ENT, IR, robotics, IGT
+
+### Part XIII — Research Frontiers
+- [ ] Ch. 30 SOTA, hybrid optical+EM, ML compensation, quantum sensing
+
+### Part XIV — Building a System From Scratch
+- [ ] Ch. 31 End-to-end design worked example
+
+## Research quality control
+
+**Citation keys.** In-text citations use `[@key]` where `key` matches an `id`
+in `citations/bibliography.json`.
+
+**Confidence tags.** Claims that are not textbook-standard carry an inline
+confidence marker:
+- `(conf: high)` — multiple independent peer-reviewed/primary sources agree.
+- `(conf: med)` — single authoritative source, or vendor-reported.
+- `(conf: low)` — inferred, contested, or based on secondary reporting; treat
+  as provisional.
+
+**Source-type tags** recorded per bibliography entry: `journal`, `conference`,
+`dissertation`, `standard`, `patent`, `regulatory`, `vendor`, `lab`, `gov`.
+
+**Open questions.** Each chapter ends with an "Open questions / to verify"
+section. Items there are *not yet* `VERIFIED`.
+
+## Known scope risks / honesty notes
+- Many vendor performance numbers are self-reported and measured under
+  non-standardized conditions; they are tagged `(conf: med)` or lower and
+  cross-checked against independent assessment studies (e.g., Hummel protocol).
+- Patent priority dates vs. publication dates are distinguished where known.
+- Some early/military history is documented only in secondary sources; flagged.
