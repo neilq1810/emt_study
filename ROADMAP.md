@@ -125,7 +125,11 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > Folch 2019 (NAVIGATE).
 
 ### Part XIII — Research Frontiers
-- [ ] Ch. 30 SOTA, hybrid optical+EM, ML compensation, quantum sensing
+- [x] Ch. 30 SOTA, hybrid optical+EM, ML compensation, quantum sensing — **DRAFT**
+
+> **Parts II–XIII now drafted** (Part I partial). Remaining prose: Part I (Ch.2–3),
+> Part XIV (build-from-scratch, Ch.31). Refs added: Budker & Romalis 2007,
+> Barry et al. 2020.
 
 ### Part XIV — Building a System From Scratch
 - [ ] Ch. 31 End-to-end design worked example
