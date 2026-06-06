@@ -63,8 +63,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > (Lenz & Edelstein 2006; Davies et al. 2021).
 
 ### Part V — Analog Front Ends
-- [ ] Ch. 16 LNAs, instrumentation amps, noise budgeting
-- [ ] Ch. 17 Filtering, shielding, grounding, EMC, medical-grade power
+- [x] Ch. 16 LNAs, instrumentation amps, noise budgeting — **DRAFT**
+- [x] Ch. 17 Filtering, shielding, grounding, EMC, medical-grade power — **DRAFT**
+
+> **Parts II–V now fully drafted** (Part I partial). Next sequential: Part VI
+> (Data Conversion, Ch. 18). Standards now in bibliography: IEC 60601-1,
+> IEC 60601-1-2; analog reference: Horowitz & Hill.
 
 ### Part VI — Data Conversion
 - [ ] Ch. 18 ADC architectures, ENOB/SNR, sampling & jitter
