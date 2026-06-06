@@ -1,0 +1,70 @@
+---
+// DSP-pipeline visualizer (Ch. 11/19/20): walk a signal through the receive
+// chain stage by stage, from FDM excitation to a pose estimate.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div id="dsp-stages" class="mb-3 flex flex-wrap gap-1 text-xs"></div>
+  <canvas id="dsp-canvas" width="560" height="220" class="w-full max-w-[600px] rounded bg-slate-900"></canvas>
+  <p id="dsp-info" class="mt-2 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    The data-rate funnel (Ch. 11): the ADC's high sample rate is collapsed by
+    demodulation to a few amplitudes per frame, which the solver turns into pose.
+  </p>
+</div>
+
+<script>
+  import { lockIn } from '../lib/physics';
+
+  const cv = document.getElementById('dsp-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const info = document.getElementById('dsp-info')!;
+  const stagesDiv = document.getElementById('dsp-stages')!;
+
+  // scenario: 3 FDM transmit tones, coupling amplitudes from a notional pose
+  const fs = 50000, freqs = [1000, 2000, 3000], amps = [0.8, 0.45, 0.6], phis = [0.3, 1.1, -0.6];
+  const noise = 1.5, n = 1024;
+  const t = Array.from({ length: n }, (_, k) => k / fs);
+  const emf = t.map((tt, k) => freqs.reduce((s, f, i) => s + amps[i] * Math.cos(2 * Math.PI * f * tt + phis[i]), 0)
+    + noise * (Math.sin(k * 12.9898) * 43758.5453 % 1 - 0.5) * 3.46); // deterministic pseudo-noise
+
+  const recovered = freqs.map((f) => lockIn(emf, f, fs).amp);
+
+  function axes() { ctx.clearRect(0, 0, cv.width, cv.height); ctx.strokeStyle = '#334155'; ctx.beginPath(); ctx.moveTo(20, cv.height / 2); ctx.lineTo(cv.width - 10, cv.height / 2); ctx.stroke(); }
+  function plot(arr: number[], color: string, show = 400) {
+    const m = Math.max(...arr.map(Math.abs)); const sc = (cv.height / 2 - 10) / m;
+    ctx.strokeStyle = color; ctx.lineWidth = 1.2; ctx.beginPath();
+    for (let k = 0; k < Math.min(arr.length, show); k++) { const x = 20 + (k / show) * (cv.width - 30), y = cv.height / 2 - arr[k] * sc; k ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+  }
+  function bars(vals: number[], labels: string[], color: string) {
+    const m = Math.max(...vals), bw = (cv.width - 60) / vals.length;
+    vals.forEach((v, i) => {
+      const h = (v / m) * (cv.height - 50), x = 40 + i * bw;
+      ctx.fillStyle = color; ctx.fillRect(x, cv.height - 25 - h, bw * 0.6, h);
+      ctx.fillStyle = '#e2e8f0'; ctx.font = '11px system-ui'; ctx.fillText(labels[i], x, cv.height - 10); ctx.fillText(v.toFixed(2), x, cv.height - 28 - h);
+    });
+  }
+
+  const stages = [
+    { name: '1 · Excitation (FDM)', rate: '3 tones', info: 'Three transmit axes driven at distinct frequencies (Ch. 19.2) — simultaneous, separable by frequency.',
+      draw: () => { axes(); plot(t.map((tt) => freqs.reduce((s, f, i) => s + amps[i] * Math.cos(2 * Math.PI * f * tt + phis[i]), 0)), '#38bdf8'); } },
+    { name: '2 · Sensor EMF (noisy)', rate: `${(fs / 1000).toFixed(0)} kS/s`, info: 'Induced coil EMF: the coupling-weighted sum of tones, buried in noise (Parts IV–VI). This is what the ADC sees.',
+      draw: () => { axes(); plot(emf, '#94a3b8'); } },
+    { name: '3 · ADC samples', rate: `${(fs / 1000).toFixed(0)} kS/s`, info: 'Oversampled, quantized samples (Ch. 18) — the highest data rate in the chain.',
+      draw: () => { axes(); ctx.strokeStyle = '#22d3ee'; const show = 120, m = Math.max(...emf.map(Math.abs)), sc = (cv.height / 2 - 10) / m; for (let k = 0; k < show; k++) { const x = 20 + (k / show) * (cv.width - 30), y = cv.height / 2 - emf[k] * sc; ctx.beginPath(); ctx.moveTo(x, cv.height / 2); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, 1.6, 0, 7); ctx.fillStyle = '#22d3ee'; ctx.fill(); } } },
+    { name: '4 · Demod (lock-in)', rate: '3 amplitudes/frame', info: 'Synchronous detection collapses each tone to one amplitude (Ch. 20) — recovering the coupling row even from deep noise. The funnel narrows sharply here.',
+      draw: () => { ctx.clearRect(0, 0, cv.width, cv.height); bars(recovered, ['Tx-x', 'Tx-y', 'Tx-z'], '#facc15'); } },
+    { name: '5 · Coupling matrix', rate: '9 numbers', info: 'Calibrated amplitudes assemble the 3×3 coupling matrix M (Ch. 5/11). (Here one sensor row shown ×3 for illustration.)',
+      draw: () => { ctx.clearRect(0, 0, cv.width, cv.height); const g = 3, cell = 46, ox = cv.width / 2 - (g * cell) / 2, oy = 30; const m = Math.max(...recovered); for (let r = 0; r < g; r++) for (let c = 0; c < g; c++) { const v = recovered[c] * (1 - 0.2 * r); const tt = v / m; ctx.fillStyle = `rgb(${Math.round(40 + 215 * tt)},${Math.round(40 + 180 * tt)},90)`; ctx.fillRect(ox + c * cell, oy + r * cell, cell - 3, cell - 3); } ctx.fillStyle = '#e2e8f0'; ctx.font = '12px system-ui'; ctx.fillText('M (3×3) — color = |coupling|', ox, oy + g * cell + 18); } },
+    { name: '6 · Pose estimate', rate: '6 DOF + covariance', info: 'The solver (Ch. 23) inverts M → pose; the Kalman filter (Ch. 21) smooths it and reports uncertainty. Output: a few numbers per frame.',
+      draw: () => { ctx.clearRect(0, 0, cv.width, cv.height); ctx.fillStyle = '#e2e8f0'; ctx.font = '14px system-ui'; ctx.fillText('pose = (x, y, z, roll, pitch, yaw)  ±  covariance', 40, cv.height / 2 - 10); ctx.fillStyle = '#4ade80'; ctx.beginPath(); ctx.arc(cv.width / 2, cv.height / 2 + 30, 8, 0, 7); ctx.fill(); } },
+  ];
+
+  function select(i: number) {
+    [...stagesDiv.children].forEach((c, k) => c.className = 'rounded px-2 py-1 cursor-pointer ' + (k === i ? 'bg-accent text-white' : 'bg-slate-100 hover:bg-slate-200'));
+    stages[i].draw();
+    info.innerHTML = `<b>${stages[i].name}</b> — data rate: <span class="tabular-nums">${stages[i].rate}</span>. ${stages[i].info}`;
+  }
+  stages.forEach((s, i) => { const b = document.createElement('button'); b.textContent = s.name; b.onclick = () => select(i); stagesDiv.appendChild(b); });
+  select(0);
+</script>

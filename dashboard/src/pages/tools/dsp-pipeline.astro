@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import DspPipeline from '../../components/DspPipeline.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="DSP-pipeline visualizer" toc={toc}>
+  <h1>DSP-pipeline visualizer</h1>
+  <p>
+    Follow a signal through the receive chain (Ch. 11): FDM excitation → noisy
+    sensor EMF → ADC samples → lock-in amplitudes → coupling matrix → pose. Click
+    each stage to see its representation and how the data rate funnels from
+    kilosamples-per-second down to a handful of numbers per frame.
+  </p>
+  <DspPipeline />
+</BookLayout>

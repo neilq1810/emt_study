@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import PositionSolver from '../../components/PositionSolver.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Position-solver visualizer" toc={toc}>
+  <h1>Position-solver visualizer</h1>
+  <p>
+    Recovering pose is a nonlinear least-squares problem (Ch. 23). Click anywhere
+    on the residual-cost surface to seed Levenberg–Marquardt and watch it descend
+    to the minimum. Add measurement noise to see the minimum — and the converged
+    estimate — shift.
+  </p>
+  <PositionSolver />
+</BookLayout>

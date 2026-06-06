@@ -1,0 +1,103 @@
+---
+// Kalman-filter explorer (Ch. 21): a 1-D constant-velocity tracker. The data
+// (truth + noisy measurements) is fixed; the sliders set the filter's assumed
+// process (Q) and measurement (R) noise, exposing the smoothing/lag trade.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">filter R (trust meas ↔ model):
+      <input id="kf-R" type="range" min="-3" max="1" step="0.1" value="-1" /><span id="kf-R-v" class="tabular-nums"></span></label>
+    <label class="flex items-center gap-2">filter Q (model agility):
+      <input id="kf-Q" type="range" min="-5" max="0" step="0.1" value="-3" /><span id="kf-Q-v" class="tabular-nums"></span></label>
+    <button id="kf-reseed" class="rounded border px-2 py-1 text-xs hover:bg-slate-100">new noise</button>
+  </div>
+  <canvas id="kf-canvas" width="560" height="280" class="w-full max-w-[600px] rounded"></canvas>
+  <p id="kf-readout" class="mt-2 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    Black = truth · grey dots = noisy measurements · teal = Kalman estimate.
+    Low R → tracks measurements (jittery); low Q → trusts the motion model
+    (smooth but laggy). The gain blends them by relative uncertainty (Ch. 21 §21.2).
+  </p>
+</div>
+
+<script>
+  import { gauss } from '../lib/physics';
+
+  const cv = document.getElementById('kf-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const Rsl = document.getElementById('kf-R') as HTMLInputElement;
+  const Qsl = document.getElementById('kf-Q') as HTMLInputElement;
+  const readout = document.getElementById('kf-readout')!;
+
+  const N = 120, dt = 1, measSigma = 1.2;
+  let truth: number[] = [], meas: number[] = [];
+
+  function genData() {
+    truth = []; meas = [];
+    for (let k = 0; k < N; k++) {
+      // smooth maneuvering truth: drift + turn
+      const t = k / N;
+      const x = 18 * Math.sin(2 * Math.PI * t) + 10 * t * 6 - 18;
+      truth.push(x);
+      meas.push(x + measSigma * gauss());
+    }
+  }
+
+  function runKF(R: number, q: number) {
+    // state [pos, vel]; F=[[1,dt],[0,1]]; H=[1,0]
+    let x = [meas[0], 0];
+    let P = [[10, 0], [0, 10]];
+    const Q = [[q * dt ** 3 / 3, q * dt ** 2 / 2], [q * dt ** 2 / 2, q * dt]];
+    const est: number[] = [];
+    for (let k = 0; k < N; k++) {
+      // predict
+      const xp = [x[0] + dt * x[1], x[1]];
+      const Pp = [
+        [P[0][0] + dt * (P[1][0] + P[0][1]) + dt * dt * P[1][1] + Q[0][0], P[0][1] + dt * P[1][1] + Q[0][1]],
+        [P[1][0] + dt * P[1][1] + Q[1][0], P[1][1] + Q[1][1]],
+      ];
+      // update (H=[1,0])
+      const S = Pp[0][0] + R;
+      const K = [Pp[0][0] / S, Pp[1][0] / S];
+      const y = meas[k] - xp[0];
+      x = [xp[0] + K[0] * y, xp[1] + K[1] * y];
+      P = [
+        [(1 - K[0]) * Pp[0][0], (1 - K[0]) * Pp[0][1]],
+        [Pp[1][0] - K[1] * Pp[0][0], Pp[1][1] - K[1] * Pp[0][1]],
+      ];
+      est.push(x[0]);
+    }
+    return est;
+  }
+
+  function draw() {
+    const R = Math.pow(10, +Rsl.value), q = Math.pow(10, +Qsl.value);
+    document.getElementById('kf-R-v')!.textContent = R.toExponential(1);
+    document.getElementById('kf-Q-v')!.textContent = q.toExponential(1);
+    const est = runKF(R, q);
+
+    const all = truth.concat(meas, est);
+    const lo = Math.min(...all), hi = Math.max(...all), pad = 16;
+    const X = (k: number) => pad + (k / (N - 1)) * (cv.width - 2 * pad);
+    const Y = (v: number) => pad + (1 - (v - lo) / (hi - lo)) * (cv.height - 2 * pad);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    // measurements
+    ctx.fillStyle = '#cbd5e1';
+    meas.forEach((m, k) => { ctx.beginPath(); ctx.arc(X(k), Y(m), 1.8, 0, 7); ctx.fill(); });
+    const line = (arr: number[], color: string, w: number) => {
+      ctx.strokeStyle = color; ctx.lineWidth = w; ctx.beginPath();
+      arr.forEach((v, k) => (k ? ctx.lineTo(X(k), Y(v)) : ctx.moveTo(X(k), Y(v)))); ctx.stroke();
+    };
+    line(truth, '#0f172a', 2);
+    line(est, '#0e7490', 2);
+
+    const rmsMeas = Math.sqrt(meas.reduce((s, m, k) => s + (m - truth[k]) ** 2, 0) / N);
+    const rmsEst = Math.sqrt(est.reduce((s, e, k) => s + (e - truth[k]) ** 2, 0) / N);
+    readout.innerHTML = `RMS error — raw measurements: <b>${rmsMeas.toFixed(2)}</b> · Kalman estimate: <b>${rmsEst.toFixed(2)}</b> ` +
+      `(${rmsEst < rmsMeas ? 'filter reduces error' : 'mistuned: worse than raw'})`;
+  }
+
+  [Rsl, Qsl].forEach((e) => e.addEventListener('input', draw));
+  document.getElementById('kf-reseed')!.addEventListener('click', () => { genData(); draw(); });
+  genData(); draw();
+</script>
