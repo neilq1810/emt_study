@@ -10,7 +10,7 @@ change.
 |-------|----------------------------------------------------------|---------------|
 | 1     | Repository structure + master outline + roadmap          | ✅ Done        |
 | 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
-| 3     | Chapter-by-chapter content (Parts I–XIV)                 | 🟡 In progress |
+| 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
 | 4     | Figures & visualizations                                 | ⬜ Not started |
 | 5     | Simulations                                              | ⬜ Not started |
 | 6     | Interactive website (digital textbook + tools)           | ⬜ Not started |
@@ -32,8 +32,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 
 ### Part I — Foundations
 - [x] Ch. 1 History of electromagnetic tracking — **DRAFT**
-- [ ] Ch. 2 Patent genealogy & academic genealogy
-- [ ] Ch. 3 Technology timeline & trees
+- [x] Ch. 2 Patent genealogy & academic genealogy — **DRAFT**
+- [x] Ch. 3 Technology timeline & trees — **DRAFT**
+
+> **ALL prose chapters (Parts I–XIV, Ch. 1–31) now drafted.** Next phases:
+> figures (4), simulations (5), website (6), cross-ref (7), technical review (8),
+> final (9). Patent refs added: Kuipers 1975, Blood 1990, Ben-Haim 1995.
 
 ### Part II — Electromagnetic Theory
 - [x] Ch. 4 Maxwell's equations, quasistatics & the magnetic dipole — **DRAFT**
