@@ -1,0 +1,68 @@
+---
+// Vendor-ecosystem map (Ch. 28). Server-rendered SVG node-link graph of vendors
+// and acquisitions; client script shows details on click.
+import { vendors } from '../data/ecosystem';
+
+const COLORS: Record<string, string> = {
+  ac: '#ca8a04', 'pulsed-dc': '#0e7490', 'medical-ep': '#b91c1c',
+  'medical-nav': '#2563eb', holding: '#64748b',
+};
+const W = 160, H = 46, COLW = 230, ROWH = 74, OX = 20, OY = 20;
+const pos = (n: { col: number; row: number }) => ({ x: OX + n.col * COLW, y: OY + n.row * ROWH });
+const byId = Object.fromEntries(vendors.nodes.map((n) => [n.id, n]));
+const width = OX + 3 * COLW + 40;
+const height = OY + 6 * ROWH + 20;
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-2 flex flex-wrap gap-3 text-xs">
+    {Object.entries(COLORS).map(([k, c]) => (
+      <span><span style={`color:${c}`}>■</span> {k}</span>
+    ))}
+  </div>
+  <div class="overflow-x-auto">
+    <svg viewBox={`0 0 ${width} ${height}`} class="w-full" style={`min-width:${width}px;max-width:760px`}>
+      <defs>
+        <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"></path>
+        </marker>
+      </defs>
+      {vendors.edges.map((e) => {
+        const a = pos(byId[e.from]), b = pos(byId[e.to]);
+        const x1 = a.x + W / 2, y1 = a.y + H / 2, x2 = b.x + W / 2, y2 = b.y + H / 2;
+        const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+        return (
+          <g>
+            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow)"></line>
+            <text x={mx} y={my - 3} font-size="9" fill="#64748b" text-anchor="middle">{e.label}</text>
+          </g>
+        );
+      })}
+      {vendors.nodes.map((n) => {
+        const p = pos(n);
+        return (
+          <g class="vendor-node" data-id={n.id} style="cursor:pointer">
+            <rect x={p.x} y={p.y} width={W} height={H} rx="6" fill="#fff" stroke={COLORS[n.kind]} stroke-width="2"></rect>
+            <text x={p.x + W / 2} y={p.y + H / 2 + 4} font-size="12" font-weight="600" fill="#0f172a" text-anchor="middle">{n.label}</text>
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+  <div id="ve-detail" class="mt-2 min-h-[3rem] rounded bg-slate-50 p-3 text-sm">click a vendor for details</div>
+  <p class="mt-1 text-xs text-slate-400">
+    Arrows = acquisitions (acquirer → target). Facts from Ch. 28 (vendor/trade-press
+    sources; dates tagged conf: med pending second-source corroboration).
+  </p>
+  <script type="application/json" id="ve-data" set:html={JSON.stringify(Object.fromEntries(vendors.nodes.map((n) => [n.id, { label: n.label, kind: n.kind, note: n.note }])))}></script>
+</div>
+
+<script>
+  const data = JSON.parse(document.getElementById('ve-data')!.textContent!) as Record<string, { label: string; kind: string; note: string }>;
+  const detail = document.getElementById('ve-detail')!;
+  document.querySelectorAll('.vendor-node').forEach((el) => {
+    el.addEventListener('click', () => {
+      const d = data[(el as HTMLElement).dataset.id!];
+      detail.innerHTML = `<b>${d.label}</b> <span class="text-xs uppercase text-slate-400">[${d.kind}]</span><br><span class="text-slate-600">${d.note}</span>`;
+    });
+  });
+</script>

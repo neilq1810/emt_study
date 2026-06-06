@@ -1,0 +1,81 @@
+---
+// Patent / technology timeline explorer (Ch. 2/3). Events are passed in from the
+// page (built from the bibliography + curated milestones) and embedded as JSON.
+interface Ev { year: number; title: string; kind: string; note: string; url?: string; ref?: string }
+const { events } = Astro.props as { events: Ev[] };
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div id="tl-filters" class="mb-3 flex flex-wrap gap-3 text-xs"></div>
+  <canvas id="tl-canvas" width="760" height="300" class="w-full cursor-pointer rounded"></canvas>
+  <div id="tl-detail" class="mt-2 min-h-[3rem] rounded bg-slate-50 p-3 text-sm">click a marker for details</div>
+  <p class="mt-1 text-xs text-slate-400">
+    Each marker traces to <code>citations/bibliography.json</code>; click to open
+    the source. Patents/papers from the bibliography; corporate milestones from
+    Ch. 28 (trade-press sourced).
+  </p>
+  <script type="application/json" id="tl-data" set:html={JSON.stringify(events)}></script>
+</div>
+
+<script>
+  const events = JSON.parse(document.getElementById('tl-data')!.textContent!) as
+    { year: number; title: string; kind: string; note: string; url?: string }[];
+  const cv = document.getElementById('tl-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const detail = document.getElementById('tl-detail')!;
+  const filters = document.getElementById('tl-filters')!;
+
+  const KINDS: Record<string, string> = {
+    patent: '#b91c1c', paper: '#0e7490', book: '#7c3aed', standard: '#0f766e',
+    company: '#ca8a04', product: '#2563eb', acquisition: '#db2777',
+  };
+  const active = new Set(Object.keys(KINDS));
+  const minY = Math.min(...events.map((e) => e.year)) - 2;
+  const maxY = Math.max(...events.map((e) => e.year)) + 2;
+  let hit: { x: number; y: number; e: any }[] = [];
+
+  const padL = 20, padR = 20, padB = 28;
+  const X = (yr: number) => padL + ((yr - minY) / (maxY - minY)) * (cv.width - padL - padR);
+
+  function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    const lanes = Object.keys(KINDS).filter((k) => active.has(k));
+    const laneH = (cv.height - padB) / Math.max(lanes.length, 1);
+    // decade gridlines
+    ctx.strokeStyle = '#e2e8f0'; ctx.fillStyle = '#94a3b8'; ctx.font = '10px system-ui';
+    for (let y = Math.ceil(minY / 10) * 10; y <= maxY; y += 10) {
+      ctx.beginPath(); ctx.moveTo(X(y), 0); ctx.lineTo(X(y), cv.height - padB); ctx.stroke();
+      ctx.fillText(String(y), X(y) - 12, cv.height - 10);
+    }
+    hit = [];
+    lanes.forEach((k, li) => {
+      const yMid = li * laneH + laneH / 2;
+      ctx.fillStyle = '#475569'; ctx.font = '11px system-ui'; ctx.fillText(k, 4, yMid - laneH / 2 + 12);
+      events.filter((e) => e.kind === k).forEach((e) => {
+        const x = X(e.year);
+        ctx.fillStyle = KINDS[k]; ctx.beginPath(); ctx.arc(x, yMid, 6, 0, 7); ctx.fill();
+        ctx.fillStyle = '#334155'; ctx.font = '10px system-ui';
+        ctx.fillText(String(e.year), x - 10, yMid + 18);
+        hit.push({ x, y: yMid, e });
+      });
+    });
+  }
+
+  cv.addEventListener('click', (ev) => {
+    const r = cv.getBoundingClientRect();
+    const mx = ((ev.clientX - r.left) / r.width) * cv.width, my = ((ev.clientY - r.top) / r.height) * cv.height;
+    let best: any = null, bd = 1e9;
+    for (const h of hit) { const d = Math.hypot(h.x - mx, h.y - my); if (d < 14 && d < bd) { bd = d; best = h.e; } }
+    if (best) detail.innerHTML = `<b>${best.year} — ${best.title}</b> <span class="text-xs uppercase text-slate-400">[${best.kind}]</span><br><span class="text-slate-600">${best.note ?? ''}</span>` +
+      (best.url ? `<br><a class="text-accent" href="${best.url}" target="_blank" rel="noopener">source ↗</a>` : '');
+  });
+
+  Object.keys(KINDS).forEach((k) => {
+    const id = `f-${k}`;
+    filters.insertAdjacentHTML('beforeend',
+      `<label class="flex items-center gap-1"><input type="checkbox" id="${id}" checked> <span style="color:${KINDS[k]}">●</span>${k}</label>`);
+    setTimeout(() => document.getElementById(id)!.addEventListener('change', (e) => {
+      (e.target as HTMLInputElement).checked ? active.add(k) : active.delete(k); draw();
+    }), 0);
+  });
+  draw();
+</script>

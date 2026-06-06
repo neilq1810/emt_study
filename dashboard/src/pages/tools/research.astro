@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import { loadBib, authorsShort } from '../../lib/bib';
+import { themeMap } from '../../data/ecosystem';
+import ResearchLandscape from '../../components/ResearchLandscape.astro';
+
+const toc = buildToc(await getCollection('book'));
+const { byId } = loadBib();
+
+const themes = Object.entries(themeMap).map(([name, def]) => ({
+  name,
+  desc: def.desc,
+  works: def.keys
+    .map((k) => byId[k])
+    .filter(Boolean)
+    .map((e) => ({
+      key: e.id, title: e.title, authors: authorsShort(e), year: e.year, venue: e.venue, url: e.url, relevance: e.relevance,
+    })),
+}));
+---
+<BookLayout title="Research-landscape explorer" toc={toc}>
+  <h1>Research-landscape explorer</h1>
+  <p>
+    The academic genealogy (Ch. 2 §2.4) and frontiers (Ch. 30), organized into
+    research themes. Every entry is a verified reference from the bibliography —
+    filter by theme or search, and click through to the source.
+  </p>
+  <ResearchLandscape themes={themes} />
+</BookLayout>
