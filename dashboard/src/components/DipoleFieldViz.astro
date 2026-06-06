@@ -1,0 +1,106 @@
+---
+// Interactive dipole-field visualizer (Ch. 4). Canvas heatmap of log|B| in the
+// x–z plane with a tiltable dipole and a hover readout.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-4 text-sm">
+    <label class="flex items-center gap-2">
+      Dipole tilt (from z): <input id="df-tilt" type="range" min="0" max="180" value="0" />
+      <span id="df-tilt-val" class="tabular-nums">0°</span>
+    </label>
+    <span id="df-readout" class="text-slate-500">hover the field to read |B|</span>
+  </div>
+  <canvas id="df-canvas" width="420" height="420" class="w-full max-w-[460px] cursor-crosshair rounded"></canvas>
+  <p class="mt-2 text-xs text-slate-500">
+    Colour = log₁₀|B| from the point-dipole field (eq. 4.1); the 1/r³ falloff and
+    the 2:1 axis/equator anisotropy are visible. Moment magnitude 1 A·m².
+  </p>
+</div>
+
+<script>
+  import { dipoleField, bMag, type Vec3 } from '../lib/physics';
+
+  const cv = document.getElementById('df-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const tilt = document.getElementById('df-tilt') as HTMLInputElement;
+  const tiltVal = document.getElementById('df-tilt-val')!;
+  const readout = document.getElementById('df-readout')!;
+
+  const N = 84;
+  const half = 0.4; // domain [-0.4, 0.4] m
+  const cell = cv.width / N;
+
+  function colormap(t: number): string {
+    t = Math.max(0, Math.min(1, t));
+    // dark-blue -> teal -> yellow
+    const stops = [
+      [12, 24, 70],
+      [14, 116, 144],
+      [250, 220, 60],
+    ];
+    const seg = t < 0.5 ? 0 : 1;
+    const f = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
+    const a = stops[seg], b = stops[seg + 1];
+    const r = Math.round(a[0] + (b[0] - a[0]) * f);
+    const g = Math.round(a[1] + (b[1] - a[1]) * f);
+    const bl = Math.round(a[2] + (b[2] - a[2]) * f);
+    return `rgb(${r},${g},${bl})`;
+  }
+
+  function moment(): Vec3 {
+    const th = (Number(tilt.value) * Math.PI) / 180;
+    return [Math.sin(th), 0, Math.cos(th)];
+  }
+
+  function toWorld(px: number, py: number): Vec3 {
+    const x = (px / cv.width) * 2 * half - half;
+    const z = half - (py / cv.height) * 2 * half;
+    return [x, 0, z];
+  }
+
+  function draw() {
+    const m = moment();
+    let lo = Infinity, hi = -Infinity;
+    const vals: number[] = [];
+    for (let j = 0; j < N; j++)
+      for (let i = 0; i < N; i++) {
+        const w = toWorld((i + 0.5) * cell, (j + 0.5) * cell);
+        const r = Math.hypot(w[0], w[2]);
+        let v: number;
+        if (r < 0.04) v = NaN;
+        else v = Math.log10(bMag(dipoleField(m, w)));
+        vals.push(v);
+        if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+      }
+    for (let j = 0; j < N; j++)
+      for (let i = 0; i < N; i++) {
+        const v = vals[j * N + i];
+        ctx.fillStyle = isFinite(v) ? colormap((v - lo) / (hi - lo)) : '#1e293b';
+        ctx.fillRect(i * cell, j * cell, cell + 1, cell + 1);
+      }
+    // dipole arrow at centre
+    const cx = cv.width / 2, cy = cv.height / 2, L = 26;
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cx - m[0] * L, cy + m[2] * L);
+    ctx.lineTo(cx + m[0] * L, cy - m[2] * L);
+    ctx.stroke();
+  }
+
+  tilt.addEventListener('input', () => {
+    tiltVal.textContent = tilt.value + '°';
+    draw();
+  });
+  cv.addEventListener('mousemove', (e) => {
+    const rect = cv.getBoundingClientRect();
+    const w = toWorld(
+      ((e.clientX - rect.left) / rect.width) * cv.width,
+      ((e.clientY - rect.top) / rect.height) * cv.height,
+    );
+    const r = Math.hypot(w[0], w[2]);
+    if (r < 0.04) { readout.textContent = 'too close to source'; return; }
+    const B = bMag(dipoleField(moment(), w));
+    readout.textContent = `r=${(r * 100).toFixed(1)} cm · |B|=${(B * 1e6).toExponential(2)} µT`;
+  });
+  draw();
+</script>

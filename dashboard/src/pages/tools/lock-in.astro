@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import LockInSim from '../../components/LockInSim.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="Lock-in simulator" toc={toc}>
+  <h1>Lock-in / synchronous-detection simulator</h1>
+  <p>
+    Synchronous detection (Ch. 20) is what lets EMT recover microtesla signals
+    from beneath far larger interference. Bury the signal in noise and watch the
+    lock-in still recover its amplitude — with RMS error falling as 1/√T as the
+    integration time grows.
+  </p>
+  <LockInSim />
+</BookLayout>

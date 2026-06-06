@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import VendorEcosystem from '../../components/VendorEcosystem.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Vendor-ecosystem map" toc={toc}>
+  <h1>Vendor-ecosystem map</h1>
+  <p>
+    The commercial landscape (Ch. 28): the AC (Polhemus) and pulsed-DC (Ascension)
+    lineages, the medical-EP cluster (Biosense/CARTO, EnSite, Rhythmia), navigation
+    bronchoscopy (superDimension), and the acquisition chains that consolidated
+    them. Click a vendor for details.
+  </p>
+  <VendorEcosystem />
+</BookLayout>

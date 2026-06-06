@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import DipoleFieldViz from '../../components/DipoleFieldViz.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="Dipole field visualizer" toc={toc}>
+  <h1>Dipole field visualizer</h1>
+  <p>
+    The magnetic dipole field (Ch. 4, eq. 4.1) is the workhorse of EMT. Tilt the
+    dipole and hover to read |B|; note the steep 1/r³ falloff and the factor-of-2
+    stronger field on the dipole axis than on its equator.
+  </p>
+  <DipoleFieldViz />
+</BookLayout>

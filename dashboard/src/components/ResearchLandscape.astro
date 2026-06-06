@@ -1,0 +1,67 @@
+---
+// Research-landscape explorer (Ch. 2 §2.4 / Ch. 30). Theme → works, joined from
+// the bibliography in the page. Filter by theme and search; cards link to source.
+interface Work { key: string; title: string; authors: string; year?: number; venue?: string; url?: string; relevance?: number }
+interface Theme { name: string; desc: string; works: Work[] }
+const { themes } = Astro.props as { themes: Theme[] };
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-2 text-xs">
+    <button class="rl-filter rounded border px-2 py-1" data-theme="*">All</button>
+    {themes.map((t) => <button class="rl-filter rounded border px-2 py-1" data-theme={t.name}>{t.name}</button>)}
+    <input id="rl-search" placeholder="search…" class="ml-auto rounded border px-2 py-1" />
+  </div>
+  <div id="rl-grid" class="space-y-5">
+    {themes.map((t) => (
+      <section class="rl-theme" data-theme={t.name}>
+        <h3 class="text-sm font-semibold text-accent">{t.name}</h3>
+        <p class="mb-2 text-xs text-slate-500">{t.desc}</p>
+        <div class="grid gap-2 sm:grid-cols-2">
+          {t.works.map((w) => (
+            <a
+              class="rl-card block rounded border border-slate-200 p-2 text-sm hover:border-accent"
+              href={w.url ?? '#'} target="_blank" rel="noopener"
+              data-theme={t.name}
+              data-text={`${w.title} ${w.authors} ${w.venue ?? ''}`.toLowerCase()}
+            >
+              <div class="font-medium">{w.title}</div>
+              <div class="text-xs text-slate-500">{w.authors}{w.year ? ` · ${w.year}` : ''}{w.venue ? ` · ${w.venue}` : ''}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+  <p id="rl-count" class="mt-2 text-xs text-slate-400"></p>
+</div>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.rl-filter')];
+  const cards = [...document.querySelectorAll<HTMLAnchorElement>('.rl-card')];
+  const themes = [...document.querySelectorAll<HTMLElement>('.rl-theme')];
+  const search = document.getElementById('rl-search') as HTMLInputElement;
+  const count = document.getElementById('rl-count')!;
+  let activeTheme = '*';
+
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach((c) => {
+      const okT = activeTheme === '*' || c.dataset.theme === activeTheme;
+      const okQ = !q || c.dataset.text!.includes(q);
+      const vis = okT && okQ;
+      c.style.display = vis ? '' : 'none';
+      if (vis) shown++;
+    });
+    themes.forEach((s) => {
+      const any = [...s.querySelectorAll<HTMLElement>('.rl-card')].some((c) => c.style.display !== 'none');
+      s.style.display = any ? '' : 'none';
+    });
+    count.textContent = `${shown} works shown`;
+    buttons.forEach((b) => b.classList.toggle('bg-accent', b.dataset.theme === activeTheme));
+    buttons.forEach((b) => b.classList.toggle('text-white', b.dataset.theme === activeTheme));
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => { activeTheme = b.dataset.theme!; apply(); }));
+  search.addEventListener('input', apply);
+  apply();
+</script>

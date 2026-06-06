@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import KalmanExplorer from '../../components/KalmanExplorer.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Kalman-filter explorer" toc={toc}>
+  <h1>Kalman-filter explorer</h1>
+  <p>
+    A recursive estimator (Ch. 21) fuses a motion model with noisy measurements,
+    blending them by their relative uncertainties. Tune the filter's assumed
+    measurement noise (R) and process noise (Q) and watch the smoothing/lag trade
+    — and how a mistuned filter can do worse than the raw measurements.
+  </p>
+  <KalmanExplorer />
+</BookLayout>

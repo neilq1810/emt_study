@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import CoilGeometry from '../../components/CoilGeometry.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Coil-geometry explorer" toc={toc}>
+  <h1>Coil-geometry explorer</h1>
+  <p>
+    A coil's magnetic moment (m = NIπa²) sets the field it projects, and the
+    dipole approximation is valid only beyond ~5–10 coil radii (Ch. 4 §4.6).
+    Adjust radius, turns, current, and observation distance to see the moment,
+    the exact on-axis field, and the dipole-approximation error.
+  </p>
+  <CoilGeometry />
+</BookLayout>

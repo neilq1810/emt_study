@@ -1,0 +1,81 @@
+---
+// Interactive CRLB explorer (Ch. 24). Plots on-axis position uncertainty vs
+// range using the law fitted to the full Fisher-information simulation.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">
+      σ_B [nT]: <input id="cr-sb" type="range" min="0.1" max="10" step="0.1" value="1" />
+      <span id="cr-sb-val" class="tabular-nums">1.0</span>
+    </label>
+    <label class="flex items-center gap-2">
+      moment [A·m²]: <input id="cr-m" type="range" min="0.5" max="10" step="0.5" value="1" />
+      <span id="cr-m-val" class="tabular-nums">1.0</span>
+    </label>
+  </div>
+  <canvas id="cr-canvas" width="520" height="320" class="w-full max-w-[560px] rounded"></canvas>
+  <p id="cr-readout" class="mt-2 text-xs text-slate-500"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    On-axis CRLB; σ ∝ z⁴ (1/r³ field × position-sensitivity), fitted to and
+    matching <code>simulations/run_all.py</code>.
+  </p>
+</div>
+
+<script>
+  import { crlbPositionSigma } from '../lib/physics';
+
+  const cv = document.getElementById('cr-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const sb = document.getElementById('cr-sb') as HTMLInputElement;
+  const mm = document.getElementById('cr-m') as HTMLInputElement;
+  const sbVal = document.getElementById('cr-sb-val')!;
+  const mVal = document.getElementById('cr-m-val')!;
+  const readout = document.getElementById('cr-readout')!;
+
+  const padL = 56, padB = 36, padT = 14, padR = 14;
+  const zMin = 0.1, zMax = 0.6;
+  const yMin = -3, yMax = 1; // log10(mm): 0.001 .. 10 mm
+
+  function px(z: number) {
+    return padL + ((z - zMin) / (zMax - zMin)) * (cv.width - padL - padR);
+  }
+  function py(logmm: number) {
+    return padT + (1 - (logmm - yMin) / (yMax - yMin)) * (cv.height - padT - padB);
+  }
+
+  function draw() {
+    const sigmaB = Number(sb.value) * 1e-9;
+    const moment = Number(mm.value);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+
+    // gridlines + y labels (log decades)
+    ctx.strokeStyle = '#e2e8f0'; ctx.fillStyle = '#64748b'; ctx.font = '11px system-ui';
+    for (let d = yMin; d <= yMax; d++) {
+      const y = py(d);
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(cv.width - padR, y); ctx.stroke();
+      ctx.fillText(`${Math.pow(10, d)} mm`.replace('0.001', '1 µm'), 4, y + 3);
+    }
+    for (let z = 0.1; z <= 0.6001; z += 0.1) {
+      ctx.fillText(z.toFixed(1), px(z) - 6, cv.height - 12);
+    }
+    ctx.fillText('range z [m]', cv.width / 2 - 24, cv.height - 1);
+
+    // curve
+    ctx.strokeStyle = '#0e7490'; ctx.lineWidth = 2.5; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const z = zMin + (i / 200) * (zMax - zMin);
+      const mmv = crlbPositionSigma(z, sigmaB, moment) * 1e3;
+      const Y = py(Math.log10(Math.max(mmv, 1e-4)));
+      i === 0 ? ctx.moveTo(px(z), Y) : ctx.lineTo(px(z), Y);
+    }
+    ctx.stroke();
+
+    const at = (z: number) => (crlbPositionSigma(z, sigmaB, moment) * 1e3).toFixed(3);
+    readout.textContent = `σ_pos: ${at(0.2)} mm @0.2 m · ${at(0.3)} mm @0.3 m · ${at(0.5)} mm @0.5 m`;
+  }
+
+  for (const [el, span, fmt] of [[sb, sbVal, (v: string) => Number(v).toFixed(1)], [mm, mVal, (v: string) => Number(v).toFixed(1)]] as const) {
+    el.addEventListener('input', () => { span.textContent = fmt(el.value); draw(); });
+  }
+  draw();
+</script>

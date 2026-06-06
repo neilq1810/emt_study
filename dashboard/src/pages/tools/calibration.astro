@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import CalibrationWorkflow from '../../components/CalibrationWorkflow.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Calibration-workflow explorer" toc={toc}>
+  <h1>Calibration-workflow explorer</h1>
+  <p>
+    Static distortion is repeatable, so it can be mapped and corrected (Ch. 26–27).
+    A polynomial field map fitted at calibration points removes most of the raw
+    error — but too high a degree with too few points over-fits and worsens the
+    result between samples. Explore the trade.
+  </p>
+  <CalibrationWorkflow />
+</BookLayout>

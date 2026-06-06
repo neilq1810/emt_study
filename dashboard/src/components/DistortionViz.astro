@@ -1,0 +1,81 @@
+---
+// Distortion / eddy-current field visualizer (Ch. 6): a nearby conductor,
+// modelled as an induced (image) dipole, perturbs the primary field. Heatmap
+// shows the resulting position-distortion percentage across the plane.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">distorter distance [cm]:
+      <input id="dz-d" type="range" min="8" max="45" value="20" /><span id="dz-d-v" class="tabular-nums">20</span></label>
+    <label class="flex items-center gap-2">conductor size [cm]:
+      <input id="dz-b" type="range" min="1" max="9" value="4" /><span id="dz-b-v" class="tabular-nums">4</span></label>
+    <label class="flex items-center gap-2">conductivity factor:
+      <input id="dz-k" type="range" min="0" max="100" value="60" /><span id="dz-k-v" class="tabular-nums">0.6</span></label>
+  </div>
+  <canvas id="dz-canvas" width="420" height="420" class="w-full max-w-[460px] rounded"></canvas>
+  <p id="dz-readout" class="mt-2 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    Colour = |ΔB|/|B₀| (field distortion %). Conductor modelled as a
+    perfect-conductor sphere induced dipole m_ind = −(2πb³/μ₀)·factor·B₀ (image
+    model, Ch. 6 §6.5; illustrative). White ✕ marks the conductor.
+  </p>
+</div>
+
+<script>
+  import { dipoleField, bMag, MU0, type Vec3 } from '../lib/physics';
+
+  const dD = document.getElementById('dz-d') as HTMLInputElement;
+  const bB = document.getElementById('dz-b') as HTMLInputElement;
+  const kK = document.getElementById('dz-k') as HTMLInputElement;
+  const cv = document.getElementById('dz-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const readout = document.getElementById('dz-readout')!;
+
+  const N = 90, half = 0.5, cell = cv.width / N;
+  const mPrim: Vec3 = [0, 0, 1];
+
+  function cmap(t: number): string {
+    t = Math.max(0, Math.min(1, t));
+    const r = Math.round(255 * Math.min(1, t * 2));
+    const g = Math.round(255 * (1 - Math.abs(t - 0.5) * 2) * 0.7);
+    const b = Math.round(255 * Math.max(0, 1 - t * 2));
+    return `rgb(${r},${g},${b})`;
+  }
+  const sub = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+
+  function draw() {
+    const dist = +dD.value / 100, b = +bB.value / 100, factor = +kK.value / 100;
+    document.getElementById('dz-d-v')!.textContent = dD.value;
+    document.getElementById('dz-b-v')!.textContent = bB.value;
+    document.getElementById('dz-k-v')!.textContent = factor.toFixed(2);
+    const d: Vec3 = [dist, 0, 0];
+    const Bd = dipoleField(mPrim, d);
+    const pol = -(2 * Math.PI * b * b * b) / MU0 * factor;
+    const mInd: Vec3 = [pol * Bd[0], pol * Bd[1], pol * Bd[2]];
+
+    let maxPct = 0;
+    for (let j = 0; j < N; j++)
+      for (let i = 0; i < N; i++) {
+        const x = ((i + 0.5) / N) * 2 * half - half;
+        const z = half - ((j + 0.5) / N) * 2 * half;
+        const r: Vec3 = [x, 0, z];
+        const rr = Math.hypot(x, z), rd = Math.hypot(x - dist, z);
+        if (rr < 0.04 || rd < b) { ctx.fillStyle = '#1e293b'; ctx.fillRect(i * cell, j * cell, cell + 1, cell + 1); continue; }
+        const B0 = dipoleField(mPrim, r);
+        const Bi = dipoleField(mInd, sub(r, d));
+        const pct = (bMag(Bi) / bMag(B0)) * 100;
+        maxPct = Math.max(maxPct, pct);
+        ctx.fillStyle = cmap(pct / 30);
+        ctx.fillRect(i * cell, j * cell, cell + 1, cell + 1);
+      }
+    // markers
+    const toPx = (x: number, z: number) => [((x + half) / (2 * half)) * cv.width, ((half - z) / (2 * half)) * cv.height];
+    const [gx, gy] = toPx(0, 0); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(gx, gy, 4, 0, 7); ctx.fill();
+    const [dx, dy] = toPx(dist, 0); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(dx - 6, dy - 6); ctx.lineTo(dx + 6, dy + 6); ctx.moveTo(dx + 6, dy - 6); ctx.lineTo(dx - 6, dy + 6); ctx.stroke();
+    readout.innerHTML = `Peak distortion in plane: <b>${maxPct.toFixed(1)}%</b> of |B₀| ` +
+      `(grows steeply as the conductor nears the working volume — Ch. 6 §6.6).`;
+  }
+  [dD, bB, kK].forEach((e) => e.addEventListener('input', draw));
+  draw();
+</script>

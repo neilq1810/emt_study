@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import WorkingVolume from '../../components/WorkingVolume.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Working-volume optimizer" toc={toc}>
+  <h1>Working-volume optimizer</h1>
+  <p>
+    Given a generator moment, a measurement-noise floor, and an accuracy target,
+    how large is the usable volume? Because position uncertainty grows as z⁴
+    (Ch. 24), the usable radius extends only as the 4th root of moment — a sharp
+    lesson for system sizing (Ch. 9, Ch. 31).
+  </p>
+  <WorkingVolume />
+</BookLayout>

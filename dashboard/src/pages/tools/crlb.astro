@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import CrlbExplorer from '../../components/CrlbExplorer.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="CRLB / accuracy explorer" toc={toc}>
+  <h1>CRLB / accuracy explorer</h1>
+  <p>
+    The Cramér–Rao lower bound (Ch. 24, eq. 24.1) predicts the best achievable
+    position accuracy for a given geometry and measurement noise. On axis it grows
+    as the fourth power of range — the sharpest statement of the 1/r³ conditioning
+    penalty. Adjust the field-referred noise σ_B and the generator moment.
+  </p>
+  <CrlbExplorer />
+</BookLayout>

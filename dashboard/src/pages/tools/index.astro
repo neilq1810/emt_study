@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+
+const toc = buildToc(await getCollection('book'));
+const base = import.meta.env.BASE_URL;
+const home = base.endsWith('/') ? base : base + '/';
+
+const tools = [
+  ['dipole', 'Dipole field visualizer', 'Ch. 4 — explore the 1/r³ near-field and its 2:1 axis/equator anisotropy.'],
+  ['coil-geometry', 'Coil-geometry explorer', 'Ch. 4/9 — moment, exact loop field vs dipole approximation, validity.'],
+  ['dof', '5-DOF vs 6-DOF demonstration', 'Ch. 13 — the roll null of a single coil, and how a 2nd coil resolves it.'],
+  ['distortion', 'Distortion / eddy visualizer', 'Ch. 6 — induced-dipole field perturbation from a nearby conductor.'],
+  ['lock-in', 'Lock-in simulator', 'Ch. 20 — recover a tone buried in noise; watch error fall as 1/√T.'],
+  ['noise-budget', 'Noise-budget calculator', 'Ch. 15–16 — coil Johnson noise, induced EMF, and amplitude SNR.'],
+  ['adc', 'ADC performance explorer', 'Ch. 18 — quantization SNR, oversampling + noise shaping, ENOB.'],
+  ['dsp-pipeline', 'DSP-pipeline visualizer', 'Ch. 11 — signal from FDM excitation → lock-in → coupling matrix → pose.'],
+  ['solver', 'Position-solver visualizer', 'Ch. 23 — click the cost surface; watch Levenberg–Marquardt converge.'],
+  ['kalman', 'Kalman-filter explorer', 'Ch. 21 — tune Q/R; see the smoothing vs lag trade on a tracked target.'],
+  ['calibration', 'Calibration-workflow explorer', 'Ch. 26–27 — polynomial field-map correction and over-fitting.'],
+  ['crlb', 'CRLB / accuracy explorer', 'Ch. 24 — how position uncertainty grows as z⁴ with range, and with noise/moment.'],
+  ['error-propagation', 'Error-propagation simulator', 'Ch. 11/24 — Jacobian conditioning amplifies measurement error into pose error.'],
+  ['monte-carlo', 'Monte-Carlo uncertainty', 'Ch. 24/25 — solver scatter vs the theoretical CRLB error ellipse.'],
+  ['working-volume', 'Working-volume optimizer', 'Ch. 9/24 — usable range for an accuracy target; the z⁴ penalty.'],
+  ['patents', 'Patent / technology timeline', 'Ch. 2–3 — foundational patents, milestones, and capability lineage.'],
+  ['vendors', 'Vendor-ecosystem map', 'Ch. 28 — vendors, technologies, and the acquisition chains.'],
+  ['research', 'Research-landscape explorer', 'Ch. 2/30 — the academic genealogy by theme, from the bibliography.'],
+];
+---
+
+<BookLayout title="Interactive tools" toc={toc}>
+  <h1>Interactive tools</h1>
+  <p class="lead">
+    Client-side modules backed by the validated <code>simulations/emtrack</code>
+    physics (their results agree with the Python suite). More of the 20 modules
+    from the project brief will be added here.
+  </p>
+  <ul>
+    {tools.map(([slug, name, desc]) => (
+      <li><a href={`${home}tools/${slug}`}><strong>{name}</strong></a> — {desc}</li>
+    ))}
+  </ul>
+</BookLayout>

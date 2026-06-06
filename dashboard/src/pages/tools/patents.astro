@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import { loadBib, authorsShort } from '../../lib/bib';
+import { extraMilestones } from '../../data/ecosystem';
+import PatentTimeline from '../../components/PatentTimeline.astro';
+
+const toc = buildToc(await getCollection('book'));
+const { entries, byId } = loadBib();
+
+const KIND: Record<string, string> = { patent: 'patent', article: 'paper', book: 'book', standard: 'standard' };
+const fromBib = entries
+  .filter((e) => e.year && KIND[e.type ?? ''])
+  .map((e) => ({
+    year: e.year!,
+    title: e.title.length > 64 ? e.title.slice(0, 61) + '…' : e.title,
+    kind: KIND[e.type!],
+    note: `${authorsShort(e)}${e.venue ? ' · ' + e.venue : ''}`,
+    url: e.url,
+  }));
+const fromMilestones = extraMilestones.map((m) => ({
+  year: m.year, title: m.label, kind: m.kind, note: byId[m.ref]?.title ?? '', url: byId[m.ref]?.url,
+}));
+const events = [...fromBib, ...fromMilestones].sort((a, b) => a.year - b.year);
+---
+<BookLayout title="Patent & technology timeline" toc={toc}>
+  <h1>Patent &amp; technology timeline explorer</h1>
+  <p>
+    The IP and capability lineage (Ch. 2–3): foundational patents (Kuipers 1975 →
+    Polhemus/AC; Blood 1990 → Ascension/pulsed-DC; Ben-Haim 1995 → Biosense/CARTO),
+    the 1979 Raab formalization, the standardized-assessment and clinical
+    milestones, and corporate events. Filter by kind and click for sources.
+  </p>
+  <PatentTimeline events={events} />
+</BookLayout>

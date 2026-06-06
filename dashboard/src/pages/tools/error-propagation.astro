@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import ErrorPropagation from '../../components/ErrorPropagation.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Error-propagation simulator" toc={toc}>
+  <h1>Error-propagation simulator</h1>
+  <p>
+    A 1% measurement error is <em>not</em> a 1% pose error. Errors propagate
+    through the forward-model Jacobian and are amplified by its conditioning
+    (~1/σ_min) — which worsens steeply with range (Ch. 11 §11.5, Ch. 24 §24.2).
+    See the condition number climb and the worst-case position error it implies.
+  </p>
+  <ErrorPropagation />
+</BookLayout>

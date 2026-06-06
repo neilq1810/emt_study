@@ -1,0 +1,119 @@
+---
+// Position-solver visualizer (Ch. 23): the inverse problem as a 2-D cost
+// surface, with a live Levenberg–Marquardt descent from a clicked start point.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">measurement noise:
+      <input id="ps-n" type="range" min="0" max="100" value="0" /><span id="ps-n-v" class="tabular-nums">0%</span></label>
+    <span class="text-slate-500">click the map to seed the solver</span>
+  </div>
+  <canvas id="ps-canvas" width="440" height="380" class="w-full max-w-[480px] cursor-crosshair rounded"></canvas>
+  <p id="ps-readout" class="mt-2 text-sm">click to run Levenberg–Marquardt</p>
+  <p class="mt-1 text-xs text-slate-400">
+    Colour = log residual cost ‖h(x)−z‖² over the (x,z) plane (orientation fixed).
+    White ○ = true pose; yellow = LM iterates; the solver descends to the basin
+    minimum (Ch. 23 §23.3).
+  </p>
+</div>
+
+<script>
+  import { dipoleField, type Vec3 } from '../lib/physics';
+
+  const cv = document.getElementById('ps-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const noise = document.getElementById('ps-n') as HTMLInputElement;
+  const readout = document.getElementById('ps-readout')!;
+
+  const xMin = -0.4, xMax = 0.4, zMin = 0.05, zMax = 0.5;
+  const pTrue: [number, number] = [0.15, 0.3];
+
+  // forward model (position only, orientation = identity): stacked field vectors
+  function h(x: number, z: number): number[] {
+    const p: Vec3 = [x, 0, z];
+    return [...dipoleField([1, 0, 0], p), ...dipoleField([0, 1, 0], p), ...dipoleField([0, 0, 1], p)];
+  }
+  let z0 = h(pTrue[0], pTrue[1]);
+  const cost = (x: number, z: number) => {
+    const hv = h(x, z); let s = 0; for (let i = 0; i < 9; i++) s += (hv[i] - z0[i]) ** 2; return s;
+  };
+
+  const toPx = (x: number, z: number): [number, number] => [
+    ((x - xMin) / (xMax - xMin)) * cv.width,
+    (1 - (z - zMin) / (zMax - zMin)) * cv.height,
+  ];
+  const toWorld = (px: number, py: number): [number, number] => [
+    xMin + (px / cv.width) * (xMax - xMin),
+    zMin + (1 - py / cv.height) * (zMax - zMin),
+  ];
+
+  function lm(x0: number, z0p: number) {
+    let p = [x0, z0p], lam = 1e-3, c = cost(p[0], p[1]);
+    const path = [[...p]];
+    for (let it = 0; it < 40; it++) {
+      const eps = 1e-6, hv = h(p[0], p[1]);
+      const r = hv.map((v, i) => v - z0[i]);
+      // numerical Jacobian 9x2
+      const J: number[][] = [[], []];
+      for (let k = 0; k < 2; k++) {
+        const pp = [...p]; pp[k] += eps;
+        const hp = h(pp[0], pp[1]);
+        for (let i = 0; i < 9; i++) J[k][i] = (hp[i] - hv[i]) / eps;
+      }
+      // JtJ (2x2), Jtr (2)
+      let a = 0, b = 0, d = 0, g0 = 0, g1 = 0;
+      for (let i = 0; i < 9; i++) { a += J[0][i] ** 2; b += J[0][i] * J[1][i]; d += J[1][i] ** 2; g0 += J[0][i] * r[i]; g1 += J[1][i] * r[i]; }
+      const A = a + lam * a, D = d + lam * d; // scaled damping
+      const det = A * D - b * b;
+      if (Math.abs(det) < 1e-30) break;
+      const dx = -(D * g0 - b * g1) / det, dz = -(-b * g0 + A * g1) / det;
+      const np = [p[0] + dx, p[1] + dz];
+      const nc = cost(np[0], np[1]);
+      if (nc < c) { p = np; c = nc; lam = Math.max(lam / 3, 1e-9); path.push([...p]); }
+      else { lam *= 3; }
+      if (Math.hypot(dx, dz) < 1e-7) break;
+    }
+    return { p, path, c };
+  }
+
+  function drawSurface() {
+    const G = 70, cw = cv.width / G, ch = cv.height / G;
+    let lo = Infinity, hi = -Infinity; const vals: number[] = [];
+    for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) {
+      const [x, z] = toWorld((i + 0.5) * cw, (j + 0.5) * ch);
+      const v = Math.log10(cost(x, z) + 1e-30); vals.push(v);
+      lo = Math.min(lo, v); hi = Math.max(hi, v);
+    }
+    for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) {
+      const t = (vals[j * G + i] - lo) / (hi - lo);
+      const r = Math.round(20 + 235 * t), g = Math.round(30 + 180 * t), bl = Math.round(90 + 60 * (1 - t));
+      ctx.fillStyle = `rgb(${r},${g},${bl})`; ctx.fillRect(i * cw, j * ch, cw + 1, ch + 1);
+    }
+    const [tx, ty] = toPx(pTrue[0], pTrue[1]);
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(tx, ty, 6, 0, 7); ctx.stroke();
+  }
+
+  function run(x0: number, z0p: number) {
+    drawSurface();
+    const { p, path, c } = lm(x0, z0p);
+    ctx.strokeStyle = '#fde047'; ctx.lineWidth = 2; ctx.beginPath();
+    path.forEach((q, k) => { const [px, py] = toPx(q[0], q[1]); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke();
+    ctx.fillStyle = '#fde047'; path.forEach((q) => { const [px, py] = toPx(q[0], q[1]); ctx.beginPath(); ctx.arc(px, py, 2, 0, 7); ctx.fill(); });
+    const errMm = Math.hypot(p[0] - pTrue[0], p[1] - pTrue[1]) * 1000;
+    readout.innerHTML = `LM converged in ${path.length} accepted steps to (${p[0].toFixed(3)}, ${p[1].toFixed(3)}) — ` +
+      `position error <b>${errMm.toFixed(2)} mm</b>${errMm < 1 ? ' ✅' : ''}`;
+  }
+
+  noise.addEventListener('input', () => {
+    const n = +noise.value / 100; document.getElementById('ps-n-v')!.textContent = noise.value + '%';
+    const clean = h(pTrue[0], pTrue[1]); const amp = Math.max(...clean.map(Math.abs));
+    z0 = clean.map((v) => v + n * 0.15 * amp * (Math.random() * 2 - 1));
+    drawSurface();
+  });
+  cv.addEventListener('click', (e) => {
+    const rect = cv.getBoundingClientRect();
+    const [x, z] = toWorld(((e.clientX - rect.left) / rect.width) * cv.width, ((e.clientY - rect.top) / rect.height) * cv.height);
+    run(x, z);
+  });
+  drawSurface();
+</script>

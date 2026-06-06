@@ -1,0 +1,74 @@
+---
+// 5-DOF vs 6-DOF demonstration (Ch. 13): a single-axis sensor's measurements
+// are invariant under roll about its own axis — the roll null. A second
+// (perpendicular) coil resolves it.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">tilt:
+      <input id="dof-tilt" type="range" min="0" max="180" value="50" /><span id="dof-tilt-v" class="tabular-nums">50°</span></label>
+    <label class="flex items-center gap-2">azimuth:
+      <input id="dof-az" type="range" min="0" max="360" value="30" /><span id="dof-az-v" class="tabular-nums">30°</span></label>
+    <label class="flex items-center gap-2 font-semibold text-accent">roll (about sensor axis):
+      <input id="dof-roll" type="range" min="0" max="360" value="0" /><span id="dof-roll-v" class="tabular-nums">0°</span></label>
+    <label class="flex items-center gap-2"><input id="dof-2" type="checkbox" /> add 2nd coil (6-DOF)</label>
+  </div>
+  <div id="dof-bars" class="space-y-2 text-sm"></div>
+  <p id="dof-note" class="mt-3 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    Bars = |projection of each transmit-axis field onto a sensor coil|. Move
+    <b>roll</b>: the single coil's three bars never change (the 5-DOF roll null);
+    tilt/azimuth do change them. Enable the 2nd coil to see roll become observable.
+  </p>
+</div>
+
+<script>
+  import { dipoleField, type Vec3 } from '../lib/physics';
+
+  const tilt = document.getElementById('dof-tilt') as HTMLInputElement;
+  const az = document.getElementById('dof-az') as HTMLInputElement;
+  const roll = document.getElementById('dof-roll') as HTMLInputElement;
+  const two = document.getElementById('dof-2') as HTMLInputElement;
+  const bars = document.getElementById('dof-bars')!;
+  const note = document.getElementById('dof-note')!;
+
+  const p: Vec3 = [0.15, 0.05, 0.3]; // fixed sensor position
+  const B = [dipoleField([1, 0, 0], p), dipoleField([0, 1, 0], p), dipoleField([0, 0, 1], p)];
+  const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+  function bar(label: string, val: number, max: number, color: string) {
+    const w = Math.min(100, (val / max) * 100);
+    return `<div><div class="flex justify-between text-xs text-slate-500"><span>${label}</span><span class="tabular-nums">${(val * 1e6).toFixed(2)} µT</span></div>
+      <div class="h-3 w-full rounded bg-slate-100"><div class="h-3 rounded" style="width:${w}%;background:${color}"></div></div></div>`;
+  }
+
+  function update() {
+    const th = (+tilt.value * Math.PI) / 180, ps = (+az.value * Math.PI) / 180, ph = (+roll.value * Math.PI) / 180;
+    document.getElementById('dof-tilt-v')!.textContent = tilt.value + '°';
+    document.getElementById('dof-az-v')!.textContent = az.value + '°';
+    document.getElementById('dof-roll-v')!.textContent = roll.value + '°';
+
+    const n: Vec3 = [Math.sin(th) * Math.cos(ps), Math.sin(th) * Math.sin(ps), Math.cos(th)];
+    const m1 = B.map((b) => Math.abs(dot(b, n)));
+    const mx = Math.max(...B.map((b) => Math.hypot(b[0], b[1], b[2])));
+
+    let html = '<div class="font-medium">Coil 1 (sensor axis):</div>';
+    ['Tx-x', 'Tx-y', 'Tx-z'].forEach((l, i) => (html += bar(l, m1[i], mx, '#0e7490')));
+
+    if (two.checked) {
+      // perpendicular frame, rotated by roll about n
+      const et: Vec3 = [Math.cos(th) * Math.cos(ps), Math.cos(th) * Math.sin(ps), -Math.sin(th)];
+      const ep: Vec3 = [-Math.sin(ps), Math.cos(ps), 0];
+      const n2: Vec3 = [Math.cos(ph) * et[0] + Math.sin(ph) * ep[0], Math.cos(ph) * et[1] + Math.sin(ph) * ep[1], Math.cos(ph) * et[2] + Math.sin(ph) * ep[2]];
+      const m2 = B.map((b) => Math.abs(dot(b, n2)));
+      html += '<div class="mt-2 font-medium">Coil 2 (⊥, rolls with sensor):</div>';
+      ['Tx-x', 'Tx-y', 'Tx-z'].forEach((l, i) => (html += bar(l, m2[i], mx, '#7c3aed')));
+    }
+    bars.innerHTML = html;
+    note.innerHTML = two.checked
+      ? '<span class="text-violet-700">6-DOF:</span> Coil 2 bars <b>change with roll</b> → roll is now observable.'
+      : '<span class="text-accent">5-DOF:</span> one coil only senses its own axis → rolling about it changes <b>nothing</b>. Roll is unobservable.';
+  }
+  [tilt, az, roll, two].forEach((e) => e.addEventListener('input', update));
+  update();
+</script>

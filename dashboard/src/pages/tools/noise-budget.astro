@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import NoiseBudget from '../../components/NoiseBudget.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="Noise-budget calculator" toc={toc}>
+  <h1>Noise-budget calculator</h1>
+  <p>
+    The receive chain is sensor-limited only if the AFE adds less noise than the
+    coil itself (Ch. 15–16). This calculator gives the coil's Johnson-noise floor,
+    the induced EMF for a given field, and the resulting amplitude SNR over the
+    integration bandwidth. Defaults match the Ch. 4 §4.7 / Ch. 15 worked example.
+  </p>
+  <NoiseBudget />
+</BookLayout>

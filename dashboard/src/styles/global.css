@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sidebar-w: 19rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-50 text-ink antialiased;
+}
+
+/* Make ASCII block diagrams in the manuscript render cleanly. */
+.prose pre {
+  @apply text-[0.78rem] leading-snug;
+}
+
+/* KaTeX display math spacing */
+.prose .katex-display {
+  @apply my-4 overflow-x-auto overflow-y-hidden;
+}
+
+/* Confidence / status callouts (plain-text conventions in the manuscript) */
+.prose blockquote {
+  @apply border-l-4 border-accent/60 bg-cyan-50/60 not-italic;
+}
+
+.sidebar-link[aria-current='page'] {
+  @apply bg-accent/10 text-accent font-semibold;
+}

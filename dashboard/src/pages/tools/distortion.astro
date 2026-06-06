@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import DistortionViz from '../../components/DistortionViz.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Distortion / eddy-current visualizer" toc={toc}>
+  <h1>Distortion / eddy-current field visualizer</h1>
+  <p>
+    A nearby conductor hosts induced (eddy) currents that radiate a secondary
+    field, corrupting the measurement (Ch. 6). Modelled here as a conducting-sphere
+    induced dipole (image model, §6.5), the heatmap shows how distortion grows
+    steeply as the conductor approaches the working volume — the reason metal
+    discipline and compensation (Ch. 27) matter.
+  </p>
+  <DistortionViz />
+</BookLayout>

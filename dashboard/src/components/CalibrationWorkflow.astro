@@ -1,0 +1,87 @@
+---
+// Calibration-workflow explorer (Ch. 26/27): a smooth spatial distortion biases
+// the raw position; a polynomial field-map correction fitted at calibration
+// points removes most of it. Watch the residual shrink — and over-fit.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">distortion:
+      <input id="cw-amp" type="range" min="0" max="100" value="50" /><span id="cw-amp-v" class="tabular-nums">5.0 mm</span></label>
+    <label class="flex items-center gap-2">calibration points:
+      <input id="cw-pts" type="range" min="3" max="25" value="9" /><span id="cw-pts-v" class="tabular-nums">9</span></label>
+    <label class="flex items-center gap-2">polynomial degree:
+      <input id="cw-deg" type="range" min="1" max="9" value="3" /><span id="cw-deg-v" class="tabular-nums">3</span></label>
+  </div>
+  <canvas id="cw-canvas" width="560" height="260" class="w-full max-w-[600px] rounded"></canvas>
+  <p id="cw-readout" class="mt-2 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    Red = raw distortion error vs position; teal = residual after polynomial
+    field-map correction; dots = calibration samples. Too high a degree with too
+    few points over-fits and worsens between samples (Ch. 26 §26.4).
+  </p>
+</div>
+
+<script>
+  const amp = document.getElementById('cw-amp') as HTMLInputElement;
+  const pts = document.getElementById('cw-pts') as HTMLInputElement;
+  const deg = document.getElementById('cw-deg') as HTMLInputElement;
+  const cv = document.getElementById('cw-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const readout = document.getElementById('cw-readout')!;
+
+  // "true" smooth distortion field (mm) over x in [0,1]: a couple of bumps
+  const distortion = (x: number, A: number) =>
+    A * (Math.sin(3.3 * x) * 0.7 + Math.sin(7.1 * x + 1.0) * 0.3 + 0.15 * Math.sin(13 * x));
+
+  // small dense linear solve (Gaussian elimination) for polynomial least squares
+  function polyfit(xs: number[], ys: number[], d: number): number[] {
+    const m = d + 1;
+    const A = Array.from({ length: m }, () => new Array(m).fill(0));
+    const b = new Array(m).fill(0);
+    for (let k = 0; k < xs.length; k++) {
+      const pw = [1]; for (let j = 1; j < 2 * m; j++) pw.push(pw[j - 1] * xs[k]);
+      for (let i = 0; i < m; i++) { b[i] += pw[i] * ys[k]; for (let j = 0; j < m; j++) A[i][j] += pw[i + j]; }
+    }
+    // solve A c = b
+    for (let i = 0; i < m; i++) {
+      let p = i; for (let r = i + 1; r < m; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r;
+      [A[i], A[p]] = [A[p], A[i]]; [b[i], b[p]] = [b[p], b[i]];
+      if (Math.abs(A[i][i]) < 1e-12) continue;
+      for (let r = 0; r < m; r++) if (r !== i) { const f = A[r][i] / A[i][i]; for (let j = i; j < m; j++) A[r][j] -= f * A[i][j]; b[r] -= f * b[i]; }
+    }
+    return b.map((v, i) => v / (A[i][i] || 1));
+  }
+  const polyval = (c: number[], x: number) => c.reduce((s, ci, i) => s + ci * Math.pow(x, i), 0);
+
+  function draw() {
+    const A = +amp.value / 10, M = +pts.value, d = +deg.value;
+    document.getElementById('cw-amp-v')!.textContent = A.toFixed(1) + ' mm';
+    document.getElementById('cw-pts-v')!.textContent = String(M);
+    document.getElementById('cw-deg-v')!.textContent = String(d);
+
+    const calX = Array.from({ length: M }, (_, i) => i / (M - 1));
+    const calY = calX.map((x) => distortion(x, A));
+    const c = polyfit(calX, calY, Math.min(d, M - 1));
+
+    const xs = Array.from({ length: 200 }, (_, i) => i / 199);
+    const raw = xs.map((x) => distortion(x, A));
+    const resid = xs.map((x) => distortion(x, A) - polyval(c, x));
+
+    const yMax = Math.max(0.5, A * 1.2);
+    const px = (x: number) => 30 + x * (cv.width - 45);
+    const py = (v: number) => cv.height / 2 - (v / yMax) * (cv.height / 2 - 16);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = '#e2e8f0'; ctx.beginPath(); ctx.moveTo(30, py(0)); ctx.lineTo(cv.width - 15, py(0)); ctx.stroke();
+    ctx.fillStyle = '#64748b'; ctx.font = '11px system-ui'; ctx.fillText('error [mm]', 2, 12); ctx.fillText('position', cv.width / 2, cv.height - 2);
+    const line = (arr: number[], col: string) => { ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.beginPath(); arr.forEach((v, i) => { const x = px(xs[i]); i ? ctx.lineTo(x, py(v)) : ctx.moveTo(x, py(v)); }); ctx.stroke(); };
+    line(raw, '#ef4444'); line(resid, '#0e7490');
+    ctx.fillStyle = '#0f172a'; calX.forEach((x, i) => { ctx.beginPath(); ctx.arc(px(x), py(calY[i]), 3, 0, 7); ctx.fill(); });
+
+    const rms = (a: number[]) => Math.sqrt(a.reduce((s, v) => s + v * v, 0) / a.length);
+    const r0 = rms(raw), r1 = rms(resid);
+    readout.innerHTML = `RMS error — raw: <b>${r0.toFixed(3)} mm</b> → corrected: <b>${r1.toFixed(3)} mm</b> ` +
+      `(${r1 < r0 ? (100 * (1 - r1 / r0)).toFixed(0) + '% reduction' : 'over-fit: worse!'})`;
+  }
+  [amp, pts, deg].forEach((e) => e.addEventListener('input', draw));
+  draw();
+</script>

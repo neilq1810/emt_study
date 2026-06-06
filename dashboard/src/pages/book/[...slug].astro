@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc, chapterMeta } from '../../lib/toc';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('book');
+  const toc = buildToc(entries);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, toc },
+  }));
+}
+
+const { entry, toc } = Astro.props;
+const { Content } = await render(entry);
+const { title } = chapterMeta(entry);
+---
+
+<BookLayout title={title} toc={toc} current={entry.id}>
+  <Content />
+</BookLayout>
