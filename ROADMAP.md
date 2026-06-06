@@ -13,7 +13,7 @@ change.
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
 | 4     | Figures & visualizations                                 | ⬜ Not started |
 | 5     | Simulations                                              | ⬜ Not started |
-| 6     | Interactive website (digital textbook + tools)           | ⬜ Not started |
+| 6     | Interactive website (digital textbook + tools)           | 🟡 Scaffold done (Astro+Tailwind+KaTeX, Pages CI); tools pending |
 | 7     | Cross-referencing pass                                   | ⬜ Not started |
 | 8     | Technical review                                         | ⬜ Not started |
 | 9     | Publication-ready version                                | ⬜ Not started |

@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../layouts/BookLayout.astro';
+import { buildToc, chapterHref } from '../lib/toc';
+
+const entries = await getCollection('book');
+const toc = buildToc(entries);
+const base = import.meta.env.BASE_URL;
+const chapterCount = entries.filter((e) => e.id.includes('/')).length;
+---
+
+<BookLayout title="Home" toc={toc}>
+  <h1>The Electromagnetic Tracking Definitive Guide</h1>
+  <p class="lead">
+    A doctoral-level reference work, engineering design guide, and interactive
+    educational platform for electromagnetic tracking (EMT) technology —
+    spanning Maxwell's equations to a from-scratch system design.
+  </p>
+
+  <blockquote>
+    <strong>Status: draft.</strong> {chapterCount} chapters across Parts I–XIV are
+    drafted with verified citations and explicit open-questions lists. Figures,
+    simulations, and the interactive tool modules are in progress. See the
+    repository <code>ROADMAP.md</code> for live status.
+  </blockquote>
+
+  <h2>Browse by part</h2>
+  {
+    toc.map((group) => (
+      <section>
+        <h3>{group.label}</h3>
+        <ul>
+          {group.items.map((item) => (
+            <li>
+              <a href={chapterHref(base, item.id)}>{item.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  <h2>How this site is built</h2>
+  <p>
+    The pages here are rendered directly from the Markdown manuscript in the
+    repository's <code>/book</code> directory (the single source of truth), with
+    mathematics typeset via KaTeX. Planned interactive modules (dipole-field
+    visualizer, noise-budget calculator, lock-in and Kalman explorers, CRLB and
+    Monte-Carlo uncertainty tools) will be added as Astro islands.
+  </p>
+</BookLayout>
