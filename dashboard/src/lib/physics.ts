@@ -103,3 +103,68 @@ export function crlbMaxRange(targetSigma: number, sigmaB: number, moment: number
   return Math.pow((targetSigma * moment) / (C * sigmaB), 0.25);
 }
 
+// --- Position-only forward model & 3×3 Fisher/CRLB (Ch. 23/24) ---
+// Measurement = the three transmit dipoles' field vectors at p (sensor
+// orientation = identity), i.e. a 9-vector. Position is the 3-DOF unknown.
+
+export function fieldMeasurement(p: Vec3, moment = 1): number[] {
+  return [
+    ...dipoleField([moment, 0, 0], p),
+    ...dipoleField([0, moment, 0], p),
+    ...dipoleField([0, 0, moment], p),
+  ];
+}
+
+/** Numerical 9×3 Jacobian dh/dp (rows = 9 measurements, cols = x,y,z). */
+export function jacobian9x3(p: Vec3, moment = 1, eps = 1e-7): number[][] {
+  const J: number[][] = [];
+  const h0 = fieldMeasurement(p, moment);
+  for (let i = 0; i < 9; i++) J.push([0, 0, 0]);
+  for (let k = 0; k < 3; k++) {
+    const pp: Vec3 = [...p] as Vec3;
+    pp[k] += eps;
+    const hk = fieldMeasurement(pp, moment);
+    for (let i = 0; i < 9; i++) J[i][k] = (hk[i] - h0[i]) / eps;
+  }
+  return J;
+}
+
+/** Symmetric 3×3 from JᵀJ / σ². */
+export function fisher3(J: number[][], sigma: number): number[][] {
+  const F = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (let a = 0; a < 3; a++)
+    for (let b = 0; b < 3; b++) {
+      let s = 0;
+      for (let i = 0; i < 9; i++) s += J[i][a] * J[i][b];
+      F[a][b] = s / (sigma * sigma);
+    }
+  return F;
+}
+
+/** Inverse of a 3×3 matrix (returns null if singular). */
+export function invert3(M: number[][]): number[][] | null {
+  const [a, b, c] = M[0], [d, e, f] = M[1], [g, h, i] = M[2];
+  const A = e * i - f * h, B = -(d * i - f * g), C = d * h - e * g;
+  const det = a * A + b * B + c * C;
+  if (Math.abs(det) < 1e-300) return null;
+  const id = 1 / det;
+  return [
+    [A * id, (c * h - b * i) * id, (b * f - c * e) * id],
+    [B * id, (a * i - c * g) * id, (c * d - a * f) * id],
+    [C * id, (b * g - a * h) * id, (a * e - b * d) * id],
+  ];
+}
+
+export function matVec3(M: number[][], v: Vec3): Vec3 {
+  return [
+    M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2],
+    M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2],
+    M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2],
+  ];
+}
+
+/** Full 3×3 CRLB covariance at pose p for field-referred noise σ (Ch. 24). */
+export function crlbCov3(p: Vec3, sigma: number, moment = 1): number[][] | null {
+  return invert3(fisher3(jacobian9x3(p, moment), sigma));
+}
+

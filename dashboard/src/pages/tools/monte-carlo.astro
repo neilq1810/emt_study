@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import MonteCarlo from '../../components/MonteCarlo.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Monte-Carlo uncertainty analysis" toc={toc}>
+  <h1>Monte-Carlo uncertainty analysis</h1>
+  <p>
+    Add noise to the measurement, re-solve, repeat. The cloud of recovered
+    positions should fill the theoretical CRLB error ellipse (Ch. 24) — confirming
+    the solver is statistically efficient and the bound is a real design predictor
+    (Ch. 25). Note the axial error exceeds the lateral, and both grow with range.
+  </p>
+  <MonteCarlo />
+</BookLayout>

@@ -1,0 +1,105 @@
+---
+// Monte-Carlo uncertainty analysis (Ch. 24/25): repeatedly perturb the
+// measurement, re-solve, and scatter the recovered positions against the
+// theoretical CRLB error ellipse.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">range z [cm]:
+      <input id="mc-z" type="range" min="10" max="50" value="30" /><span id="mc-z-v" class="tabular-nums">30</span></label>
+    <label class="flex items-center gap-2">σ_B [nT]:
+      <input id="mc-sb" type="range" min="0.2" max="5" step="0.2" value="1" /><span id="mc-sb-v" class="tabular-nums">1.0</span></label>
+    <label class="flex items-center gap-2">trials:
+      <input id="mc-n" type="range" min="100" max="2000" step="100" value="600" /><span id="mc-n-v" class="tabular-nums">600</span></label>
+    <button id="mc-run" class="rounded border px-2 py-1 text-xs hover:bg-slate-100">re-run</button>
+  </div>
+  <canvas id="mc-canvas" width="420" height="380" class="w-full max-w-[460px] rounded"></canvas>
+  <p id="mc-readout" class="mt-2 text-sm"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    Dots = Levenberg–Marquardt solutions for noisy measurements (lateral vs axial
+    error); ellipse = 1σ CRLB predicted from the Fisher information (Ch. 24). Their
+    agreement confirms the estimator is efficient and the CRLB is a usable design
+    bound — the axial error exceeds the lateral, and both grow with range.
+  </p>
+</div>
+
+<script>
+  import { fieldMeasurement, jacobian9x3, invert3, crlbCov3, gauss, type Vec3 } from '../lib/physics';
+
+  const zS = document.getElementById('mc-z') as HTMLInputElement;
+  const sbS = document.getElementById('mc-sb') as HTMLInputElement;
+  const nS = document.getElementById('mc-n') as HTMLInputElement;
+  const cv = document.getElementById('mc-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const readout = document.getElementById('mc-readout')!;
+
+  function solve(zmeas: number[], p0: Vec3): Vec3 {
+    let p: Vec3 = [...p0] as Vec3;
+    for (let it = 0; it < 4; it++) {
+      const h = fieldMeasurement(p), J = jacobian9x3(p);
+      const r = h.map((v, i) => v - zmeas[i]);
+      const JtJ = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+      const Jtr: Vec3 = [0, 0, 0];
+      for (let a = 0; a < 3; a++) {
+        for (let b = 0; b < 3; b++) { let s = 0; for (let i = 0; i < 9; i++) s += J[i][a] * J[i][b]; JtJ[a][b] = s; }
+        let s = 0; for (let i = 0; i < 9; i++) s += J[i][a] * r[i]; Jtr[a] = s;
+      }
+      const inv = invert3(JtJ); if (!inv) break;
+      p = [p[0] - (inv[0][0] * Jtr[0] + inv[0][1] * Jtr[1] + inv[0][2] * Jtr[2]),
+           p[1] - (inv[1][0] * Jtr[0] + inv[1][1] * Jtr[1] + inv[1][2] * Jtr[2]),
+           p[2] - (inv[2][0] * Jtr[0] + inv[2][1] * Jtr[1] + inv[2][2] * Jtr[2])];
+    }
+    return p;
+  }
+
+  // 2×2 symmetric eigen for the (lateral x, axial z) covariance submatrix
+  function eig2(a: number, b: number, d: number) {
+    const tr = a + d, det = a * d - b * b;
+    const disc = Math.sqrt(Math.max(0, tr * tr / 4 - det));
+    const l1 = tr / 2 + disc, l2 = tr / 2 - disc;
+    const ang = Math.abs(b) < 1e-300 ? 0 : Math.atan2(l1 - a, b);
+    return { l1, l2, ang };
+  }
+
+  function run() {
+    const z = +zS.value / 100, sigmaB = +sbS.value * 1e-9, N = +nS.value;
+    document.getElementById('mc-z-v')!.textContent = zS.value;
+    document.getElementById('mc-sb-v')!.textContent = (+sbS.value).toFixed(1);
+    document.getElementById('mc-n-v')!.textContent = String(N);
+    const truth: Vec3 = [0, 0, z];
+    const clean = fieldMeasurement(truth);
+
+    const ex: number[] = [], ez: number[] = []; // lateral, axial errors [mm]
+    let s2 = 0;
+    for (let t = 0; t < N; t++) {
+      const zm = clean.map((v) => v + sigmaB * gauss());
+      const p = solve(zm, truth);
+      const dx = (p[0] - truth[0]) * 1000, dy = (p[1] - truth[1]) * 1000, dz = (p[2] - truth[2]) * 1000;
+      ex.push(Math.hypot(dx, dy) * Math.sign(dx)); ez.push(dz);
+      s2 += dx * dx + dy * dy + dz * dz;
+    }
+    const empRms = Math.sqrt(s2 / N);
+    const cov = crlbCov3(truth, sigmaB)!;
+    const crlbRms = Math.sqrt((cov[0][0] + cov[1][1] + cov[2][2])) * 1000;
+
+    // draw
+    const span = Math.max(...ex.map(Math.abs), ...ez.map(Math.abs)) * 1.15 || 1;
+    const cx = cv.width / 2, cy = cv.height / 2, sc = (cv.width / 2 - 20) / span;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = '#e2e8f0'; ctx.beginPath(); ctx.moveTo(cx, 10); ctx.lineTo(cx, cv.height - 10); ctx.moveTo(10, cy); ctx.lineTo(cv.width - 10, cy); ctx.stroke();
+    ctx.fillStyle = '#64748b'; ctx.font = '11px system-ui'; ctx.fillText('lateral err [mm]', cv.width - 110, cy - 6); ctx.fillText('axial err [mm]', cx + 6, 18);
+    ctx.fillStyle = 'rgba(14,116,144,0.5)';
+    for (let t = 0; t < ex.length; t++) { ctx.beginPath(); ctx.arc(cx + ex[t] * sc, cy - ez[t] * sc, 1.6, 0, 7); ctx.fill(); }
+    // CRLB 1σ ellipse from [x,z] submatrix (mm²)
+    const a = cov[0][0] * 1e6, b = cov[0][2] * 1e6, d = cov[2][2] * 1e6;
+    const { l1, l2, ang } = eig2(a, b, d);
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.save(); ctx.translate(cx, cy); ctx.rotate(-ang);
+    ctx.beginPath(); ctx.ellipse(0, 0, Math.sqrt(l1) * sc, Math.sqrt(l2) * sc, 0, 0, 7); ctx.stroke(); ctx.restore();
+
+    readout.innerHTML = `Empirical RMS (3-D): <b>${empRms.toFixed(3)} mm</b> · CRLB: <b>${crlbRms.toFixed(3)} mm</b> ` +
+      `(ratio ${(empRms / crlbRms).toFixed(2)} — efficient estimator)`;
+  }
+  [zS, sbS, nS].forEach((e) => e.addEventListener('input', run));
+  document.getElementById('mc-run')!.addEventListener('click', run);
+  run();
+</script>

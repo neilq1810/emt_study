@@ -13,7 +13,7 @@ change.
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
 | 4     | Figures & visualizations                                 | 🟡 7 computed figures (Ch.4/6/20/24); schematic diagrams pending |
 | 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 7 sims incl. eddy/skin-depth) |
-| 6     | Interactive website (digital textbook + tools)           | 🟡 Scaffold + 13 interactive tools (dipole/coil/DOF/distortion/lock-in/noise/ADC/DSP-pipeline/solver/Kalman/calibration/CRLB/working-volume); 7 of brief's 20 pending |
+| 6     | Interactive website (digital textbook + tools)           | 🟡 Scaffold + 15 interactive tools; 5 of brief's 20 pending (3-D sensor-orientation, patent-timeline, vendor-ecosystem, research-landscape, clinical demos) |
 | 7     | Cross-referencing pass                                   | ⬜ Not started |
 | 8     | Technical review                                         | ⬜ Not started |
 | 9     | Publication-ready version                                | ⬜ Not started |

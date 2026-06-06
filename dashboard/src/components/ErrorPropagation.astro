@@ -1,0 +1,88 @@
+---
+// Error-propagation simulator (Ch. 11 §11.5 / Ch. 24): how a measurement error
+// maps to a pose error through the forward-model Jacobian, and why the
+// amplification (conditioning) explodes with range.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-5 text-sm">
+    <label class="flex items-center gap-2">range z [cm]:
+      <input id="ep-z" type="range" min="10" max="55" value="30" /><span id="ep-z-v" class="tabular-nums">30</span></label>
+    <label class="flex items-center gap-2">measurement error:
+      <input id="ep-e" type="range" min="0.1" max="5" step="0.1" value="1" /><span id="ep-e-v" class="tabular-nums">1.0%</span></label>
+  </div>
+  <canvas id="ep-canvas" width="520" height="280" class="w-full max-w-[560px] rounded"></canvas>
+  <div id="ep-out" class="mt-3 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
+  <p class="mt-1 text-xs text-slate-400">
+    Curve = condition number κ(J) of the forward-model Jacobian vs range (log
+    scale). A measurement error does <b>not</b> map 1:1 to pose error — it is
+    amplified by ~1/σ_min(J), which grows steeply with distance (Ch. 24 §24.2).
+  </p>
+</div>
+
+<script>
+  import { fieldMeasurement, jacobian9x3, invert3, type Vec3 } from '../lib/physics';
+
+  const zS = document.getElementById('ep-z') as HTMLInputElement;
+  const eS = document.getElementById('ep-e') as HTMLInputElement;
+  const cv = document.getElementById('ep-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const out = document.getElementById('ep-out')!;
+
+  function JtJ(p: Vec3): number[][] {
+    const J = jacobian9x3(p);
+    const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) { let s = 0; for (let i = 0; i < 9; i++) s += J[i][a] * J[i][b]; M[a][b] = s; }
+    return M;
+  }
+  function powerEig(M: number[][], iters = 60): number {
+    let v: Vec3 = [1, 1, 1];
+    for (let k = 0; k < iters; k++) {
+      const w: Vec3 = [M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2], M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2], M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2]];
+      const n = Math.hypot(w[0], w[1], w[2]) || 1; v = [w[0] / n, w[1] / n, w[2] / n];
+    }
+    const Mv: Vec3 = [M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2], M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2], M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2]];
+    return v[0] * Mv[0] + v[1] * Mv[1] + v[2] * Mv[2]; // Rayleigh quotient ≈ λmax
+  }
+  function singulars(p: Vec3) {
+    const M = JtJ(p);
+    const lmax = powerEig(M);
+    const inv = invert3(M);
+    const lminInv = inv ? powerEig(inv) : Infinity; // = 1/λmin
+    const lmin = 1 / lminInv;
+    return { smax: Math.sqrt(lmax), smin: Math.sqrt(lmin), kappa: Math.sqrt(lmax * lminInv) };
+  }
+
+  function draw() {
+    const z = +zS.value / 100, eps = +eS.value / 100;
+    document.getElementById('ep-z-v')!.textContent = zS.value;
+    document.getElementById('ep-e-v')!.textContent = (+eS.value).toFixed(1) + '%';
+
+    // κ vs range curve
+    const zs: number[] = [], ks: number[] = [];
+    for (let i = 0; i <= 90; i++) { const zz = 0.1 + (i / 90) * 0.45; zs.push(zz); ks.push(singulars([0, 0, zz]).kappa); }
+    const padL = 50, padB = 30, padT = 12, padR = 12;
+    const lo = Math.log10(Math.min(...ks)), hi = Math.log10(Math.max(...ks));
+    const px = (zz: number) => padL + ((zz - 0.1) / 0.45) * (cv.width - padL - padR);
+    const py = (k: number) => padT + (1 - (Math.log10(k) - lo) / (hi - lo + 1e-9)) * (cv.height - padT - padB);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = '#64748b'; ctx.font = '11px system-ui';
+    ctx.fillText('κ(J)', 6, py(Math.pow(10, hi)) + 10); ctx.fillText('range z [m]', cv.width / 2 - 24, cv.height - 2);
+    for (let z2 = 0.1; z2 <= 0.55; z2 += 0.1) ctx.fillText(z2.toFixed(1), px(z2) - 6, cv.height - 14);
+    ctx.strokeStyle = '#0e7490'; ctx.lineWidth = 2.5; ctx.beginPath();
+    zs.forEach((zz, i) => (i ? ctx.lineTo(px(zz), py(ks[i])) : ctx.moveTo(px(zz), py(ks[i])))); ctx.stroke();
+    // marker
+    const cur = singulars([0, 0, z]);
+    ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(px(z), py(cur.kappa), 4, 0, 7); ctx.fill();
+
+    const hmag = Math.hypot(...fieldMeasurement([0, 0, z]));
+    const worstPosErr = (eps * hmag) / cur.smin * 1000; // mm, worst-case
+    const row = (l: string, v: string) => `<div class="flex justify-between"><span class="text-slate-500">${l}</span><b>${v}</b></div>`;
+    out.innerHTML =
+      row('Jacobian condition number κ(J)', cur.kappa.toFixed(1)) +
+      row('σ_min(J) (weakest direction)', cur.smin.toExponential(2)) +
+      row(`${eS.value}% measurement error → worst-case pos error`, `${worstPosErr.toFixed(2)} mm`) +
+      row('Amplification (pose err / meas err)', `≈ ${(cur.kappa).toFixed(0)}× in the worst direction`);
+  }
+  [zS, eS].forEach((e) => e.addEventListener('input', draw));
+  draw();
+</script>
