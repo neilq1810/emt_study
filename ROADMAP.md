@@ -87,8 +87,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 - [x] Ch. 22 Real-time implementations (FPGA/GPU/embedded) — **DRAFT**
 
 ### Part VIII — Position Solvers
-- [ ] Ch. 23 Inverse problem, LM, MLE, Bayesian
-- [ ] Ch. 24 Observability, conditioning, convergence, uncertainty
+- [x] Ch. 23 Inverse problem, LM, MLE, Bayesian — **DRAFT**
+- [x] Ch. 24 Observability, conditioning, convergence, uncertainty — **DRAFT**
+
+> **Parts II–VIII now fully drafted** (Part I partial). The full signal chain
+> (physics → … → pose + uncertainty) is now continuous. Next sequential: Part IX
+> (Error Sources, Ch. 25). Refs added: Marquardt 1963, Kay 1993, Nocedal & Wright 2006.
 
 ### Part IX — Error Sources
 - [ ] Ch. 25 Error taxonomy, budgets, sensitivity matrices, Monte Carlo
