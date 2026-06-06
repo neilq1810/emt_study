@@ -49,8 +49,9 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 - [ ] Ch. 12 Latency & real-time constraints
 
 ### Part IV — Sensor Engineering
-- [ ] Ch. 13 Coil physics & sensor geometries (3/5/6 DOF)
-- [ ] Ch. 14 Miniaturization, catheter & PCB coils
+- [ ] Ch. 13 Sensor physics & geometries (induction vs. field sensors; 3/5/6 DOF)
+- [ ] Ch. 14 Construction & technologies — coils + solid-state MR (AMR/GMR/**TMR**
+      bridge), Hall, fluxgate, MEMS; sensor-selection matrix
 - [ ] Ch. 15 Manufacturing, tolerance & noise analysis
 
 ### Part V — Analog Front Ends

@@ -36,7 +36,10 @@
 
 ### Ch. 3 — Technology Timelines & Trees
 3.1 Excitation-scheme technology tree (AC / pulsed-DC / hybrid)
-3.2 Sensor technology tree (wire-wound / PCB / fluxgate / magnetoresistive)
+3.2 Sensor technology tree — two branches:
+    (a) induction pickups (wire-wound, PCB, thin-film coils; EMF ∝ ω·B);
+    (b) direct field sensors (Hall, fluxgate, AMR, GMR, **TMR**, optically
+        pumped/atomic magnetometers; respond to B including DC)
 3.3 Capability timeline (volume, DOF, accuracy, update rate)
 
 ---
@@ -108,16 +111,32 @@
 
 ## PART IV — SENSOR ENGINEERING
 
-### Ch. 13 — Coil Physics & Sensor Geometries
-13.1 Single-coil 5-DOF sensing (and the roll ambiguity)
+### Ch. 13 — Sensor Physics & Geometries
+13.0 Two sensing principles: induction pickups (EMF ∝ ω·B) vs. direct
+     field sensors (respond to B, including DC) — and what each implies for
+     AC vs. pulsed-DC architectures (ties to Ch. 6, Ch. 8)
+13.1 Single-element 5-DOF sensing (and the roll ambiguity)
 13.2 Orthogonal triad 6-DOF sensing
 13.3 Non-orthogonal and over-determined arrangements
 13.4 Hybrid sensors (EM + IMU)
 
-### Ch. 14 — Miniaturization & Construction
-14.1 Wire-wound vs. PCB vs. thin-film coils
+### Ch. 14 — Sensor Construction, Miniaturization & Technologies
+14.1 Wire-wound vs. PCB vs. thin-film induction coils
 14.2 Catheter and implantable sensors
-14.3 MEMS and emerging approaches
+14.3 Solid-state magnetic field sensors — the magnetoresistive family
+     14.3.1 AMR, GMR, and **TMR (tunneling magnetoresistance)** — physics and
+            comparison (sensitivity, MR ratio, size, power)
+     14.3.2 **Wheatstone-bridge / push-pull TMR sensors** — offset & temperature
+            compensation, full-bridge vs. half-bridge, reference layers
+     14.3.3 Set/reset (flipping) schemes, linearization, hysteresis
+     14.3.4 Noise in MR sensors: 1/f (flicker) noise floor and its impact on
+            low-frequency/quasi-static resolution; detectivity (T/√Hz)
+     14.3.5 Hall-effect and fluxgate sensors for context/comparison
+     14.3.6 Why MR/TMR suits pulsed-DC, chip-scale, and array architectures
+            (flat DC response where induction coils fail)
+14.4 MEMS resonant/Lorentz-force magnetometers and other emerging approaches
+14.5 Sensor selection matrix: coil vs. fluxgate vs. Hall vs. AMR/GMR/TMR vs.
+     OPM — sensitivity, bandwidth, size, power, noise, cost, DC capability
 
 ### Ch. 15 — Manufacturing, Tolerance & Noise
 15.1 Tolerance analysis (winding, alignment, area)
@@ -253,7 +272,9 @@ patents · clinical adoption · reported performance · market position.
 30.1 Recent advances and leading laboratories
 30.2 Hybrid optical + EM systems
 30.3 AI-assisted calibration and ML distortion compensation
-30.4 Novel sensors; quantum/atomic magnetometry possibilities
+30.4 Novel sensors: high-detectivity TMR and MR sensor arrays; quantum/atomic
+     (optically pumped, NV-diamond) magnetometry possibilities and their
+     noise-floor vs. bandwidth trade for EMT
 30.5 Open problems and research opportunities
 
 ---
