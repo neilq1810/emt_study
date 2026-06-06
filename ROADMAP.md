@@ -76,11 +76,15 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > **Parts II–VI now fully drafted** (Part I partial). Next sequential: Part VII
 > (DSP, Ch. 19–22). ADC refs added: Walden 1999, IEEE Std 1241.
 
+> **Parts II–VII now fully drafted** (Part I partial). Next sequential: Part VIII
+> (Position Solvers, Ch. 23–24). Refs added: Scofield 1994, Kalman 1960,
+> Julier & Uhlmann 2004, Bar-Shalom et al. 2001.
+
 ### Part VII — Digital Signal Processing
-- [ ] Ch. 19 Excitation/multiplexing (FDM/TDM/CDM/orthogonal)
-- [ ] Ch. 20 Lock-in / synchronous detection; matched & adaptive filtering
-- [ ] Ch. 21 Kalman/particle filtering & sensor fusion
-- [ ] Ch. 22 Real-time implementations (FPGA/GPU/embedded)
+- [x] Ch. 19 Excitation/multiplexing (FDM/TDM/CDM/orthogonal) — **DRAFT**
+- [x] Ch. 20 Lock-in / synchronous detection; matched & adaptive filtering — **DRAFT**
+- [x] Ch. 21 Kalman/particle filtering & sensor fusion — **DRAFT**
+- [x] Ch. 22 Real-time implementations (FPGA/GPU/embedded) — **DRAFT**
 
 ### Part VIII — Position Solvers
 - [ ] Ch. 23 Inverse problem, LM, MLE, Bayesian
