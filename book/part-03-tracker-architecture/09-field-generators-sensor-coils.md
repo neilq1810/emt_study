@@ -1,6 +1,6 @@
 # Chapter 9 — Field Generators & Sensor Coils
 
-> **Status:** DRAFT · **Part III — Tracker Architecture**
+> **Status:** DEEPENED (awaiting review) · **Part III — Tracker Architecture**
 > Builds on Ch. 4–8. Hands off to Part IV (sensor engineering) and Ch. 16–18
 > (AFE/ADC). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -36,6 +36,29 @@ toward larger coils and/or **ferromagnetic cores** (high-$\mu_r$ cores multiply
 moment for given $N I$) — at the cost of the core nonlinearity and modeling
 burden discussed in Ch. 7 §7.2.
 
+### The coil as an electrical load
+The three "knobs" are not free: a generator coil is an inductor, and the moment
+$m_t=N_tI_tA_t$ is bought against electrical reality. For a coil of inductance
+$L$, winding resistance $R$, driven at $\omega$ to carry current $I_t$:
+
+$$
+V_\text{drive} = I_t\,\big|R + j\omega L\big| = I_t\sqrt{R^2 + (\omega L)^2},
+\qquad
+P_\text{diss} = I_t^2 R .
+\tag{9.1}
+$$
+
+At EMT frequencies an air coil of any size is **strongly inductive**
+($\omega L \gg R$), so the drive voltage is dominated by the reactive term
+$I_t\omega L$ — which can reach hundreds of volts for a high-moment coil
+(§9.4). The dissipation $P_\text{diss}=I_t^2R$ is pure heat in the winding, the
+root cause of the **thermal drift** that degrades calibration (Ch. 15 §15.5,
+Ch. 25). Estimating $L$ and $R$ from the geometry uses the standard
+inductance formulas — e.g. for a multi-turn loop of radius $a$ and wire radius
+$r_w$, $L\approx\mu_0 N^2 a\,[\ln(8a/r_w)-2]$, and $R=\rho\,(N\,2\pi a)/A_\text{wire}$
+[@grover1946]. These two numbers, with (9.1), set the power amplifier
+specification (Part V) and feed the resonant-drive decision (§9.4).
+
 ## 9.2 Generator coil arrangements
 
 The canonical 6-DOF generator is the **orthogonal triad**: three mutually
@@ -69,6 +92,19 @@ other magnetics applications); EMT *wants* a structured field. Field shaping is
 achieved through coil geometry, relative placement, and (in distributed
 generators) the relative drive amplitudes/phases of multiple coils.
 
+**Designing the shape with spherical harmonics.** The field-shaping problem has a
+clean formulation via the solid-harmonic representation of Ch. 7 §7.2: each
+generator coil contributes a known set of harmonic coefficients
+$\{a_{lm}^{(c)}\}$, and the *total* field over the volume is the linear
+combination $\sum_c I_c\,a_{lm}^{(c)}$ weighted by the per-coil currents. The
+designer therefore *synthesizes* a desired field structure by solving a linear
+system for the coil currents/placements — choosing strong, smoothly varying
+gradients (good observability/low PDOP, Ch. 24) while keeping the high-order
+$a_{lm}$ small (so the dipole/low-order model stays accurate and the dynamic
+range stays bounded). This turns "field shaping" from art into a tractable linear
+design, and the same harmonics become the fast online forward model the solver
+uses (Ch. 7).
+
 ## 9.4 Drive electronics (brief; full treatment in Part V)
 
 - **AC generators** require stable sinusoidal current sources — typically a DDS
@@ -79,10 +115,38 @@ generators) the relative drive amplitudes/phases of multiple coils.
 - **Pulsed-DC generators** require clean current *steps* with controlled
   settling, plus the timing to define the post-step sample instant after
   eddy-current decay (Ch. 6 §6.4).
-- **Resonant drive.** Tuning the coil with a capacitor to resonate at the drive
-  frequency boosts current (and thus moment) for given drive voltage, at the
-  cost of bandwidth and tuning sensitivity — a classic Q-vs-bandwidth trade
-  revisited in Ch. 16.
+- **Resonant drive.** Tuning the coil with a series capacitor $C=1/(\omega^2 L)$
+  cancels the inductive reactance, so the power amplifier sees only the winding
+  resistance $R$ — collapsing the drive voltage from $I_t\omega L$ to $I_tR$ while
+  the reactive energy circulates in the tank. The current (hence moment) is
+  boosted by the quality factor $Q=\omega L/R$ for given amplifier capability, at
+  the cost of bandwidth $\mathrm{BW}=f_0/Q$ and temperature-sensitive tuning.
+
+### Worked example — coil design & the resonant-drive trade
+Target $m_t=1\,\text{A·m}^2$ with $N=100$ turns and area $A=10^{-3}\,\text{m}^2$
+(loop radius $a=1.8\,\text{cm}$) → required current $I_t=m_t/(NA)=10\,\text{A}$.
+From the §9.1 formulas (wire radius $r_w\approx0.5$ mm):
+$L\approx0.8\,\text{mH}$, $R\approx0.24\,\Omega$. At $f=10\,\text{kHz}$,
+$\omega L\approx50\,\Omega$ — so the coil is **~210×** more reactive than
+resistive ($Q=\omega L/R\approx210$).
+
+| Drive mode | Amplifier voltage (eq. 9.1) | Amplifier sees | Coil power |
+|---|---|---|---|
+| **Non-resonant** | $I_t\,\omega L \approx \mathbf{500\ V}$ | $|R+j\omega L|=50\,\Omega$ | $I_t^2R=24\,\text{W}$ |
+| **Resonant** ($C\approx0.32\,\mu\text{F}$) | $I_t R \approx \mathbf{2.4\ V}$ | $R=0.24\,\Omega$ | $I_t^2R=24\,\text{W}$ |
+
+Resonance cuts the required amplifier voltage from an impractical ~500 V to
+2.4 V (the 500 V now appears only *across the tank* $L$ and $C$, handled by
+passives) — which is why **AC generators are almost always resonant**. The price
+is bandwidth: $\mathrm{BW}=f_0/Q\approx10\,\text{kHz}/210\approx 48\,\text{Hz}$.
+That narrow band has two consequences: the excitation frequency must be very
+stable and the tank temperature-compensated; and each coil is effectively a
+band-pass tuned to *its own* frequency — which is exactly why **planar FDM
+generators give each coil a distinct resonant frequency** (the Anser 8-coil
+design [@jaeger2017]) rather than sharing one. The heat ($24\,\text{W}$ in a
+small coil) is the same in both modes and drives the thermal-stability problem of
+Ch. 15. (conf: high — direct from (9.1) and the resonant-circuit relations;
+inductance from [@grover1946].)
 
 ## 9.5 Sensor coils — the receive end (overview)
 
@@ -91,9 +155,13 @@ The sensor converts the local field into a measurable signal. Two families
 
 - **Induction pickup coils** — EMF $\propto N_s A_s\,\omega\,B$ (Ch. 5, eq. 5.2).
   Simple, passive, but sensitivity collapses as $\omega\to0$, so they suit
-  *AC* architectures. Miniaturization trades area $A_s$ (and thus signal)
-  against the need to fit inside a catheter or needle — the central tension of
-  Ch. 14.
+  *AC* architectures. Sensitivity scales with the **area-turns** $N_sA_s$, but
+  more turns raise the inductance and the parasitic self-capacitance, lowering the
+  **self-resonant frequency** $f_0=1/(2\pi\sqrt{L_sC_s})$ — which must stay safely
+  above the excitation band, or the coil's response becomes peaked,
+  temperature-sensitive, and hard to calibrate (Ch. 15 §15.3, Ch. 16 §16.3).
+  Miniaturization trades area $A_s$ (and thus signal) against the need to fit
+  inside a catheter or needle — the central tension of Ch. 14.
 - **Direct field sensors** (fluxgate, Hall, **AMR/GMR/TMR** bridges) — respond
   to $B$ including DC, so they enable *pulsed-DC* and quasi-static
   architectures and chip-scale integration (Ch. 14.3). Their noise floor (1/f
@@ -123,15 +191,18 @@ Ch. 18, and is one of the hardest constraints in the whole system.
 ---
 
 ## Open questions / to verify
-- Source representative generator moments / drive currents / working-volume
-  sizes for named commercial generators (Ch. 28), with conditions, rather than
-  asserting numbers.
+- ✅ **Resolved:** the resonant-drive Q-vs-bandwidth trade is now worked (§9.4):
+  ~520 V → 2.4 V amplifier reduction, $Q\approx216$, $\mathrm{BW}\approx46$ Hz,
+  explaining per-coil FDM frequencies. Remaining: a Phase-5 notebook computing
+  $L,R,Q$ for a few coil geometries.
 - Add a field-shaping example (multi-coil planar generator) with a simulated
-  field map (Phase 5) and the resulting observability map (Ch. 24).
-- Quantify the resonant-drive Q-vs-bandwidth trade with a worked example tied to
-  a target update rate (Ch. 12).
+  field map (Phase 5) and the resulting observability/PDOP map (Ch. 24), via the
+  §9.3 spherical-harmonic synthesis.
+- Source representative generator moments / drive currents / working-volume
+  sizes for named commercial generators (Ch. 28), with conditions.
 
 ## Sources cited
-- [@raab1979] orthogonal-triad template. [@plotkin2003] transmitter arrays.
-  [@paperno2001] rotating-field generators. (Sensor families → Part IV;
-  drive electronics → Part V.)
+- [@raab1979] orthogonal-triad template. [@grover1946] coil inductance/resistance
+  formulas. [@jaeger2017] planar FDM 8-coil generator (per-coil resonance).
+  [@plotkin2003] transmitter arrays. [@paperno2001] rotating-field generators.
+  (Sensor families → Part IV; drive electronics → Part V.)
