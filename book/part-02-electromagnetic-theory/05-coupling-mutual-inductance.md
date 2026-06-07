@@ -1,6 +1,6 @@
 # Chapter 5 — Coil Coupling, Mutual Inductance & Magnetic Moment
 
-> **Status:** DRAFT · **Part II — Electromagnetic Theory**
+> **Status:** DEEPENED (awaiting review) · **Part II — Electromagnetic Theory**
 > Builds directly on Chapter 4 (dipole field, eq. 4.1). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -26,6 +26,19 @@ moment $\mathbf{m}=NIA\,\hat{\mathbf{n}}$. Two refinements matter in practice:
 - **Sensor "moment" by reciprocity.** A receive coil is characterized by the
   same $N_s A_{s,\text{eff}}$ product; reciprocity (§5.5) lets us treat a coil
   identically whether it transmits or receives.
+- **Ferrite cores and the demagnetizing limit.** A high-permeability core boosts
+  the effective area, but *not* by the bulk $\mu_r$: a finite rod's field is
+  limited by its own **demagnetizing factor** $D$ (a geometric constant, small for
+  long thin rods). The **apparent permeability** is
+  $$
+  \mu_\text{app} = \frac{\mu_r}{1 + D\,(\mu_r - 1)} \xrightarrow{\mu_r\to\infty} \frac{1}{D},
+  $$
+  so for $\mu_r\gg1$ the gain saturates at $\sim1/D$ regardless of the material —
+  a long, slender core ($D\sim0.01$) yields $\mu_\text{app}\sim100$, a stubby one
+  far less. This is *the* reason catheter sensors are made long and thin
+  (Ch. 14.2), and why the moment of a cored coil must be calibrated, not computed
+  from $\mu_r$. Practical self/mutual-inductance formulas for real coil geometries
+  are tabulated by Grover [@grover1946]. (conf: high — standard magnetostatics.)
 
 ## 5.2 Flux linkage and the induced EMF (Faraday)
 
@@ -104,7 +117,36 @@ $$
 
 which is manifestly **symmetric in $t\leftrightarrow s$** — the formal statement
 of reciprocity (§5.5). Equation (5.3) is the point-dipole limit of (5.4) and
-inherits its $r\gg a$ validity bound from Chapter 4, §4.6.
+inherits its $r\gg a$ validity bound from Chapter 4, §4.6. (The reduction
+(5.4)→(5.3) is: expand $1/|\mathbf r_t-\mathbf r_s|$ to the leading multipole for
+$r\gg a$, perform the loop integrals to recover the moments $N_tA_t$, $N_sA_s$,
+and the dipole angular factor — the dipole field of Ch. 4 integrated over the
+sensor.)
+
+### Coupling coefficient and the *loaded* voltage
+Two practical refinements connect the idealized $M$ to what the front end
+actually measures:
+
+- **Coupling coefficient.** Normalizing $M$ by the self-inductances,
+  $k = M/\sqrt{L_t L_s}$ with $|k|\le1$, expresses how tightly the coils are
+  linked. For EMT $k$ is **minuscule** ($k\ll10^{-3}$): the coils are far apart
+  relative to their size, so almost no flux links — which is *why* the received
+  signal is microvolt-class (Ch. 4 §4.7) and the whole receive chain must be so
+  low-noise (Parts IV–VI). It also means the sensor's back-reaction on the
+  transmitter (reflected impedance $\sim k^2$) is utterly negligible, so the
+  transmitter drive is independent of sensor pose.
+- **Open-circuit EMF vs. loaded voltage.** Equation (5.1) is the *open-circuit*
+  EMF. The sensor coil ($L_s$, winding resistance $R_s$, self-capacitance) feeds
+  the AFE input impedance $Z_\text{in}$, so the measured voltage is the divider
+  $$
+  v = \varepsilon\,\frac{Z_\text{in}}{Z_\text{in} + R_s + j\omega L_s}.
+  $$
+  A high-impedance voltage-mode front end ($Z_\text{in}\gg|R_s+j\omega L_s|$)
+  recovers $v\approx\varepsilon$; near the coil's self-resonance the denominator
+  shapes the response and adds a temperature/phase dependence the calibration must
+  absorb (Ch. 15 §15.3, Ch. 16 §16.3). The forward model (5.3) is the *coupling*;
+  this divider is the *transduction* — both enter the calibrated channel gain
+  (Ch. 11 §11.2).
 
 ## 5.4 The 3×3 coupling matrix
 
@@ -153,9 +195,13 @@ solvers of Chapter 23.
 
 ## 5.5 Reciprocity and its consequences
 
-Neumann's formula (5.4) is symmetric, so $M_{ts}=M_{st}$: **a coil pair couples
-equally whether you drive the "transmitter" and listen on the "sensor" or vice
-versa.** Consequences for system design:
+Neumann's formula (5.4) is symmetric under exchanging the two contours
+($\mathbf r_t\leftrightarrow\mathbf r_s$, $d\boldsymbol\ell_t\leftrightarrow d\boldsymbol\ell_s$),
+because the integrand $d\boldsymbol\ell_t\!\cdot\!d\boldsymbol\ell_s/|\mathbf r_t-\mathbf r_s|$
+is itself symmetric. Hence $M_{ts}=M_{st}$: **a coil pair couples equally whether
+you drive the "transmitter" and listen on the "sensor" or vice versa** (a special
+case of the Lorentz reciprocity theorem [@jackson1998]). Consequences for system
+design:
 
 - **Architectural freedom.** One may build a *large transmitter / small sensor*
   system (the medical norm: a fixed field generator and a tiny catheter coil) or
@@ -209,14 +255,42 @@ factor seen in the field magnitude in Chapter 4, now expressed in the
 *measured coupling*. This is a quick bench check that a forward-model
 implementation is correct. (conf: high — direct from (5.3).)
 
+## Worked numeric example — induced voltage across the volume
+Take a generator moment $m_t=1\,\text{A·m}^2$, a sensor with
+$N_sA_s=10^{-3}\,\text{m}^2{\cdot}\text{turns}$ (e.g. $N_s=1000$,
+$A_s=10^{-6}\,\text{m}^2$), AC at $f=10\,\text{kHz}$ ($\omega=6.28\times10^4$).
+Using $|\varepsilon|=N_sA_s\,\omega\,|\mathbf B_0\!\cdot\!\hat{\mathbf n}_s|$
+(eq. 5.2) and the Ch. 4 fields:
+
+- **Near, on-axis** ($r=0.3$ m, aligned): $B = \mu_0 m_t/(2\pi r^3) = 7.4\,\mu\text{T}$
+  → $\varepsilon = 10^{-3}\cdot6.28\times10^4\cdot7.4\times10^{-6} \approx 0.47\,\text{mV}$.
+- **Far edge, equatorial** ($r=0.5$ m): $B = 0.8\,\mu\text{T}$ (Ch. 4 §4.7)
+  → $\varepsilon \approx 50\,\mu\text{V}$.
+
+So the signal spans roughly $0.47\,\text{mV}$ down to $50\,\mu\text{V}$ — and far
+less at unfavourable orientations — across this small volume, a **~20 dB swing
+from range alone** (more once orientation and the full 60 dB working range are
+included, Ch. 9 §9.6). Against the $\sim$13 nV-RMS demodulated noise floor of the
+Ch. 20 worked example, the far-edge SNR is $\sim50\,\mu\text{V}/13\,\text{nV}\approx
+3800$ — comfortably resolvable, and consistent with the sub-mm CRLB of Ch. 24.
+This connects the coupling physics here directly to the AFE dynamic-range problem
+(Ch. 16 §16.4) and the lock-in budget (Ch. 20 §20.9). (conf: high — eqs. (5.2),
+(4.2); a full off-axis $\mathbf M$ is validated to machine precision in the
+Phase-5 `sim_closed_form_init`, Ch. 23.)
+
 ---
 
 ## Open questions / to verify
-- Provide the full step-by-step reduction of (5.4) → (5.3) in Appendix C.
+- ✅ **Resolved:** the (5.4)→(5.3) reduction sketch is now given in §5.3; a worked
+  numerical $\mathbf M$ / induced voltage is added above and the full off-axis
+  $\mathbf M$ is machine-precision-validated in the Phase-5 closed-form sim
+  (Ch. 23). Remaining: move the *full* step-by-step multipole reduction to
+  Appendix C.
 - Confirm IEEE DOIs for [@paperno2001] and [@plotkin2003] against IEEE Xplore.
-- Add a worked numerical $\mathbf{M}$ for a specific pose and cross-check against
-  the Phase-5 simulation.
+- Add a measured/Grover-tabulated self-inductance for a representative catheter
+  coil to make the §5.3 coupling-coefficient estimate concrete [@grover1946].
 
 ## Sources cited
-- [@raab1979] dipole/coupling foundation. [@plotkin2003] transmitter arrays.
-  [@paperno2001] rotating-field excitation.
+- [@raab1979] dipole/coupling foundation. [@jackson1998] Neumann formula,
+  reciprocity. [@grover1946] practical inductance formulas. [@plotkin2003]
+  transmitter arrays. [@paperno2001] rotating-field excitation.

@@ -934,6 +934,22 @@
       "verified": true
     },
     {
+      "id": "grover1946",
+      "type": "book",
+      "title": "Inductance Calculations: Working Formulas and Tables",
+      "authors": ["Grover, Frederick W."],
+      "year": 1946,
+      "venue": "Van Nostrand (Dover reprint 2004)",
+      "url": "https://store.doverpublications.com/0486495779.html",
+      "publisher": "Dover Publications",
+      "source_type": "book",
+      "keywords": ["mutual inductance", "self-inductance", "coils", "formulas", "Neumann", "coaxial filaments"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "The classic practical handbook of self/mutual-inductance formulas and tables for coils (coaxial circular filaments, single-layer solenoids, etc.) — design-from-first-principles reference for Ch.5/9/15. Dover reprint ISBN 978-0486495774.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
