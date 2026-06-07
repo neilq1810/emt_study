@@ -18,8 +18,8 @@ Collaborative deepen-and-review pass. Each chapter moves
 |---:|-------|-------|-------|
 | 19 | Excitation & channel separation | 🟢 DEEPENED → review | +Anser FDM, harmonic/IMD crosstalk, Hadamard CDM, worked freq plan, multi-coil scaling, failure-mode box (1015→2376 w) |
 | 20 | Synchronous detection & filtering | 🟢 DEEPENED → review | +ENBW derivation, output-SNR/processing-gain, matched-filter/CRLB optimality, reference phase/harmonic/Rician/dynamic-reserve, analog-vs-digital, pulsed-DC matched filter, Widrow adaptive/witness, worked SNR (974→2080 w) |
-| 21 | State estimation & fusion | ⬜ DRAFT | next |
-| 22 | Real-time implementations | ⬜ DRAFT | |
+| 21 | State estimation & fusion | 🟢 DEEPENED → review | +EMT state vector, EKF Jacobian, full UKF sigma points, error-state/MEKF orientation (Solà), particle filter (Arulampalam), EM+IMU error-state fusion, NIS distortion detection, NIS/NEES consistency (1052→1787 w) |
+| 22 | Real-time implementations | ⬜ DRAFT | next |
 | 23 | Inverse problem (solvers) | ⬜ DRAFT | |
 | 24 | Conditioning, observability, uncertainty | ⬜ DRAFT | partly backed by Phase-5 sims |
 | 25 | Error taxonomy & budgets | ⬜ DRAFT | |
