@@ -734,6 +734,26 @@
       "verified": true
     },
     {
+      "id": "widrow1975",
+      "type": "article",
+      "title": "Adaptive Noise Cancelling: Principles and Applications",
+      "authors": ["Widrow, Bernard", "Glover, John R.", "McCool, John M.", "Kaunitz, John", "Williams, Charles S.", "Hearn, Robert H.", "Zeidler, James R.", "Dong, Eugene", "Goodlin, Robert C."],
+      "year": 1975,
+      "venue": "Proceedings of the IEEE",
+      "volume": "63",
+      "issue": "12",
+      "pages": "1692-1716",
+      "doi": "10.1109/PROC.1975.10036",
+      "url": "https://ieeexplore.ieee.org/document/1451965",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": ["adaptive filter", "LMS", "noise cancelling", "reference sensor", "interference"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Foundational adaptive noise-cancelling paper (LMS, reference/witness cancellation). Basis for the adaptive-interference and witness-sensor methods of Ch.20/27. DOI 10.1109/PROC.1975.10036 verified.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
