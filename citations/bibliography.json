@@ -850,6 +850,22 @@
       "verified": true
     },
     {
+      "id": "groves2013",
+      "type": "book",
+      "title": "Principles of GNSS, Inertial, and Multisensor Integrated Navigation Systems, 2nd Edition",
+      "authors": ["Groves, Paul D."],
+      "year": 2013,
+      "venue": "Artech House",
+      "url": "https://us.artechhouse.com/Principles-of-GNSS-Inertial-and-Multisensor-Integrated-Navigation-Systems-Second-Edition-P1683.aspx",
+      "publisher": "Artech House",
+      "source_type": "book",
+      "keywords": ["GNSS", "dilution of precision", "DOP", "integrated navigation", "Kalman", "INS"],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Standard reference for dilution of precision (DOP) and multisensor (GNSS+INS) integration; cross-domain analogue for EMT conditioning (Ch.24) and fusion (Ch.21). ISBN 978-1-60807-005-3.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",

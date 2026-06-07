@@ -24,8 +24,8 @@ Collaborative deepen-and-review pass. Each chapter moves
 **Part VII (Ch. 19–22) fully deepened.**
 
 | 23 | Inverse problem (solvers) | 🟢 DEEPENED → review | GN derived, LM trust-region/λ-update, **closed-form initializer derived + numerically verified (eig 1:1:4, machine-precision)**, MAP=KF, SO(3)/constraints, robust M-estimators/IRLS (Huber), basins/rank-deficiency (1107→1915 w) |
-| 24 | Conditioning, observability, uncertainty | ⬜ DRAFT | partly backed by Phase-5 sims |
-| 25 | Error taxonomy & budgets | ⬜ DRAFT | |
+| 24 | Conditioning, observability, uncertainty | 🟢 DEEPENED → review | local-vs-global observability, SVD conditioning bound (eq 24.2) + preconditioning, **GNSS dilution-of-precision bridge (Groves)**, fuller CRLB/error-ellipsoid; preserves Phase-5 z^4/Monte-Carlo (→1830 w) |
+| 25 | Error taxonomy & budgets | ⬜ DRAFT | next (Part IX — last of batch) |
 
 (Other chapters remain DRAFT; will be scheduled after this batch.)
 
