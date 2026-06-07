@@ -714,6 +714,26 @@
       "verified": true
     },
     {
+      "id": "jaeger2017",
+      "type": "article",
+      "title": "Anser EMT: the first open-source electromagnetic tracking platform for image-guided interventions",
+      "authors": ["Jaeger, Herman Alexander", "Franz, Alfred M.", "O'Donoghue, Kilian", "Seitel, Alexander", "Trauzettel, Fabian", "Maier-Hein, Lena", "Cantillon-Murphy, Pádraig"],
+      "year": 2017,
+      "venue": "International Journal of Computer Assisted Radiology and Surgery",
+      "volume": "12",
+      "issue": "6",
+      "pages": "1059-1067",
+      "doi": "10.1007/s11548-017-1568-7",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28357627/",
+      "publisher": "Springer",
+      "source_type": "journal",
+      "keywords": ["open-source", "FDM", "frequency division", "lock-in", "field generator", "8 coils", "OpenIGTLink"],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Open-source FDM EMT: 8 field-generator coils at distinct frequencies, lock-in demodulation; reported 1.14 mm / 0.04 deg accuracy. Key reference for Ch.19 (FDM), Ch.20 (lock-in), Ch.31 (open-source ecosystem). DOI/PMID verified; vol 12(6):1059-1067 to re-confirm.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
