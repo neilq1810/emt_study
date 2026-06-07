@@ -830,6 +830,26 @@
       "verified": true
     },
     {
+      "id": "huber1964",
+      "type": "article",
+      "title": "Robust Estimation of a Location Parameter",
+      "authors": ["Huber, Peter J."],
+      "year": 1964,
+      "venue": "The Annals of Mathematical Statistics",
+      "volume": "35",
+      "issue": "1",
+      "pages": "73-101",
+      "doi": "10.1214/aoms/1177703732",
+      "url": "https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-35/issue-1/Robust-Estimation-of-a-Location-Parameter/10.1214/aoms/1177703732.full",
+      "publisher": "Institute of Mathematical Statistics",
+      "source_type": "journal",
+      "keywords": ["robust estimation", "M-estimator", "Huber loss", "outliers", "influence function"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Introduces the Huber M-estimator / robust loss — the basis for outlier-robust pose solving (IRLS) in Ch.23. DOI 10.1214/aoms/1177703732 verified (Project Euclid: vol 35(1):73-101).",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",

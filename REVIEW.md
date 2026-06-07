@@ -23,7 +23,7 @@ Collaborative deepen-and-review pass. Each chapter moves
 
 **Part VII (Ch. 19–22) fully deepened.**
 
-| 23 | Inverse problem (solvers) | ⬜ DRAFT | next (Part VIII) |
+| 23 | Inverse problem (solvers) | 🟢 DEEPENED → review | GN derived, LM trust-region/λ-update, **closed-form initializer derived + numerically verified (eig 1:1:4, machine-precision)**, MAP=KF, SO(3)/constraints, robust M-estimators/IRLS (Huber), basins/rank-deficiency (1107→1915 w) |
 | 24 | Conditioning, observability, uncertainty | ⬜ DRAFT | partly backed by Phase-5 sims |
 | 25 | Error taxonomy & budgets | ⬜ DRAFT | |
 

@@ -1,0 +1,9 @@
+{
+  "eigenvalue_ratio_mean": [
+    1.0,
+    1.0,
+    4.0
+  ],
+  "clean_position_err_max_m": 3.4219371797089426e-16,
+  "note": "Eigenvalue ratio 1:1:4 confirms the derivation; clean recovery is machine-precision (Ch.23 \u00a723.5)."
+}
