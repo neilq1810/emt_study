@@ -218,6 +218,68 @@ mapped across the working volume — the quantitative answer to "how accurate is
 this system, where, and why," and the input to the clinical requirements of
 Ch. 29 and the from-scratch design of Ch. 31.
 
+### Worked example — propagating one source of each class
+Before tabulating the whole budget, here is the **method applied end-to-end** to
+one representative source of each class, at the mid-volume pose $z=0.3$ m of the
+Ch. 31 design. Each step is: identify the source, find its **sensitivity
+coefficient** $c=\partial(\text{position})/\partial(\text{source})$ (§25.5,
+eq. 25.1), evaluate its **standard uncertainty** (GUM Type A or Type B, §25.5),
+and propagate.
+
+**(1) Stochastic — sensor + AFE field-referred noise.** Evaluated *Type A* (from
+the measured noise floor) as $\sigma_B = 0.9\,\text{nT}$ (1σ). The sensitivity is
+the CRLB gain — the inverse-Jacobian mapping from field noise to position — which
+the Phase-5 simulation gives at $z=0.3$ m as
+$c_1 = 0.086\,\text{mm/nT}$ (Ch. 24; position $\sigma$ scales linearly with
+$\sigma_B$). Hence
+$$
+u_1 = c_1\,\sigma_B = 0.086\,\tfrac{\text{mm}}{\text{nT}}\times 0.9\,\text{nT}
+= 0.077\,\text{mm}.
+$$
+
+**(2) Deterministic — per-channel gain calibration residual.** Evaluated *Type B*
+as a bound: the calibration leaves a residual gain error of at most
+$\varepsilon = \pm0.2\%$. The sensitivity coefficient follows from the dipole
+range law: the measured amplitude $A\propto r^{-3}$, so
+$\dfrac{\mathrm dr}{r} = -\dfrac13\dfrac{\mathrm dA}{A}$, i.e.
+$c_2 = \partial r/\partial\varepsilon = r/3 = 100\,\text{mm}$. The cube-root is
+forgiving — **a 0.2% gain error becomes only a 0.067% range error**:
+$$
+\delta r = c_2\,\varepsilon = 100\,\text{mm}\times 0.002 = 0.20\,\text{mm (bound)}
+\;\Rightarrow\; u_2 = \frac{0.20}{\sqrt3} = 0.115\,\text{mm}
+$$
+(the $/\sqrt3$ converts a rectangular Type-B *bound* to a standard uncertainty).
+
+**(3) Environmental — a nearby conductor (eddy distortion).** A 5 cm conductor at
+$d_t = 0.3$ m from the generator and $d_s = 0.2$ m from the sensor. The *raw*
+distortion fraction is (Ch. 6, eq. 6.4)
+$$
+\eta = \frac{a^3 r^3}{d_t^3 d_s^3}
+= \frac{(0.05)^3(0.3)^3}{(0.3)^3(0.2)^3} = 1.56\% .
+$$
+Static field-mapping (Ch. 27) typically suppresses a fixed distorter by
+$\sim$8×, leaving a residual $\eta_\text{res}\approx0.20\%$. Propagating this like
+a fractional field error through the same $r/3$ range sensitivity (plus a
+comparable lateral/bearing term) gives a positional bound $\delta x\approx
+0.30\,\text{mm}$, so $u_3 = 0.30/\sqrt3 = 0.17\,\text{mm}$ (Type B).
+
+**Combine (independent → RSS, eq. 25.1).** The three sources are uncorrelated, so
+the cross-terms vanish and
+$$
+u_c = \sqrt{u_1^2 + u_2^2 + u_3^2}
+= \sqrt{0.077^2 + 0.115^2 + 0.17^2} \approx 0.22\,\text{mm},
+$$
+and the **expanded uncertainty** (coverage factor $k=2$, ~95%) is
+$U = 2u_c \approx 0.44\,\text{mm}$.
+
+Three takeaways the calculation makes concrete: (i) the **cube-root forgiveness**
+($c\propto r/3$) means gain and distortion errors hurt range *three times less*
+than their raw fractional size; (ii) the environmental term, even after mapping,
+is the **largest single contributor** — the recurring EMT lesson; and (iii) the
+*method* is uniform across classes (sensitivity coefficient × standard
+uncertainty, then combine) even though the *evaluation* differs (Type A noise vs.
+Type B bounds). The full budget below simply repeats this for every row.
+
 ### A worked numeric position budget (mid-volume)
 For the Ch. 31 example (0.5 m volume) at a well-conditioned mid-volume pose
 ($z=0.3$ m), using the Phase-5 mapping that a field-referred noise
