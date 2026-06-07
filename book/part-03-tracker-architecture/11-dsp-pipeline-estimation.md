@@ -1,6 +1,6 @@
 # Chapter 11 — DSP Pipeline & Estimation (Architecture View)
 
-> **Status:** DRAFT · **Part III — Tracker Architecture**
+> **Status:** DEEPENED (awaiting review) · **Part III — Tracker Architecture**
 > Architecture-level overview; the algorithms live in Part VII (Ch. 19–22) and
 > Part VIII (Ch. 23–24). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -102,19 +102,80 @@ Each stage adds and transforms error, and the stages are *not* independent:
    weak (poor observability/conditioning, Ch. 24). A 1% amplitude error does
    *not* map to a 1% pose error; the gain depends on geometry.
 
+**Quantifying the Stage-3 amplification.** The mapping is the inverse Jacobian
+(Ch. 24). Two concrete anchors from the deepened solver chapters: near mid-volume
+a fractional measurement error $\varepsilon$ produces a *range* error of only
+$\sim(r/3)\varepsilon$ — the cube-root forgiveness of Ch. 25's worked example (a
+0.2% gain error → 0.2 mm at $z=0.3$ m). But the amplification is **pose-dependent
+and grows steeply toward the edge**: the CRLB scales as $z^4$ (Ch. 24 §24.5), so
+the *same* $\varepsilon$ yields several-fold larger pose error at the volume
+boundary, and near an observability null (a 5-DOF roll direction, Ch. 13) it
+diverges. The Phase-6 *error-propagation* tool plots this amplification
+($\kappa(\mathbf J)$ vs. range) directly. The lesson for the pipeline: Stage 3 is
+not a fixed "gain" — it is a geometry-dependent amplifier, which is why pose
+error must be reported *with* its pose-dependent covariance (§11.6), not as a
+single accuracy number.
+
 This is why the error budget (Ch. 25) is assembled *through the pipeline*, not
 per-component in isolation, and why uncertainty quantification (Ch. 24) belongs
 to the solver, not bolted on afterward.
 
+## 11.6 The data contract: propagate covariances, not just values
+
+The single most important architectural discipline in the pipeline is that **each
+stage outputs a value *and* its covariance**, and the next stage consumes both.
+The pipeline is therefore a covariance-propagation chain that exactly mirrors the
+value chain:
+
+$$
+\underbrace{\mathbf R_a}_{\text{amplitude cov (Stage 1)}}
+\ \xrightarrow{\text{calibrate}}\
+\underbrace{\mathbf R_M}_{\text{coupling cov (Stage 2)}}
+\ \xrightarrow{\text{invert}}\
+\underbrace{\mathbf P = (\mathbf J^\top\mathbf R_M^{-1}\mathbf J)^{-1}}_{\text{pose cov (Stage 3) = CRLB}}.
+$$
+
+- **Stage 1** produces $\mathbf R_a$ — the amplitude noise covariance, set by the
+  effective noise bandwidth ($\propto1/\tau$, Ch. 20) and the upstream sensor/AFE/
+  ADC floor (Parts IV–VI). It is (nearly) diagonal and channel-dependent.
+- **Stage 2** transforms it: per-channel gains scale $\mathbf R_a$, and *every*
+  calibration constant carries its own uncertainty that adds to $\mathbf R_M$
+  (Ch. 26). Crucially, calibration can introduce **correlations** (a shared
+  field-map residual couples channels), so $\mathbf R_M$ is *not* diagonal — and
+  treating it as diagonal under-weights the better channels and biases the solve.
+- **Stage 3** maps $\mathbf R_M$ to the pose covariance $\mathbf P$ via the
+  inverse Fisher information — which is exactly the **CRLB** (Ch. 24, eq. 24.1).
+  Feeding the *correct* $\mathbf R_M$ (not an identity weight) is what makes the
+  estimate efficient (Ch. 23 §23.2).
+
+This is why the solver weights by $\mathbf R_M^{-1}$ (Ch. 23) and why the Kalman
+filter consumes $\mathbf P$ as its measurement covariance (Ch. 21): the whole
+chain is one consistent uncertainty calculation. A pipeline that passes bare
+numbers between stages — amplitudes without $\mathbf R_a$, a pose without
+$\mathbf P$ — throws away the information needed to weight, fuse, and flag
+correctly, and is the most common architectural mistake in homegrown trackers.
+
+### Failure modes (per stage)
+- **Stage 1:** residual crosstalk/leakage (Ch. 19) appears as a *correlated*
+  amplitude bias, not white noise — mis-modeled if $\mathbf R_a$ is assumed
+  diagonal.
+- **Stage 2:** uncorrected distortion or stale calibration injects a
+  pose-dependent bias the solver cannot detect from one frame (needs fusion/
+  consistency, Ch. 21).
+- **Stage 3:** divergence/local-minimum at a poorly conditioned pose (Ch. 23/24);
+  guarded by the closed-form seed, bounded iterations, and the eigenvalue-ratio
+  consistency check (Ch. 23 §23.5).
+
 ---
 
 ## Open questions / to verify
-- Add a quantitative example of Stage-3 error amplification (Jacobian
-  conditioning) at a poorly observable pose, backed by the Phase-5 solver
-  simulation.
-- Confirm the closed-form-initializer claim (eigenstructure of
-  $\mathbf{M}^{\top}\mathbf{M}$) against a primary source and add to Ch. 23.
+- ✅ **Resolved:** Stage-3 amplification is now quantified (§11.5, cube-root
+  near-field, $z^4$ edge growth, Phase-6 tool); the closed-form $\mathbf M^\top\mathbf M$
+  initializer is **derived and machine-verified** in Ch. 23 §23.5
+  (`sim_closed_form_init`). Remaining: a Phase-5 notebook propagating
+  $\mathbf R_a\!\to\!\mathbf R_M\!\to\!\mathbf P$ end-to-end for a concrete frame.
 
 ## Sources cited
-- [@raab1979] predictor/corrector recursive estimation and linearization;
-  detailed algorithms cross-referenced to Parts VII–VIII.
+- [@raab1979] predictor/corrector recursive estimation and linearization.
+  Covariance propagation / CRLB from Ch. 24; calibration from Ch. 26; detailed
+  algorithms cross-referenced to Parts VII–VIII.
