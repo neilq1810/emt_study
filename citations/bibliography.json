@@ -866,6 +866,22 @@
       "verified": true
     },
     {
+      "id": "gum2008",
+      "type": "standard",
+      "title": "Evaluation of measurement data — Guide to the expression of uncertainty in measurement (GUM)",
+      "authors": ["Joint Committee for Guides in Metrology (JCGM/BIPM)"],
+      "year": 2008,
+      "venue": "JCGM 100:2008 (GUM 1995 with minor corrections)",
+      "url": "https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf",
+      "publisher": "BIPM / JCGM",
+      "source_type": "standard",
+      "keywords": ["uncertainty", "Type A", "Type B", "combined standard uncertainty", "coverage factor", "law of propagation"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "The international metrology standard for uncertainty budgeting: Type A/B evaluation, law of propagation of uncertainty (eq 25.1), combined and expanded uncertainty (k coverage factor). Authoritative basis for the Ch.25 error budget. JCGM 100:2008.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",

@@ -25,9 +25,13 @@ Collaborative deepen-and-review pass. Each chapter moves
 
 | 23 | Inverse problem (solvers) | 🟢 DEEPENED → review | GN derived, LM trust-region/λ-update, **closed-form initializer derived + numerically verified (eig 1:1:4, machine-precision)**, MAP=KF, SO(3)/constraints, robust M-estimators/IRLS (Huber), basins/rank-deficiency (1107→1915 w) |
 | 24 | Conditioning, observability, uncertainty | 🟢 DEEPENED → review | local-vs-global observability, SVD conditioning bound (eq 24.2) + preconditioning, **GNSS dilution-of-precision bridge (Groves)**, fuller CRLB/error-ellipsoid; preserves Phase-5 z^4/Monte-Carlo (→1830 w) |
-| 25 | Error taxonomy & budgets | ⬜ DRAFT | next (Part IX — last of batch) |
+| 25 | Error taxonomy & budgets | 🟢 DEEPENED → review | +GUM law of propagation (eq 25.1, Type A/B, combined/expanded uncertainty), **worked numeric position budget** (→0.84 mm @95%, top-down allocation), correlation cross-terms (1696→2411 w) |
 
-(Other chapters remain DRAFT; will be scheduled after this batch.)
+**✅ Batch complete: Ch. 19–25 (Parts VII–IX) all deepened.** 14 new verified
+citations added across the batch (Anser, Widrow, Solà, Arulampalam, Hogenauer,
+Volder, Huber, Groves, GUM, …). All build clean (0 KaTeX errors).
+
+(Other chapters remain DRAFT; will be scheduled next.)
 
 ## User-review queue
-- [ ] Ch. 19 — awaiting review
+- [ ] Ch. 19–25 — awaiting review (batch)

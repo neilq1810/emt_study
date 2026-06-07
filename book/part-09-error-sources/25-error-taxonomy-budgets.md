@@ -1,6 +1,6 @@
 # Chapter 25 — Error Taxonomy, Budgets & Monte Carlo
 
-> **Status:** DRAFT · **Part IX — Error Sources** (the whole of Part IX)
+> **Status:** DEEPENED (awaiting review) · **Part IX — Error Sources** (the whole of Part IX)
 > Assembles the per-stage error contributions established across Parts II–VIII
 > into one quantitative model. Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -144,6 +144,37 @@ Stochastic terms combine as variances (covariance addition, RSS); deterministic
 terms combine as biases (signed, worst-case or RSS depending on independence);
 the result is a per-pose error mean and covariance.
 
+### The law of propagation of uncertainty (GUM)
+The rigorous, standardized way to combine the contributions is the **GUM**
+(*Guide to the Expression of Uncertainty in Measurement*) [@gum2008]. For a
+measurand $y=f(x_1,\dots,x_N)$, the **combined standard uncertainty** is
+
+$$
+u_c^2(y) = \sum_{i=1}^{N} c_i^2\,u^2(x_i)
+\;+\; 2\!\sum_{i=1}^{N-1}\sum_{j=i+1}^{N} c_i\,c_j\,u(x_i,x_j),
+\qquad c_i=\frac{\partial f}{\partial x_i},
+\tag{25.1}
+$$
+
+with $c_i$ the **sensitivity coefficients** (here the columns of the pose
+sensitivity map above) and $u(x_i,x_j)$ the covariances. Two regimes:
+
+- **Independent sources** ($u(x_i,x_j)=0$): the cross-terms vanish and (25.1) is
+  the familiar **root-sum-square** — the rule for sensor/AFE/ADC noise.
+- **Correlated sources** ($u(x_i,x_j)\neq0$): the cross-terms *do not* vanish. For
+  **fully correlated** contributions (generator-drive noise common to every
+  channel, §25.4) the combination tends toward a **linear sum**, not RSS — which
+  is why such a term can dominate even when each channel's contribution looks
+  small, and why it gets its own budget line.
+
+GUM also distinguishes how each $u(x_i)$ is *evaluated*: **Type A** by statistical
+analysis of repeated observations (e.g. a measured jitter or noise-floor RMS), and
+**Type B** by other means (datasheet limits, calibration certificates, a physics
+model, prior data) [@gum2008]. The reported figure is then the **expanded
+uncertainty** $U = k\,u_c$ with coverage factor $k$ ($k=2$ for ~95% under
+approximate normality) — the form a clinical/regulatory accuracy claim should take
+(Ch. 29). This is the metrology backbone of the budget table in §25.7.
+
 ## 25.6 Monte Carlo uncertainty analysis
 
 Linear sensitivity propagation (25.5) is a first-order approximation that breaks
@@ -187,6 +218,46 @@ mapped across the working volume — the quantitative answer to "how accurate is
 this system, where, and why," and the input to the clinical requirements of
 Ch. 29 and the from-scratch design of Ch. 31.
 
+### A worked numeric position budget (mid-volume)
+For the Ch. 31 example (0.5 m volume) at a well-conditioned mid-volume pose
+($z=0.3$ m), using the Phase-5 mapping that a field-referred noise
+$\sigma_B=1\,\text{nT}$ yields a CRLB position $\sigma\approx0.086$ mm (Ch. 24,
+`data/crlb_vs_range.csv`), and the ambient/distortion magnitudes of Poulin & Amiot
+[@poulin2002]. Values are **illustrative** (design-dependent; conf: med), but the
+*method* and combination rules are exact:
+
+| Source | Class / eval | Input | → position σ [mm] | Combine |
+|---|---|---|---|---|
+| Coil Johnson + AFE noise | stochastic / A | ~0.8 nT | 0.069 | RSS |
+| ADC quantization+thermal | stochastic / A | ~0.4 nT | 0.034 | RSS |
+| Clock jitter | stochastic / B | negligible @10 kHz | <0.005 | RSS |
+| **Stochastic subtotal** | | RSS → ~0.90 nT | **≈ 0.077** | — |
+| Calibration residual | deterministic / B | per-unit map | 0.20 | bias (RSS) |
+| Thermal drift since cal. | deterministic / B | warm-up spec | 0.10 | bias (RSS) |
+| Static distortion (mapped residual) | environmental / B | installation | 0.30 | bias |
+| Ambient EM noise | environmental / A | OR-measured | <0.15 | RSS |
+| Generator drive noise | environmental / B (corr.) | ratiometric | 0.05 | linear (correlated) |
+| **Combined std. uncertainty $u_c$** | | (25.1) | **≈ 0.42** | — |
+| **Expanded $U=2u_c$ (95%)** | | $k=2$ | **≈ 0.84** | — |
+
+So the static, well-conditioned mid-volume accuracy is $\sim0.8$ mm (95%) —
+inside the ≤1 mm target (Ch. 31), consistent with standardized assessments
+[@hummel2005]. **The conditions matter as much as the number:** at the volume edge
+the stochastic term alone grows ~8× ($z^4$, Ch. 24), and a *moving* ferromagnetic
+distorter or fast target motion (Ch. 12 §12.3, ≈1 mm at 0.1 m/s × 10 ms) are
+**separate operating conditions** that blow this budget — which is precisely why
+the clinical claim is stated as "within $X$ mm under stated conditions, **or flag
+loss of tracking**" (Ch. 29 essential performance).
+
+### Top-down allocation
+The same table runs **backwards** as a design tool: given a target (say $U\le1$ mm
+at the edge), allocate it across classes — e.g. budget ≤0.5 mm stochastic (sets
+the required $\sigma_B$, hence the coil/AFE/ADC noise and generator moment via the
+CRLB, Ch. 9/15/16), ≤0.3 mm deterministic (sets the calibration/stability spec,
+Ch. 26), ≤0.7 mm environmental (sets the distortion-compensation requirement,
+Ch. 27) — then RSS the allocations back to the target. This closes the design loop
+of Ch. 31: the budget is both a *scorecard* and a *requirements generator*.
+
 ---
 
 ## Open questions / to verify
@@ -195,14 +266,22 @@ Ch. 29 and the from-scratch design of Ch. 31.
   specific). Candidate: dedicated MTJ noise-vs-bias and Barkhausen/vortex
   free-layer studies (arXiv:2103.04750 published version; vortex-state spin-valve
   noise papers).
-- Build the Phase-5 Monte Carlo notebook and produce a worked error-budget table
-  with numbers for one concrete design (ties Ch. 24 CRLB maps).
+- ✅ **Partially resolved:** a worked numeric position budget (§25.7) now combines
+  classes via the GUM law of propagation (25.1) to a combined/expanded uncertainty,
+  using the Phase-5 CRLB mapping. Remaining: drive it from a Phase-5 Monte-Carlo
+  run (not first-order) and replace the illustrative per-line magnitudes with
+  sourced/measured values.
+- Source EMT-specific *magnitudes* for Barkhausen, generator-side, and
+  bias-reference noise (currently mechanism-cited; magnitudes device/system
+  specific) — candidate dedicated MTJ noise-vs-bias and vortex free-layer studies.
 - Confirm Poulin & Amiot figures (8.4 mm / 166°; 0.15 mm ambient) against the
   primary text and add the exact measurement conditions [@poulin2002].
 
 ## Sources cited
-- [@davies2021; @lenz2006] MR/Barkhausen/1f noise mechanisms.
+- [@gum2008] uncertainty budgeting (Type A/B, law of propagation, expanded
+  uncertainty). [@davies2021; @lenz2006] MR/Barkhausen/1f noise mechanisms.
   [@monteblanco2021] TMR bias-voltage/detectivity (bias-reference term).
-  [@poulin2002] OR interference & ambient-noise magnitudes. [@yaniv2009] clinical
-  environment. [@iec60601_1_2] EMC immunity. [@horowitz_hill; @walden1999;
-  @ieee1241] AFE/ADC noise. Propagation/CRLB from Ch. 24.
+  [@poulin2002] OR interference & ambient-noise magnitudes. [@hummel2005]
+  standardized assessment. [@yaniv2009] clinical environment. [@iec60601_1_2] EMC
+  immunity. [@horowitz_hill; @walden1999; @ieee1241] AFE/ADC noise. Propagation/CRLB
+  from Ch. 24.
