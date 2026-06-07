@@ -1,6 +1,6 @@
 # Chapter 6 — Distortion Physics: Conductors, Ferromagnetics & Eddy Currents
 
-> **Status:** DRAFT · **Part II — Electromagnetic Theory**
+> **Status:** DEEPENED (awaiting review) · **Part II — Electromagnetic Theory**
 > Builds on Ch. 4 (fields) and Ch. 5 (coupling). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -90,10 +90,22 @@ the standard skin-depth result; values computed in Phase 5.)
 ## 6.3 Ferromagnetic materials
 
 A material with relative permeability $\mu_r\gg1$ provides a low-reluctance path
-that **concentrates and reshapes** magnetic flux. Unlike eddy currents, this
-effect is present in the **static** limit (it is a magnetostatic boundary-value
-problem, not an induction problem), so it distorts pulsed-DC systems just as it
-does AC systems. Ferromagnets additionally exhibit **hysteresis** and
+that **concentrates and reshapes** magnetic flux. The canonical solvable case is
+a permeable sphere of radius $a$ in a uniform field $\mathbf B_0$, which acquires
+an **induced magnetic dipole** (the magnetostatic analogue of Clausius–Mossotti)
+[@jackson1998]:
+
+$$
+\mathbf m_\text{ind} = \frac{4\pi a^3}{\mu_0}\,\frac{\mu_r-1}{\mu_r+2}\,\mathbf B_0
+\;\xrightarrow{\ \mu_r\to\infty\ }\; \frac{4\pi a^3}{\mu_0}\,\mathbf B_0 .
+\tag{6.2}
+$$
+
+Two features are decisive: the moment is **parallel** to $\mathbf B_0$ (flux is
+*concentrated*, sign opposite to the conductor case of §6.5), and it has **no
+$\omega$ dependence** — it exists in the **static** limit, because this is a
+magnetostatic boundary-value problem, not an induction problem. Hence
+ferromagnetic distortion afflicts pulsed-DC systems exactly as it does AC ones. Ferromagnets additionally exhibit **hysteresis** and
 **nonlinearity** (the response depends on field history and amplitude), which
 makes ferromagnetic distortion harder to calibrate out than the (linear,
 repeatable) eddy-current distortion of a fixed conductor in a fixed AC field.
@@ -120,25 +132,56 @@ currents **decay** with the conductor's L/R time constant. If the system
   effective update because of the settling wait, and *no* relief from
   ferromagnetic distortion.
 
-The settling time is set by the longest L/R constant among nearby conductors;
-choosing the sample instant is an explicit design parameter trading update rate
-against residual eddy distortion. (conf: high — this mechanism is the standard
-explanation for pulsed-DC immunity and is consistent with the review
-literature [@franz2014].)
+**Quantifying the settling time.** The eddy current in a conductor decays by
+magnetic diffusion; for a sphere of radius $a$ and conductivity $\sigma$ the
+slowest mode has time constant
+
+$$
+\tau_e = \frac{\mu_0\sigma a^2}{\pi^2}.
+\tag{6.3}
+$$
+
+This depends **quadratically on size** and linearly on conductivity, so the
+*largest, most conductive* nearby object dominates. Worked values for copper
+($\sigma=5.8\times10^7$):
+
+| Copper object | $\tau_e$ (eq. 6.3) | wait $\sim5\tau_e$ | max rate |
+|---|---:|---:|---:|
+| 1 cm | 0.74 ms | 3.7 ms | ~270 Hz |
+| 5 cm | 18 ms | 92 ms | ~11 Hz |
+
+So a fist-sized conductor in the volume can throttle a pulsed-DC system to ~10 Hz
+— a concrete statement of the settling-vs-rate trade. Choosing the sample instant
+is an explicit design parameter: too early leaves a residual eddy bias (a
+*deterministic* error, Ch. 25 §25.3); too late wastes update rate and SNR
+(Ch. 20 §20.6). (conf: high — (6.3) is the standard sphere eddy-decay result
+[@jackson1998]; consistent with the pulsed-DC rationale of [@franz2014].)
 
 ## 6.5 Field-perturbation theory and image models
 
 For quantitative modeling, two complementary tools:
 
-1. **Perturbation expansion.** Treat $\mathbf{B}_\text{eddy}$ as a small
-   correction $\mathbf{B}=\mathbf{B}_0+\mathbf{B}_1+\dots$, where
-   $\mathbf{B}_1$ is the field of the lowest induced multipole of the conductor.
-   For a compact conductor far from both coils, the conductor acts as an
-   **induced dipole** $\mathbf{m}_\text{ind}\propto\alpha\,\mathbf{B}_0(\text{at
-   conductor})$ with a complex, frequency-dependent polarizability $\alpha$. The
-   distortion at the sensor is then a *second* $1/r^3$ dipole field added to the
-   primary — which means distortion, like signal, falls off steeply with
-   distance from the offending object.
+1. **Induced-dipole (polarizability) model.** Treat the conductor as acquiring an
+   induced dipole $\mathbf m_\text{ind}=\alpha(\omega)\,\mathbf B_0(\text{at
+   conductor})$. For a conducting sphere of radius $a$ the polarizability is known
+   exactly (spherical Bessel functions [@jackson1998]); the two limits are what
+   matter:
+   $$
+   \mathbf m_\text{ind} \approx
+   \begin{cases}
+   -\,\dfrac{2\pi a^3}{\mu_0}\,\mathbf B_0, & a\gg\delta\ \text{(perfect-conductor limit: field expelled)}\\[2mm]
+   -\,j\,C\,\dfrac{a^2}{\delta^2}\,\dfrac{a^3}{\mu_0}\,\mathbf B_0\ \propto\ -j\,\omega, & a\ll\delta\ \text{(low-frequency limit)}
+   \end{cases}
+   $$
+   So the conductive induced moment is **opposite** to $\mathbf B_0$ (Lenz; field
+   *expelled*, unlike the ferromagnet of §6.3) and **grows $\propto\omega$ at low
+   frequency, then saturates** at $|\mathbf m_\text{ind}|=2\pi a^3 B_0/\mu_0$ once
+   $a\gtrsim\delta$. This is the quantitative form of "AC conductive distortion
+   rises with frequency" (§6.2) — it rises, then plateaus near the skin-depth
+   crossover $a\sim\delta$. (The Phase-6 *distortion visualizer* uses exactly the
+   perfect-conductor limit, $\mathbf m_\text{ind}=-(2\pi a^3/\mu_0)\,\mathbf B_0$.)
+   The distortion at the sensor is then a *second* $1/r^3$ dipole field added to
+   the primary.
 2. **Image methods.** For simple geometries (a coil above an infinite
    conducting or permeable half-space), the perturbed field equals that of an
    **image source** behind the boundary. Image models give closed-form intuition
@@ -159,13 +202,33 @@ from the coils, and (c) the excitation frequency. Foundational characterizations
 the operating volume") provide the methodology. Reported behavior consistently
 shows that:
 
-- distortion **decays rapidly with distance** from the offending object
-  (consistent with the induced-dipole $1/r^3$ argument of §6.5);
+- distortion **decays rapidly with distance** from the offending object;
 - distortion **increases with object size and conductivity** (more eddy current)
   and dramatically with **ferromagnetic content**;
 - AC systems show **frequency-dependent** conductive distortion; pulsed-DC
   systems show little conductive but full ferromagnetic distortion
   [@franz2014; @birkfellner1998].
+
+**A scaling law for the distortion fraction.** Chaining the §6.5 induced-dipole
+through the two $1/r^3$ falloffs makes the distance dependence concrete. With a
+generator–sensor separation $r$, a distorter at distance $d_t$ from the generator
+and $d_s$ from the sensor, the perturbation field relative to the primary at the
+sensor scales (perfect-conductor regime) as
+
+$$
+\frac{|\mathbf B_\text{pert}|}{|\mathbf B_0|}\ \sim\ \frac{a^3\,r^3}{d_t^3\,d_s^3}.
+\tag{6.4}
+$$
+
+Two lessons: distortion grows as the **cube of conductor size** $a^3$ and falls
+**very steeply** — as $1/d_t^3$ *and* $1/d_s^3$ (an overall $\sim1/d^6$ if the
+object moves away from both). This is why **keeping distorters a modest distance
+out of the volume is so effective**, and why a small steel tool *at the sensor
+tip* ($d_s\to0$) is catastrophic while the same tool across the room is
+invisible. Equation (6.4) is the analytic backbone of the Phase-6 distortion
+visualizer and the witness-sensor compensation of Ch. 27. (conf: med — scaling
+derivation; absolute coefficients are geometry-dependent and best taken from FEA
+(Ch. 7) or measurement [@birkfellner1998].)
 
 > **Engineering takeaway.** Distortion is *not* random noise — it is a smooth,
 > repeatable, spatially structured field error. That repeatability is exactly
@@ -178,8 +241,11 @@ shows that:
 ---
 
 ## Open questions / to verify
-- Add a quantitative induced-dipole polarizability $\alpha(\omega)$ derivation
-  (sphere in uniform AC field) to Appendix C, with the standard closed form.
+- ✅ **Resolved:** induced-dipole polarizability now given for both conductors
+  (perfect-conductor & low-freq limits, §6.5) and ferromagnets (eq. 6.2, §6.3),
+  with the eddy-decay time constant (eq. 6.3) and the distortion-vs-distance
+  scaling (eq. 6.4) [@jackson1998]. Remaining: full Bessel-function $\alpha(\omega)$
+  and a validating Phase-5 eddy-current sim against (6.4).
 - Re-confirm Birkfellner (1998) DOI/pages against the Wiley *Medical Physics*
   record (currently 25(11):2242–2248, DOI 10.1118/1.598425 — **to verify**).
 - ✅ **Partially resolved (Phase 5):** skin-depth vs frequency for Cu/Al/SS
@@ -193,6 +259,7 @@ shows that:
   surfaced in research) materially changes the §6.2 conclusion; tag findings.
 
 ## Sources cited
-- [@franz2014] review (AC vs DC sensitivity). [@birkfellner1998] systematic
+- [@franz2014] review (AC vs DC sensitivity). [@jackson1998] sphere
+  polarizability, eddy diffusion, image methods. [@birkfellner1998] systematic
   distortion characterization. [@hummel2005] metallic-object assessment.
   [@kindratenko2000] calibration/correction survey.

@@ -36,8 +36,8 @@ Volder, Huber, Groves, GUM, …). All build clean (0 KaTeX errors).
 |---:|-------|-------|-------|
 | 4 | Maxwell, quasistatics & the dipole | 🟢 DEEPENED → review | +oscillating-dipole 3-term expansion (near/induction/radiation), **tissue-transparency quantified** (skin depth ~7 m ≫ body, Gabriel), Jackson/Griffiths added (→1915 w) |
 | 5 | Coil coupling & mutual inductance | 🟢 DEEPENED → review | +demagnetizing-factor limit (μ_app→1/D, why catheter coils are long/thin), coupling coefficient k & reflected impedance, open-circuit-vs-loaded voltage divider, reciprocity proof, (5.4)→(5.3) sketch, worked induced-voltage example (0.47 mV–50 µV); Grover added (1268→1895 w) |
-| 6 | Distortion physics | ⬜ DRAFT | next (partly deepened: skin-depth table) |
-| 7 | Numerical methods (FEA/BEM) | ⬜ DRAFT | |
+| 6 | Distortion physics | 🟢 DEEPENED → review | +ferromagnetic sphere polarizability (eq 6.2), eddy-decay τ_e=μ₀σa²/π² (eq 6.3, worked: 5cm Cu→18ms→11Hz pulsed-DC cap), conducting-sphere AC limits (∝ω then saturate), distortion-fraction scaling a³r³/(d_t³d_s³) (eq 6.4) (→1879 w) |
+| 7 | Numerical methods (FEA/BEM) | ⬜ DRAFT | next (finishes Part II) |
 
 (Other chapters remain DRAFT; will be scheduled next.)
 
