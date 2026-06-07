@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import SensorOrientation3D from '../../components/SensorOrientation3D.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="3-D sensor-orientation simulator" toc={toc}>
+  <h1>3-D sensor-orientation simulator</h1>
+  <p>
+    A sensor's pose in the generator's field, in three dimensions. Tilt and roll
+    the sensor and watch the measured projections of each transmit-axis field —
+    rolling about the sensor's own axis leaves a single coil's measurements
+    unchanged (the 5-DOF roll null, Ch. 13), while a second perpendicular coil
+    makes roll observable. Drag to orbit the view.
+  </p>
+  <SensorOrientation3D />
+</BookLayout>

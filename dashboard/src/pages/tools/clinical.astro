@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import { loadBib, authorsShort } from '../../lib/bib';
+import { scenarios } from '../../data/clinical';
+import ClinicalDemos from '../../components/ClinicalDemos.astro';
+
+const toc = buildToc(await getCollection('book'));
+const { byId } = loadBib();
+
+const enriched = scenarios.map((s) => ({
+  ...s,
+  facts: s.facts.map((f) => ({ label: f.label, value: f.value, url: f.ref ? byId[f.ref]?.url : undefined })),
+  sources: s.refs.map((r) => ({ label: byId[r] ? authorsShort(byId[r]) + (byId[r].year ? ` ${byId[r].year}` : '') : r, url: byId[r]?.url })),
+}));
+---
+<BookLayout title="Clinical use-case demonstrations" toc={toc}>
+  <h1>Clinical use-case demonstrations</h1>
+  <p>
+    Where EMT's no-line-of-sight localization matters clinically (Ch. 29): cardiac
+    electrophysiology, navigation bronchoscopy, ENT/skull-base, interventional
+    radiology, and robotic/image-guided therapy. Each tab shows the workflow,
+    EMT's role, sourced key facts, and the error sources that usually dominate —
+    often registration and motion rather than the tracker itself.
+  </p>
+  <ClinicalDemos scenarios={enriched} />
+</BookLayout>

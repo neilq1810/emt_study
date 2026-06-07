@@ -47,6 +47,7 @@ const home = base.endsWith('/') ? base : base + '/';
                 ['tools/dipole', 'Dipole field visualizer'],
                 ['tools/coil-geometry', 'Coil-geometry explorer'],
                 ['tools/dof', '5-DOF vs 6-DOF demo'],
+                ['tools/sensor-orientation', 'Sensor orientation (3-D)'],
                 ['tools/distortion', 'Distortion / eddy visualizer'],
                 ['tools/lock-in', 'Lock-in simulator'],
                 ['tools/noise-budget', 'Noise-budget calculator'],
@@ -62,6 +63,7 @@ const home = base.endsWith('/') ? base : base + '/';
                 ['tools/patents', 'Patent / tech timeline'],
                 ['tools/vendors', 'Vendor-ecosystem map'],
                 ['tools/research', 'Research-landscape explorer'],
+                ['tools/clinical', 'Clinical use-cases'],
               ].map(([path, label]) => (
                 <li>
                   <a class="block rounded px-2 py-1 text-slate-700 hover:bg-slate-100" href={home + path}>
