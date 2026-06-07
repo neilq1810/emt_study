@@ -15,6 +15,26 @@ with KaTeX-typeset mathematics. Built with **Astro + Tailwind**, deployable to
 - Math (`$…$`, `$$…$$`) is rendered at build time via `remark-math` +
   `rehype-katex`.
 
+## Simulation link (figures & computed data)
+
+The Python simulations (`simulations/run_all.py`) write to the repo-root
+`/figures` and `/data`. Those are surfaced on the site by:
+
+1. **`scripts/copy-assets.mjs`** — copies `/figures` and `/data` into
+   `public/` (run automatically by the `predev`/`prebuild` npm hooks, or
+   `npm run sync:assets`). The copies are gitignored; the originals are the
+   source of truth.
+2. **`/results`** (`src/pages/results.astro`) — renders the canonical computed
+   numbers from `/data/summary.json` at build time (`src/lib/simdata.ts`).
+3. **`/figures`** (`src/pages/figures.astro`) — gallery of the generated PNGs,
+   each linked to the chapter it backs.
+4. Interactive tools can **fetch the Python data** at runtime to overlay it on
+   their JS curves — e.g. the CRLB explorer overlays `/data/crlb_vs_range.csv`,
+   demonstrating the TypeScript `physics.ts` and the NumPy `emtrack` agree.
+
+To refresh after changing the sims: `cd simulations && python3 run_all.py`,
+commit the new `/figures` + `/data`, then rebuild (the copy step picks them up).
+
 ## Local development
 
 ```bash

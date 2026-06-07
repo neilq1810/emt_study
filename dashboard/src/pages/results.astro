@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../layouts/BookLayout.astro';
+import { buildToc } from '../lib/toc';
+import { loadJson, loadCsv } from '../lib/simdata';
+
+const toc = buildToc(await getCollection('book'));
+const s = loadJson<any>('summary.json') ?? {};
+const mc = loadJson<any>('monte_carlo_vs_crlb.json') ?? {};
+const dv: any[] = s.dipole_vs_loop?.rows ?? [];
+const crlbRange = loadCsv('crlb_vs_range.csv');
+const fmt = (x: number, n = 3) => (x == null ? '—' : Number(x).toFixed(n));
+---
+
+<BookLayout title="Computed results" toc={toc}>
+  <h1>Computed results (Phase-5 simulations)</h1>
+  <p class="lead">
+    The canonical numbers below are produced by <code>simulations/run_all.py</code>
+    (the NumPy/SciPy <code>emtrack</code> library) and read directly from
+    <code>/data/summary.json</code> at build time — so the figures, the book's
+    quoted values, and the interactive tools all trace to one source.
+  </p>
+
+  {s.dipole_vs_loop && (
+    <section>
+      <h2>Dipole-approximation error (Ch. 4 §4.6)</h2>
+      <table>
+        <thead><tr><th>r/a</th><th>max error over θ [%]</th><th>mean error [%]</th></tr></thead>
+        <tbody>
+          {dv.map((r: any) => (
+            <tr><td>{r.r_over_a}</td><td>{fmt(r.max_err_pct, 2)}</td><td>{fmt(r.mean_err_pct, 2)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  )}
+
+  {s.coupling_checks && (
+    <section>
+      <h2>Coupling-tensor identities (Ch. 5)</h2>
+      <ul>
+        <li>K eigenvalues / scale = <code>[{s.coupling_checks.K_eigenvalues_over_scale.join(', ')}]</code> (expected {`{2, −1, −1}`})</li>
+        <li>trace(K) = <code>{s.coupling_checks.K_trace.toExponential(1)}</code> (expected 0)</li>
+        <li>on-axis / equator |B| ratio = <code>{fmt(s.coupling_checks.onaxis_equator_ratio, 4)}</code> (expected 2)</li>
+      </ul>
+    </section>
+  )}
+
+  {s.crlb && (
+    <section>
+      <h2>CRLB position uncertainty (Ch. 24)</h2>
+      <p>Field-referred noise σ_B = {(s.crlb.sigma_B_T * 1e9).toFixed(1)} nT · range power law σ ∝ z^<b>{fmt(s.crlb.power_law_exponent, 2)}</b>.</p>
+      <table>
+        <thead><tr><th>range</th><th>CRLB σ [mm]</th></tr></thead>
+        <tbody>
+          {Object.entries(s.crlb.sigma_mm_at).map(([k, v]: any) => (
+            <tr><td>{k}</td><td>{fmt(v, 3)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  )}
+
+  {Object.keys(mc).length > 0 && (
+    <section>
+      <h2>Monte-Carlo vs CRLB (Ch. 24/25)</h2>
+      <table>
+        <thead><tr><th>pose</th><th>MC RMS [mm]</th><th>CRLB [mm]</th><th>ratio</th></tr></thead>
+        <tbody>
+          {Object.entries(mc).map(([k, v]: any) => (
+            <tr><td>{k}</td><td>{fmt(v.mc_rms_mm)}</td><td>{fmt(v.crlb_mm)}</td><td>{fmt(v.ratio, 2)}</td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="text-sm text-slate-500">Empirical solver error matches the CRLB to ~3% — the estimator is efficient.</p>
+    </section>
+  )}
+
+  {s.closed_form_init && (
+    <section>
+      <h2>Closed-form initializer (Ch. 23 §23.5)</h2>
+      <ul>
+        <li>M·Mᵀ eigenvalue ratio = <code>[{s.closed_form_init.eigenvalue_ratio_mean.join(', ')}]</code> (derived 1:1:4)</li>
+        <li>max clean position error = <code>{s.closed_form_init.clean_position_err_max_m.toExponential(1)} m</code> (machine precision)</li>
+      </ul>
+    </section>
+  )}
+
+  {s.lockin && (
+    <section>
+      <h2>Lock-in detection (Ch. 20)</h2>
+      <p>Amplitude error scales as T^<b>{fmt(s.lockin.loglog_slope, 2)}</b> (≈ −0.5, i.e. 1/√T) at noise/signal = {s.lockin.noise_to_signal}.</p>
+    </section>
+  )}
+
+  {s.eddy_skin && (
+    <section>
+      <h2>Skin depth at 10 kHz (Ch. 6)</h2>
+      <ul>
+        {Object.entries(s.eddy_skin.skin_depth_mm_at_10kHz).map(([k, v]: any) => (
+          <li>{k}: <b>{fmt(v, 2)} mm</b></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <p class="mt-6 text-sm text-slate-400">
+    Reproduce: <code>cd simulations && python3 run_all.py</code> → regenerates
+    <code>/data</code> and <code>/figures</code> ({crlbRange.length} CRLB-range
+    samples, etc.). See the <a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/figures`}>figure gallery</a>.
+  </p>
+</BookLayout>
