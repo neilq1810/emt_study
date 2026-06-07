@@ -1,0 +1,69 @@
+---
+// Clinical use-case demonstrations (Ch. 29). Tabbed, sourced explainer of EMT
+// clinical workflows. Scenarios come from the page (joined to source URLs).
+interface Fact { label: string; value: string; url?: string }
+interface Scenario { id: string; name: string; instrument: string; blurb: string; steps: string[]; emtRole: string; facts: Fact[]; dominantErrors: string[]; sources: { label: string; url?: string }[] }
+const { scenarios } = Astro.props as { scenarios: Scenario[] };
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div id="cl-tabs" class="mb-3 flex flex-wrap gap-1 text-xs">
+    {scenarios.map((s, i) => (
+      <button class="cl-tab rounded px-2 py-1" data-i={i}>{s.name}</button>
+    ))}
+  </div>
+  <div class="flex flex-col gap-4 sm:flex-row">
+    <svg id="cl-svg" viewBox="0 0 200 150" class="w-full max-w-[220px] shrink-0 rounded bg-slate-50">
+      <rect x="20" y="95" width="160" height="14" rx="3" fill="#0e7490" opacity="0.25"></rect>
+      <text x="100" y="104" font-size="7" fill="#0e7490" text-anchor="middle">field generator</text>
+      <ellipse cx="100" cy="60" rx="62" ry="26" fill="#fee2e2" stroke="#fca5a5"></ellipse>
+      <text x="100" y="40" font-size="7" fill="#b91c1c" text-anchor="middle">patient anatomy</text>
+      <line id="cl-instr" x1="100" y1="20" x2="100" y2="66" stroke="#0f172a" stroke-width="2.5"></line>
+      <circle id="cl-tip" cx="100" cy="66" r="3" fill="#22c55e"></circle>
+      <text id="cl-instr-label" x="100" y="16" font-size="7" fill="#0f172a" text-anchor="middle">instrument</text>
+    </svg>
+    <div class="min-w-0 flex-1">
+      <p id="cl-blurb" class="text-sm"></p>
+      <div class="mt-3 grid gap-4 md:grid-cols-2">
+        <div>
+          <h4 class="text-xs font-semibold uppercase text-slate-400">Workflow</h4>
+          <ol id="cl-steps" class="ml-4 list-decimal text-sm text-slate-700"></ol>
+          <h4 class="mt-3 text-xs font-semibold uppercase text-slate-400">EMT's role</h4>
+          <p id="cl-role" class="text-sm text-slate-700"></p>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase text-slate-400">Key facts</h4>
+          <div id="cl-facts" class="space-y-1 text-sm"></div>
+          <h4 class="mt-3 text-xs font-semibold uppercase text-slate-400">Dominant errors</h4>
+          <ul id="cl-errors" class="ml-4 list-disc text-sm text-slate-700"></ul>
+          <div id="cl-sources" class="mt-3 text-xs text-slate-500"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" id="cl-data" set:html={JSON.stringify(scenarios)}></script>
+</div>
+
+<script>
+  const scenarios = JSON.parse(document.getElementById('cl-data')!.textContent!) as any[];
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.cl-tab')];
+  const el = (id: string) => document.getElementById(id)!;
+  const tipY: Record<string, number> = { catheter: 70, bronchoscope: 64, needle: 58, 'pointer/probe': 50, 'robotic catheter': 72 };
+
+  function show(i: number) {
+    const s = scenarios[i];
+    tabs.forEach((t, k) => t.className = 'cl-tab rounded px-2 py-1 ' + (k === i ? 'bg-accent text-white' : 'bg-slate-100 hover:bg-slate-200'));
+    el('cl-blurb').textContent = s.blurb;
+    el('cl-steps').innerHTML = s.steps.map((x: string) => `<li>${x}</li>`).join('');
+    el('cl-role').textContent = s.emtRole;
+    el('cl-facts').innerHTML = s.facts.map((f: any) =>
+      `<div><span class="text-slate-500">${f.label}:</span> <b>${f.value}</b>${f.url ? ` <a class="text-accent" href="${f.url}" target="_blank" rel="noopener">↗</a>` : ''}</div>`).join('');
+    el('cl-errors').innerHTML = s.dominantErrors.map((x: string) => `<li>${x}</li>`).join('');
+    el('cl-sources').innerHTML = 'Sources: ' + s.sources.map((r: any) => r.url ? `<a class="text-accent" href="${r.url}" target="_blank" rel="noopener">${r.label}</a>` : r.label).join(', ');
+    el('cl-instr-label').textContent = s.instrument;
+    const y = tipY[s.instrument] ?? 64;
+    el('cl-instr').setAttribute('y2', String(y));
+    el('cl-tip').setAttribute('cy', String(y));
+  }
+  tabs.forEach((t) => t.addEventListener('click', () => show(+t.dataset.i!)));
+  show(0);
+</script>
