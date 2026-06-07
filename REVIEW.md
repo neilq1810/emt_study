@@ -31,6 +31,14 @@ Collaborative deepen-and-review pass. Each chapter moves
 citations added across the batch (Anser, Widrow, Solà, Arulampalam, Hogenauer,
 Volder, Huber, Groves, GUM, …). All build clean (0 KaTeX errors).
 
+### Part II — Electromagnetic Theory (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 4 | Maxwell, quasistatics & the dipole | 🟢 DEEPENED → review | +oscillating-dipole 3-term expansion (near/induction/radiation), **tissue-transparency quantified** (skin depth ~7 m ≫ body, Gabriel), Jackson/Griffiths added (→1915 w) |
+| 5 | Coil coupling & mutual inductance | ⬜ DRAFT | next |
+| 6 | Distortion physics | ⬜ DRAFT | (partly deepened: skin-depth table) |
+| 7 | Numerical methods (FEA/BEM) | ⬜ DRAFT | |
+
 (Other chapters remain DRAFT; will be scheduled next.)
 
 ## User-review queue

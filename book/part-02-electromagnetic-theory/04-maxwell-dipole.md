@@ -1,6 +1,6 @@
 # Chapter 4 — Maxwell's Equations, Quasistatics & the Magnetic Dipole
 
-> **Status:** DRAFT · **Part II — Electromagnetic Theory**
+> **Status:** DEEPENED (awaiting review) · **Part II — Electromagnetic Theory**
 > Math is written in LaTeX delimited by `$…$` (inline) and `$$…$$` (display).
 > Citation keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -40,8 +40,8 @@ permittivity, permeability, and conductivity of the medium. The two equations
 that matter most for EMT are Ampère's law (with Maxwell's displacement-current
 correction) and Faraday's law: the generator coil's current creates $\mathbf{B}$
 via Ampère, and the time variation of $\mathbf{B}$ induces the sensor EMF via
-Faraday. (Standard electrodynamics; see e.g. Jackson, *Classical
-Electrodynamics* — **to add to bibliography**.)
+Faraday. (Standard electrodynamics; see Jackson [@jackson1998] for the graduate
+treatment and Griffiths [@griffiths2013] for an accessible one.)
 
 ## 4.2 The quasi-magnetostatic (near-field) regime
 
@@ -68,11 +68,19 @@ wavelength, two simplifications follow:
    *quasi-static*: a static-field solution that merely scales in time with the
    drive current.
 2. **The radiation (far) field is negligible** compared with the near field.
-   For an oscillating dipole the radiation term scales as $1/r$ and the
-   induction/near-field term as $1/r^3$; their ratio is $\sim (kr)^2\sim10^{-8}$
-   here. EMT therefore lives entirely in the **near field**, and the relevant
-   solution is the **magnetostatic** one (a static current distribution),
-   carried slowly in time by the drive waveform.
+   The exact field of an oscillating magnetic dipole has three terms of distinct
+   range (Jackson [@jackson1998]):
+   $$
+   \mathbf{B} \sim \underbrace{\frac{1}{r^3}}_{\text{near / static}}
+   + \underbrace{\frac{k}{r^2}}_{\text{induction}}
+   + \underbrace{\frac{k^2}{r}}_{\text{radiation}},\qquad k=\frac{2\pi}{\lambda}.
+   $$
+   The induction/near ratio is $\sim kr$ and the radiation/near ratio is
+   $\sim (kr)^2$. With $kr\sim2\times10^{-4}$ (from above), these are
+   $\sim2\times10^{-4}$ and $\sim4\times10^{-8}$ — so the $1/r^3$ **near term
+   dominates by four-to-eight orders of magnitude**. EMT therefore lives entirely
+   in the near field, and the relevant solution is the **magnetostatic** one (a
+   static current distribution), carried slowly in time by the drive waveform.
 
 This is exactly the regime invoked by Raab et al. when they speak of
 "quasi-static magnetic-dipole fields" [@raab1979]. It is the reason EMT can use
@@ -87,6 +95,34 @@ than fully electromagnetic. (conf: high — standard near-field scaling.)
 > by a factor of 8 (≈18 dB). EMT is intrinsically a centimeter-to-meter
 > technology; it does not scale to room-spanning volumes the way RF
 > time-of-flight does. Keep this in view through the entire book.
+
+### Why the body is transparent to the field
+EMT's defining clinical virtue — localizing a sensor *inside* the body
+(Ch. 1 §1.1) — rests on the human body being **electromagnetically transparent**
+to the low-frequency magnetic field, which is worth quantifying rather than
+asserting. Two facts:
+
+1. **Tissue is non-magnetic:** its relative permeability $\mu_r\approx1$, so it
+   does not concentrate or reshape $\mathbf{B}$ (unlike the ferromagnets of
+   Ch. 6). The field passes as if through vacuum *magnetically*.
+2. **Tissue is weakly conducting at EMT frequencies.** Measured tissue
+   conductivity is of order $\sigma\sim0.1$–$1\,\text{S/m}$ in the kHz range
+   [@gabriel1996]. The induced-eddy attenuation length is the **magnetic skin
+   depth** (Ch. 6 eq. 6.1):
+   $$
+   \delta = \frac{1}{\sqrt{\pi f\mu\sigma}}.
+   $$
+   For $f=10\,\text{kHz}$, $\mu=\mu_0$, $\sigma=0.5\,\text{S/m}$:
+   $\delta = 1/\sqrt{\pi(10^4)(4\pi\times10^{-7})(0.5)} \approx 7\,\text{m}$.
+
+A skin depth of **~7 m vastly exceeds the ~0.3 m body**, so the field traverses
+tissue with $<\!5\%$ attenuation and negligible eddy distortion: the body is, to
+the field, almost not there. (Compare a copper instrument, $\delta\approx0.66$ mm
+at the same frequency, Ch. 6 §6.2 — *eleven thousand times* thinner skin depth,
+which is exactly why metal distorts and tissue does not.) This is the
+quantitative basis for the no-line-of-sight, see-through-tissue property that
+defines the entire technology. (conf: high — $\sigma$ from [@gabriel1996], skin
+depth standard [@jackson1998].)
 
 ## 4.3 The magnetic vector potential of a current loop
 
@@ -268,8 +304,9 @@ range.)
 ---
 
 ## Open questions / to verify
-- Add Jackson and/or Griffiths (electrodynamics) to the bibliography with
-  verified ISBNs to formally back §4.1–4.4.
+- ✅ **Resolved:** Jackson [@jackson1998] and Griffiths [@griffiths2013] added to
+  back §4.1–4.4; tissue-transparency now quantified with measured $\sigma$
+  [@gabriel1996] (§4.2).
 - ✅ **Resolved (Phase 5):** §4.6 error table now holds computed values from
   `simulations/run_all.py` (`data/dipole_vs_loop_error.csv`,
   `figures/ch04_dipole_vs_loop_error.png`); the $(a/r)^2$ slope is confirmed.
@@ -278,5 +315,6 @@ range.)
   loop for inclusion in Appendix C.
 
 ## Sources cited in this chapter
-- [@raab1979] Raab et al. (1979) — quasi-static magnetic-dipole framing.
-- (Electrodynamics textbook citations — Jackson / Griffiths — **to be added**.)
+- [@raab1979] quasi-static magnetic-dipole framing. [@jackson1998; @griffiths2013]
+  electrodynamics (Maxwell, dipole, multipole, near field). [@gabriel1996] tissue
+  conductivity for the transparency argument.
