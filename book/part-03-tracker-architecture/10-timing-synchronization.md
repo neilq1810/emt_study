@@ -1,6 +1,6 @@
 # Chapter 10 — Timing, Clocking & Synchronization
 
-> **Status:** DRAFT · **Part III — Tracker Architecture**
+> **Status:** DEEPENED (awaiting review) · **Part III — Tracker Architecture**
 > Builds on Ch. 5 (coupling matrix), Ch. 8 (chain). Detailed estimation math is
 > in Part VII (Ch. 19–20). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -62,11 +62,25 @@ synchronization requirement of this chapter.
 
 The synchronization can be delivered by a **wired reference**, by an **RF/BLE
 clock-sync** between transmitter and receiver, or by an **EM-pulse handshake**
-that lets the receiver measure and track its clock offset to the transmitter
-(conf: med — these synchronization strategies are documented in the EMT
-engineering/patent literature; wireless-sensor systems in particular rely on
-such schemes). Wireless and detachable-sensor architectures live or die on the
-quality of this sync.
+that lets the receiver measure and track its clock offset to the transmitter.
+Wireless and detachable-sensor architectures live or die on the quality of this
+sync.
+
+**How tight must sync be?** A timing offset $\delta t$ between transmitter and
+receiver is a phase error $\delta\phi=\omega\,\delta t$ in the coherent detector,
+which attenuates the in-phase amplitude by $\cos\delta\phi$ (Ch. 20 §20.4). To
+hold the amplitude error below 1% requires $\delta\phi\lesssim 8^\circ=0.14$ rad,
+i.e. at $f=10\,\text{kHz}$:
+$$
+\delta t \lesssim \frac{0.14}{2\pi f} \approx 2.2\,\mu\text{s}.
+$$
+This is the quantitative synchronization budget: a *wired* reference meets it
+trivially; a *wireless* link must discipline its clock to the
+**microsecond** level. That this is achievable is shown by wireless EMT
+demonstrations — e.g. transmitting the sensor signal over an FM radio link on the
+open-source Anser system reached $1.61\pm0.68$ mm, comparable to the $1.14$ mm
+wired baseline [@crowley2023; @jaeger2017]. (conf: high — the phase-error budget
+is direct from Ch. 20 §20.4; the wireless accuracy is the reported result.)
 
 ## 10.3 Clock architecture and the reference chain
 
@@ -78,6 +92,17 @@ lock-in reference). Any *relative* timing error between these corrupts the
 amplitude estimate. The key architectural decision is **how the reference reaches
 the receiver** — physically shared (best), recovered from the received signal,
 or independently disciplined and offset-tracked (wireless).
+
+**Coherent sampling.** Deriving the excitation frequency $f_0$ and the ADC sample
+rate $f_s$ from the *same* master clock with an integer ratio
+$f_s/f_0 = $ integer (and an integer number of cycles in the analysis window)
+makes the single-bin DFT / lock-in estimate *exact* — no spectral leakage
+(Ch. 18 §18.3, Ch. 20 §20.3). This is essentially free when one clock fans out to
+both, and is the cleanest reason to build the system around a single reference
+rather than independent transmit and receive clocks. It also dovetails with the
+per-coil resonant tuning of Ch. 9 §9.4: each FDM coil's frequency is a known
+integer division of the master clock, so its tank and its demodulator stay
+locked together.
 
 ## 10.4 Clock jitter as a noise floor
 
@@ -110,6 +135,16 @@ The dominant timing concern in EMT is therefore *settling/sequencing* (TDM) and
 *phase-reference integrity* (coherence), not raw jitter. (conf: high — direct
 application of (10.1) at EMT frequencies.)
 
+**Three timing errors, not one.** It helps to keep them distinct: (i) **aperture
+jitter** (random sample-instant error, eq. 10.1) — a per-sample noise floor,
+negligible here; (ii) **static phase offset / sync error** (§10.2) — a coherent
+amplitude bias $\propto\cos\delta\phi$, the binding constraint for wireless
+links; and (iii) **output/frame jitter** (variation in *when each pose is
+produced*, Ch. 22 §22.7) — irrelevant to amplitude SNR but important for control
+loops and fusion (Ch. 21). A reference's **phase noise** — the frequency-domain
+view of jitter — integrates to (i); its slow drift contributes to (ii). EMT is
+forgiving of (i), demanding on (ii), and (iii) is a real-time-scheduling problem.
+
 ## 10.5 Timing and update rate
 
 Timing choices set the **update rate**, a clinically critical spec:
@@ -120,7 +155,12 @@ Timing choices set the **update rate**, a clinically critical spec:
   integration → more noise). A direct rate-vs-accuracy trade.
 - **FDM:** all axes simultaneous, so update rate is set by the integration time
   needed for the desired per-frequency SNR and bin separation, not by axis
-  count — generally faster, at the bandwidth/crosstalk cost of §10.1.
+  count — generally faster, at the bandwidth/crosstalk cost of §10.1. Note the
+  channel spacing is bounded *below* by two things: the bin resolution $1/\tau$
+  (Ch. 19) **and** the per-coil resonant bandwidth $f_0/Q$ (Ch. 9 §9.4) — a
+  high-$Q$ resonant generator coil only passes a narrow band around its own
+  frequency, which both enforces channel separation and demands frequency
+  stability.
 - **Pulsed-DC:** rate limited by per-axis eddy-current settling wait (Ch. 6
   §6.4) plus magnetometer integration.
 
@@ -129,14 +169,14 @@ These feed directly into the end-to-end latency budget of Ch. 12.
 ---
 
 ## Open questions / to verify
-- Attach a primary citation for EM-pulse / RF clock-synchronization schemes in
-  wireless EMT (patent literature surfaced in research; find a peer-reviewed
-  anchor).
+- ✅ **Resolved:** wireless synchronization now has a peer-reviewed anchor
+  [@crowley2023] and a quantified sync budget (§10.2, ~2 µs at 10 kHz). Remaining:
+  source a primary description of the *EM-pulse handshake* scheme specifically.
 - Provide representative $t_\text{slot}$, integration-time, and update-rate
   figures per architecture from sourced material (Ch. 28) rather than asserting.
-- Cross-check (10.1) derivation placement with Ch. 18 to avoid duplication.
 
 ## Sources cited
-- [@raab1979], [@franz2014] for coherent-detection EMT context; multiplexing and
-  synchronization specifics cross-referenced to Ch. 19–20 and flagged for
-  primary-source attachment above.
+- [@raab1979], [@franz2014] coherent-detection EMT context. [@crowley2023]
+  wireless (FM) sensor link & sync accuracy. [@jaeger2017] coherent FDM master-clock
+  realization (Anser). Multiplexing/lock-in detail cross-referenced to Ch. 19–20;
+  jitter to Ch. 18.
