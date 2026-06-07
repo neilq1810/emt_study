@@ -42,6 +42,15 @@ Volder, Huber, Groves, GUM, …). All build clean (0 KaTeX errors).
 **✅ Part II (Ch. 4–7) fully deepened.** +6 verified citations (Jackson, Griffiths,
 Gabriel, Grover, Jin; Huber/Groves/GUM from prior batch). All build clean.
 
+### Part III — Tracker Architecture (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 8 | System architecture | 🟢 DEEPENED → review | +architecture parameter space, **system link budget eq 8.1 (master design relation)**, wireless/active-passive/sync architecture, worked architecture selection + commercial mapping (1031→1945 w) |
+| 9 | Field generators & sensor coils | ⬜ DRAFT | next |
+| 10 | Timing, clocking, sync | ⬜ DRAFT | |
+| 11 | DSP pipeline & estimation | ⬜ DRAFT | |
+| 12 | Latency & real-time | ⬜ DRAFT | |
+
 (Other chapters remain DRAFT; will be scheduled next.)
 
 ## User-review queue
