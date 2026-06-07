@@ -1,6 +1,6 @@
 # Chapter 7 — Analytical & Numerical Field Methods
 
-> **Status:** DRAFT · **Part II — Electromagnetic Theory**
+> **Status:** DEEPENED (awaiting review) · **Part II — Electromagnetic Theory**
 > Closes Part II. Builds on Ch. 4–6. Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -54,34 +54,91 @@ implications:
 - **Anywhere near a conductor or steel:** no air model is valid; either keep
   such material out of the volume or move to Tier 4 mapping (Ch. 26).
 
+**A fast intermediate — the reluctance (magnetic-circuit) model.** Before
+committing to full FEA, a cored radiator can often be captured by a lumped
+**magnetic-circuit** model: treat the core, air gaps, and return path as
+reluctances $\mathcal R = \ell/(\mu A)$ in series/parallel, driven by the
+magnetomotive force $NI$. This yields the working-point flux and the effective
+moment (including the demagnetizing/saturation behaviour of Ch. 5 §5.1) in closed
+form — cheap enough for design sweeps, accurate enough to size a core before a
+single mesh is built. It is the magnetics analogue of a first-pass circuit
+estimate; FEA then refines it.
+
+### The spherical-harmonic field model (the fast *online* representation)
+The central practical problem of §7.1 — get a model that is both **faithful**
+(Tier 3/4) and **fast** (Tier 0–2) — has a clean, rigorous solution. In a
+**current-free** region (the working volume, sources outside it), the field is
+both curl- and divergence-free, so it derives from a **magnetic scalar
+potential** $\mathbf B = -\mu_0\nabla\psi$ with $\nabla^2\psi=0$. The
+regular-at-origin solution is a sum of **solid spherical harmonics**:
+
+$$
+\psi(\mathbf r) = \sum_{l=0}^{L}\sum_{m=-l}^{l} a_{lm}\, r^{l}\, Y_{lm}(\theta,\phi),
+\qquad
+\mathbf B = -\mu_0\nabla\psi .
+\tag{7.1}
+$$
+
+Fit the coefficients $a_{lm}$ (by least squares) to field samples from FEA or
+measurement over the volume; a modest truncation $L\sim3$–$5$ captures a smooth
+generator field to well below the noise floor. The payoff is large: (7.1) is
+**analytic, exactly source-free** ($\nabla\!\cdot\!\mathbf B=\nabla\!\times\!\mathbf B=0$
+by construction — unlike a naïve interpolation), **differentiable in closed form**
+(so the solver Jacobian of Ch. 24 comes for free and exactly), and evaluates in
+microseconds. This is the standard way to compress an expensive offline field into
+a real-time forward model, and it generalizes the multipole "Tier 2" row of §7.1
+to the *full* cored/planar generator (not just a dipole). (conf: high — solid
+harmonics are the standard Laplace-equation basis [@jackson1998]; the
+fit-and-evaluate workflow is widely used for cored/planar field generators.)
+
 ## 7.3 Finite element analysis (FEA)
 
 FEA solves the magnetostatic (or low-frequency eddy-current) boundary-value
-problem on a discretized mesh. For EMT the relevant formulations are:
+problem on a discretized mesh [@jin2014]. For EMT the relevant formulations are:
 
-- **Magnetostatic** ($\nabla\times\mathbf{H}=\mathbf{J}$,
-  $\nabla\cdot\mathbf{B}=0$), usually via a magnetic vector potential
-  $\mathbf{A}$ with $\mathbf{B}=\nabla\times\mathbf{A}$, to model the generator
-  with its ferromagnetic core and winding geometry.
-- **Low-frequency eddy-current (A–V) formulation** to model the *distortion*
-  physics of Ch. 6: induced currents in nearby conductors as a function of
-  excitation frequency, capturing the skin-depth behavior of eq. (6.1).
+- **Magnetostatic, $\mathbf A$-formulation.** With $\mathbf B=\nabla\times\mathbf A$
+  (which enforces $\nabla\!\cdot\!\mathbf B=0$ identically) and reluctivity
+  $\nu=1/\mu$, Ampère's law becomes
+  $$
+  \nabla\times(\nu\,\nabla\times\mathbf A) = \mathbf J ,
+  $$
+  solved in weak (Galerkin) form. The gauge freedom in $\mathbf A$ is fixed by a
+  Coulomb gauge or, in practice, a tree–cotree gauging of the discrete system.
+- **Low-frequency eddy-current ($\mathbf A$–$V$) formulation** for the Ch. 6
+  distortion physics: in conductors
+  $\nabla\times(\nu\nabla\times\mathbf A) + \sigma(\partial_t\mathbf A + \nabla V)=0$,
+  solved as a complex phasor at the excitation frequency — capturing the
+  skin-depth response of eq. (6.1).
+
+**Edge (vector) elements are essential.** Representing a vector field like
+$\mathbf A$ with ordinary nodal (scalar-per-component) elements produces *spurious
+modes* and mis-handles the tangential-continuous / normal-discontinuous behaviour
+at material interfaces. **Nédélec edge elements** assign degrees of freedom to
+mesh *edges* and enforce exactly the right continuity, and are the standard choice
+for magnetostatic/eddy-current EMT modeling [@jin2014].
 
 Practical FEA requirements specific to EMT:
 
-1. **Open-boundary truncation.** The near field decays slowly ($1/r^3$), so the
-   computational domain must extend well beyond the working volume, or use
-   infinite/absorbing boundary elements, to avoid artificial image effects.
-2. **Mesh refinement where the gradient is steep** — near windings and core
-   edges — since pose accuracy depends on the field *gradient* (Ch. 5 §5.7).
-3. **Material curves.** Core $\mu_r(H)$ nonlinearity and saturation must be
-   modeled if the generator is driven hard for moment.
+1. **Open-boundary treatment.** The near field decays slowly ($1/r^3$), so a
+   simple truncated box with a Dirichlet wall placed too close creates artificial
+   image effects. Remedies (in increasing fidelity): extend the box several
+   working-volume radii and apply $\mathbf A\times\hat{\mathbf n}=0$; **infinite
+   elements** or a **Kelvin/ballooning transformation** that maps the exterior to
+   a finite region; or a **hybrid FEM–BEM** that imposes the exact exterior
+   solution on the truncation surface [@jin2014].
+2. **Mesh resolution.** Refine where the gradient is steep — near windings and
+   core edges (pose accuracy depends on the field *gradient*, Ch. 5 §5.7) — and,
+   for eddy-current runs, **resolve the skin depth** with at least ~2 elements per
+   $\delta$ (eq. 6.1), or the conductor's surface current is mis-computed.
+3. **Material curves & convergence.** Model core $\mu_r(H)$ nonlinearity/saturation
+   if the generator is driven hard for moment (Ch. 9); and demonstrate **mesh
+   convergence** — refine until the field (and its gradient) over the working
+   volume stops changing within tolerance, guided by an a-posteriori error
+   estimator.
 
 General-purpose solvers (e.g. ANSYS-class magnetostatic/eddy-current modules)
-are the standard tooling; the discipline of **quantitative assessment** of such
-magnetostatic FEA models against analytic benchmarks is itself a studied subject
-(conf: med — to be cited from the magnetostatic-FEA assessment literature, see
-*Open questions*).
+are the standard tooling [@jin2014]; the offline FEA field is then compressed into
+the fast spherical-harmonic online model of §7.2.
 
 ## 7.4 Boundary element / method of moments (BEM/MoM)
 
@@ -106,8 +163,14 @@ A forward model used for medical pose estimation must be *validated*, not merely
 
 1. **Verification (math).** Confirm the numerical solver reproduces known
    analytic cases: on-axis loop (eq. 4.3), the 2:1 on-axis/equator ratio
-   (Ch. 4 §4.4 / Ch. 5 worked example), and dipole far-field limit. These are
-   the cheap sanity checks every implementation must pass.
+   (Ch. 4 §4.4 / Ch. 5 worked example), the dipole far-field limit, and — where no
+   closed form exists — a **method of manufactured solutions** (insert a known
+   $\mathbf A$, derive the source it implies, and check the solver recovers it).
+   These are the cheap sanity checks every implementation must pass. The Phase-5
+   suite already encodes the analytic benchmarks: `sim_coupling_checks` confirms
+   the $\{2,-1,-1\}$ tensor eigenstructure and the 2:1 ratio exactly, and
+   `sim_dipole_vs_loop` validates the finite-loop↔dipole limit (Ch. 4 §4.6) — the
+   same checks any FEA build must reproduce.
 2. **Validation (physical).** Compare the model against **measured** field maps
    or against **pose ground truth** from an independent, higher-accuracy
    modality (optical tracker, coordinate-measuring machine, precision phantom).
@@ -128,15 +191,18 @@ A forward model used for medical pose estimation must be *validated*, not merely
 ---
 
 ## Open questions / to verify
-- Attach a primary citation for cored-radiator field modeling / FEM-based
-  field-generator calibration (candidate: magnetostatic-FEA assessment paper in
-  *Nucl. Instrum. Methods A*, 2021 — verify and add to bibliography).
-- Add a worked FEA-vs-dipole comparison figure (Phase 5, `simulations/`) and a
-  digitized field-map dataset (`data/`) to make §7.2–7.3 quantitative.
-- Specify recommended open-boundary treatment and mesh-density rules of thumb
-  with a sourced example.
+- ✅ **Resolved:** FEA formulation/edge-elements/open-boundary now grounded in
+  Jin [@jin2014]; the fast online model (spherical harmonics) and the
+  reluctance intermediate are added (§7.2). Remaining: attach an *EMT-specific*
+  cored-radiator FEM-calibration paper as a worked case study.
+- Add a worked spherical-harmonic fit (Phase-5): fit (7.1) to a synthetic
+  cored-generator field and report fit residual vs. truncation $L$ and the
+  online evaluation speed-up — makes §7.2 quantitative.
+- Specify mesh-density rules of thumb (elements per skin depth; near-winding
+  refinement) with a convergence study.
 
 ## Sources cited
-- [@franz2014] forward-model/accuracy dependence. [@hummel2005] system-level
-  validation methodology. [@kindratenko2000] measured-map → correction-model
-  techniques.
+- [@franz2014] forward-model/accuracy dependence. [@jin2014] FEA formulations,
+  edge elements, open-boundary treatment. [@jackson1998] solid-harmonic /
+  scalar-potential field representation. [@hummel2005] system-level validation
+  methodology. [@kindratenko2000] measured-map → correction-model techniques.

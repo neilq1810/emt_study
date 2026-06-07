@@ -950,6 +950,22 @@
       "verified": true
     },
     {
+      "id": "jin2014",
+      "type": "book",
+      "title": "The Finite Element Method in Electromagnetics, 3rd Edition",
+      "authors": ["Jin, Jian-Ming"],
+      "year": 2014,
+      "venue": "Wiley–IEEE Press",
+      "url": "https://www.wiley.com/en-us/The+Finite+Element+Method+in+Electromagnetics,+3rd+Edition-p-9781118571361",
+      "publisher": "Wiley–IEEE Press",
+      "source_type": "book",
+      "keywords": ["finite element method", "edge elements", "Nedelec", "eddy current", "open boundary", "computational EM"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Standard computational-electromagnetics reference (vector/edge elements, magnetostatic & eddy-current formulations, open-boundary treatment) for Ch.7. ISBN 978-1118571361.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
