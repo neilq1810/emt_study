@@ -2,10 +2,15 @@ name: Deploy site to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # `main` is the production source. The feature branch is included so the site
+    # can be previewed before merge — remove it once merged to main.
+    branches: [main, claude/em-tracking-definitive-guide-bt4Wx]
     paths:
       - 'book/**'
       - 'dashboard/**'
+      - 'data/**'
+      - 'figures/**'
+      - 'citations/**'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
