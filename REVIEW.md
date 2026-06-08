@@ -58,7 +58,7 @@ Anser/Grover reused). All build clean.
 | Ch | Title | State | Notes |
 |---:|-------|-------|-------|
 | 13 | Sensor physics & geometries | 🟢 DEEPENED → review | exact roll-null derivation (Jacobian null space), **dual-coil 6-DOF roll observability ∝ sin θ — derived + Phase-5 validated (0 / 0.55 / 1.0 at 0/45/90°)**, Schneider patent; new sim9 + figure (→1433 w) |
-| 14 | Construction & technologies (TMR) | ⬜ DRAFT | next |
+| 14 | Construction & technologies (TMR) | 🟢 DEEPENED → review | +ferrite demag tie (why catheter coils long/thin), **Hooge 1/f law (bias²/A → constant detectivity)**, **MR-array tracking demo cited (capsule 3.3 mm)** resolving the key open Q, Barkhausen link (→2027 w). NB: mr_capsule authors/venue to re-confirm (search API down) |
 | 15 | Manufacturing, tolerance & noise | ⬜ DRAFT | |
 
 (Other chapters remain DRAFT; will be scheduled next.)

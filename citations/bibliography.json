@@ -999,6 +999,22 @@
       "verified": true
     },
     {
+      "id": "mr_capsule",
+      "type": "article",
+      "title": "A localization method using 3-axis magnetoresistive sensors for tracking of capsule endoscope",
+      "authors": ["(authors to confirm — PMID 17946518)"],
+      "year": 2008,
+      "venue": "(venue to confirm)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17946518/",
+      "publisher": "IEEE/PubMed-indexed",
+      "source_type": "journal",
+      "keywords": ["magnetoresistive", "sensor array", "capsule endoscope", "tracking", "magnetic marker", "localization"],
+      "relevance": 7,
+      "confidence": "med",
+      "notes": "Peer-reviewed demonstration of MAGNETORESISTIVE-sensor tracking (vs NDE/biomagnetic): 16 3-axis MR sensors localize a magnetic marker at ~3.3 mm position / ~3 deg orientation, marker 100 mm above the array. Resolves the Ch.14 open question (MR used in a real position-tracking system). PMID/title/metrics verified via index; authors/venue/year to re-confirm (search API was rate-limited).",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
