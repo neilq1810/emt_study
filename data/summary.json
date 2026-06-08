@@ -98,5 +98,11 @@
     ],
     "clean_position_err_max_m": 3.4219371797089426e-16,
     "note": "Eigenvalue ratio 1:1:4 confirms the derivation; clean recovery is machine-precision (Ch.23 \u00a723.5)."
+  },
+  "dual_coil_obs": {
+    "obs_at_0deg": 0.0,
+    "obs_at_45deg": 0.5497,
+    "obs_at_90deg": 1.0,
+    "note": "Roll about the common axis is unobservable at 0 deg (sigma_min~0) and maximal at 90 deg; scales ~ sin(theta) (Ch.13 \u00a713.3)."
   }
 }

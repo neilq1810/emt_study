@@ -352,6 +352,52 @@ def sim_closed_form_init() -> None:
           "max clean pos err", f"{res['clean_position_err_max_m']:.1e} m")
 
 
+# ---------------------------------------------------------------------------
+# Sim 9 — dual-coil 6-DOF: roll observability vs angle between coil axes (Ch. 13)
+# ---------------------------------------------------------------------------
+def sim_dual_coil_obs() -> None:
+    from scipy.spatial.transform import Rotation
+
+    p = np.array([0.15, 0.05, 0.27])
+    B = [dipole_field([1, 0, 0], p), dipole_field([0, 1, 0], p), dipole_field([0, 0, 1], p)]
+
+    def meas(rotvec, theta):
+        R = Rotation.from_rotvec(rotvec).as_matrix()
+        n1 = np.array([0.0, 0.0, 1.0])
+        n2 = np.array([np.sin(theta), 0.0, np.cos(theta)])
+        return np.array([(R @ n) @ b for n in (n1, n2) for b in B])  # 6-vector
+
+    thetas = np.linspace(0, np.pi / 2, 46)
+    eps, smin = 1e-6, []
+    for th in thetas:
+        J = np.zeros((6, 3))
+        for k in range(3):
+            d = np.zeros(3); d[k] = eps
+            J[:, k] = (meas(d, th) - meas(-d, th)) / (2 * eps)
+        smin.append(float(np.linalg.svd(J, compute_uv=False).min()))
+    smin = np.array(smin)
+    smin_n = smin / smin.max()
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot(np.degrees(thetas), smin_n, "o-", label="roll observability (σ_min, normalized)")
+    ax.plot(np.degrees(thetas), np.sin(thetas), "--", color="gray", label="sin θ")
+    ax.set_xlabel("angle between the two coil axes [deg]")
+    ax.set_ylabel("normalized roll observability")
+    ax.set_title("Dual-coil 6-DOF: roll observability vs axis angle")
+    ax.grid(True, alpha=0.3); ax.legend()
+    fig.tight_layout(); fig.savefig(FIG / "ch13_dual_coil_observability.png", dpi=140); plt.close(fig)
+
+    res = {
+        "obs_at_0deg": round(float(smin_n[0]), 4),
+        "obs_at_45deg": round(float(np.interp(45, np.degrees(thetas), smin_n)), 4),
+        "obs_at_90deg": round(float(smin_n[-1]), 4),
+        "note": "Roll about the common axis is unobservable at 0 deg (sigma_min~0) and maximal at 90 deg; scales ~ sin(theta) (Ch.13 §13.3).",
+    }
+    (DATA / "dual_coil_obs.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["dual_coil_obs"] = res
+    print("[sim9] dual-coil roll observability:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -424,6 +470,7 @@ def main() -> None:
     sim_dipole_field_plot()
     sim_eddy_skin_depth()
     sim_closed_form_init()
+    sim_dual_coil_obs()
     write_results_md()
 
 

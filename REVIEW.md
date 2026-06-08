@@ -54,6 +54,13 @@ Gabriel, Grover, Jin; Huber/Groves/GUM from prior batch). All build clean.
 **✅ Part III (Ch. 8–12) fully deepened.** +2 verified citations (Crowley 2023,
 Anser/Grover reused). All build clean.
 
+### Part IV — Sensor Engineering (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 13 | Sensor physics & geometries | 🟢 DEEPENED → review | exact roll-null derivation (Jacobian null space), **dual-coil 6-DOF roll observability ∝ sin θ — derived + Phase-5 validated (0 / 0.55 / 1.0 at 0/45/90°)**, Schneider patent; new sim9 + figure (→1433 w) |
+| 14 | Construction & technologies (TMR) | ⬜ DRAFT | next |
+| 15 | Manufacturing, tolerance & noise | ⬜ DRAFT | |
+
 (Other chapters remain DRAFT; will be scheduled next.)
 
 ## User-review queue
