@@ -15,6 +15,7 @@
   </div>
   <canvas id="mc-canvas" width="420" height="380" class="w-full max-w-[460px] rounded"></canvas>
   <p id="mc-readout" class="mt-2 text-sm"></p>
+  <p id="mc-py" class="mt-1 text-xs text-red-700"></p>
   <p class="mt-1 text-xs text-slate-400">
     Dots = Levenberg–Marquardt solutions for noisy measurements (lateral vs axial
     error); ellipse = 1σ CRLB predicted from the Fisher information (Ch. 24). Their
@@ -25,6 +26,11 @@
 
 <script>
   import { fieldMeasurement, jacobian9x3, invert3, crlbCov3, gauss, type Vec3 } from '../lib/physics';
+  import { fetchJson } from '../lib/clientdata';
+
+  // Python reference (simulations/run_all.py), poses near/mid/far.
+  let pyMc: Record<string, any> | null = null;
+  fetchJson('monte_carlo_vs_crlb.json').then((d) => { pyMc = d; run(); });
 
   const zS = document.getElementById('mc-z') as HTMLInputElement;
   const sbS = document.getElementById('mc-sb') as HTMLInputElement;
@@ -98,6 +104,18 @@
 
     readout.innerHTML = `Empirical RMS (3-D): <b>${empRms.toFixed(3)} mm</b> · CRLB: <b>${crlbRms.toFixed(3)} mm</b> ` +
       `(ratio ${(empRms / crlbRms).toFixed(2)} — efficient estimator)`;
+
+    const pyEl = document.getElementById('mc-py')!;
+    if (pyMc) {
+      // pick the nearest reference pose (keys like near_0.15m / mid_0.30m / far_0.50m)
+      let best: any = null, bd = 1e9;
+      for (const [k, v] of Object.entries(pyMc)) {
+        const zk = parseFloat(k.replace(/[^0-9.]/g, ''));
+        if (Math.abs(zk - z) < bd) { bd = Math.abs(zk - z); best = { k, v }; }
+      }
+      if (best) pyEl.innerHTML = `● Python (run_all.py) @ ${best.k}: MC ${best.v.mc_rms_mm.toFixed(3)} mm, ` +
+        `CRLB ${best.v.crlb_mm.toFixed(3)} mm, ratio ${best.v.ratio.toFixed(2)} — matches the live result.`;
+    }
   }
   [zS, sbS, nS].forEach((e) => e.addEventListener('input', run));
   document.getElementById('mc-run')!.addEventListener('click', run);

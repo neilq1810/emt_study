@@ -14,6 +14,7 @@
   </div>
   <canvas id="li-canvas" width="520" height="200" class="w-full max-w-[560px] rounded bg-slate-900"></canvas>
   <p id="li-readout" class="mt-2 text-sm"></p>
+  <p id="li-py" class="mt-1 text-xs text-red-700"></p>
   <p class="mt-1 text-xs text-slate-400">
     True amplitude = 1 (red). The lock-in recovers it from the noisy trace (grey)
     via quadrature demodulation; RMS error over 60 trials falls as 1/√T.
@@ -22,6 +23,14 @@
 
 <script>
   import { lockIn, gauss } from '../lib/physics';
+  import { fetchJson } from '../lib/clientdata';
+
+  fetchJson('summary.json').then((d) => {
+    const s = d?.lockin;
+    if (s) document.getElementById('li-py')!.innerHTML =
+      `● Python (run_all.py): amplitude error ∝ T<sup>${s.loglog_slope.toFixed(2)}</sup> ` +
+      `(≈ 1/√T) at noise/signal ${s.noise_to_signal} — the law this tool demonstrates live.`;
+  });
 
   const cv = document.getElementById('li-canvas') as HTMLCanvasElement;
   const ctx = cv.getContext('2d')!;

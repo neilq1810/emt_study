@@ -42,6 +42,18 @@ Volder, Huber, Groves, GUM, …). All build clean (0 KaTeX errors).
 **✅ Part II (Ch. 4–7) fully deepened.** +6 verified citations (Jackson, Griffiths,
 Gabriel, Grover, Jin; Huber/Groves/GUM from prior batch). All build clean.
 
+### Part III — Tracker Architecture (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 8 | System architecture | 🟢 DEEPENED → review | +architecture parameter space, **system link budget eq 8.1 (master design relation)**, wireless/active-passive/sync architecture, worked architecture selection + commercial mapping (1031→1945 w) |
+| 9 | Field generators & sensor coils | 🟢 DEEPENED → review | +coil electrical model (L,R,V,P eq 9.1), worked resonant-drive (500V→2.4V, Q≈210, BW≈48Hz → per-coil FDM freqs), spherical-harmonic field-shaping synthesis, sensor self-resonance (1059→1681 w) |
+| 10 | Timing, clocking, sync | 🟢 DEEPENED → review | +quantified sync budget (δφ=ωδt → ~2µs @10kHz; wireless Crowley 2023 1.61mm), coherent-sampling integer-ratio condition, three-distinct-jitters clarification, FDM spacing bounded by 1/τ AND resonant BW (1087→1480 w) |
+| 11 | DSP pipeline & estimation | 🟢 DEEPENED → review | +quantified Stage-3 amplification (cube-root near-field, z⁴ edge), **§11.6 covariance-propagation data contract (R_a→R_M→P=CRLB)** incl. calibration-induced correlations, per-stage failure modes; resolved both open Qs (866→1385 w) |
+| 12 | Latency & real-time | 🟢 DEEPENED → review | +worked AC/pulsed-DC latency budgets (~8ms vs 12–100ms settling-dependent), **quantitative trilemma worked example** (catheter sensor fails 1mm@100Hz → escapes via moment/noise/volume), group-delay quantification (939→1449 w) |
+
+**✅ Part III (Ch. 8–12) fully deepened.** +2 verified citations (Crowley 2023,
+Anser/Grover reused). All build clean.
+
 (Other chapters remain DRAFT; will be scheduled next.)
 
 ## User-review queue

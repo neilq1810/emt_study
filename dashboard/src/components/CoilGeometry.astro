@@ -12,10 +12,18 @@
   <div id="cg-out" class="mb-3 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
   <canvas id="cg-canvas" width="520" height="260" class="w-full max-w-[560px] rounded"></canvas>
   <p class="mt-1 text-xs text-slate-400">Exact loop field (eq. 4.3) vs dipole approximation; they converge for z ≫ a.</p>
+  <p id="cg-py" class="mt-1 text-xs text-red-700"></p>
 </div>
 
 <script>
   import { loopFieldOnAxis, momentOfLoop, MU0 } from '../lib/physics';
+  import { fetchCsv } from '../lib/clientdata';
+
+  // Python reference: dipole-approx error (max over θ) vs r/a, from run_all.py.
+  let pyErr: { r_over_a: number; max_rel_error_pct: number }[] = [];
+  fetchCsv('dipole_vs_loop_error.csv').then((rows) => {
+    pyErr = rows as any; draw();
+  });
 
   const els = ['cg-a', 'cg-N', 'cg-I', 'cg-z'].map((id) => document.getElementById(id) as HTMLInputElement);
   const cv = document.getElementById('cg-canvas') as HTMLCanvasElement;
@@ -37,6 +45,15 @@
       row('Dipole approximation', `${(dip * 1e6).toExponential(3)} µT`) +
       row('z / a', `${(z / a).toFixed(1)}`) +
       row('Dipole-approx. error', `${err.toFixed(2)} %`);
+
+    const pyEl = document.getElementById('cg-py');
+    if (pyEl && pyErr.length) {
+      const ra = z / a;
+      let best = pyErr[0];
+      for (const p of pyErr) if (Math.abs(p.r_over_a - ra) < Math.abs(best.r_over_a - ra)) best = p;
+      pyEl.innerHTML = `● Python (run_all.py) @ r/a=${best.r_over_a}: max error over θ = ` +
+        `${best.max_rel_error_pct.toFixed(2)}% (this tool shows the on-axis value; on-axis is near the worst case).`;
+    }
 
     // field vs z (log y)
     const padL = 52, padB = 30, padT = 10, padR = 10, zmax = 0.8;

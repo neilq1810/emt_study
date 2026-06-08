@@ -72,6 +72,11 @@ export function loopFieldOnAxis(current: number, radius: number, z: number, turn
   return (MU0 * turns * current * radius * radius) / (2 * Math.pow(radius * radius + z * z, 1.5));
 }
 
+/** Magnetic skin depth [m] (Ch. 6, eq. 6.1): δ = 1/√(π f μ₀ μ_r σ). */
+export function skinDepth(freq: number, sigma: number, muR = 1): number {
+  return 1 / Math.sqrt(Math.PI * freq * MU0 * muR * sigma);
+}
+
 /** Magnetic moment of an N-turn loop [A·m²]. */
 export function momentOfLoop(turns: number, current: number, radius: number): number {
   return turns * current * Math.PI * radius * radius;

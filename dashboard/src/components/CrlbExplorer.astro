@@ -43,6 +43,20 @@
     return padT + (1 - (logmm - yMin) / (yMax - yMin)) * (cv.height - padT - padB);
   }
 
+  // Python-computed reference data (simulations/run_all.py), σ_B=1 nT, m=1.
+  let pyData: { z: number; mm: number }[] = [];
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  fetch(`${base}/data/crlb_vs_range.csv`)
+    .then((r) => (r.ok ? r.text() : ''))
+    .then((t) => {
+      pyData = t.trim().split(/\r?\n/).slice(1).map((line) => {
+        const [z, mm] = line.split(',');
+        return { z: Number(z), mm: Number(mm) };
+      }).filter((d) => isFinite(d.z));
+      draw();
+    })
+    .catch(() => {});
+
   function draw() {
     const sigmaB = Number(sb.value) * 1e-9;
     const moment = Number(mm.value);
@@ -69,6 +83,21 @@
       i === 0 ? ctx.moveTo(px(z), Y) : ctx.lineTo(px(z), Y);
     }
     ctx.stroke();
+
+    // Python reference points (scaled to current σ_B/moment so they track the curve)
+    if (pyData.length) {
+      const scale = (Number(sb.value) / 1) * (1 / moment); // CSV computed at σ_B=1nT, m=1
+      ctx.fillStyle = '#b91c1c';
+      for (const d of pyData) {
+        if (d.z < zMin || d.z > zMax) continue;
+        const Y = py(Math.log10(Math.max(d.mm * scale, 1e-4)));
+        ctx.beginPath(); ctx.arc(px(d.z), Y, 2.2, 0, 7); ctx.fill();
+      }
+      ctx.font = '10px system-ui';
+      ctx.fillText('● Python (run_all.py)', cv.width - 130, 14);
+      ctx.fillStyle = '#0e7490';
+      ctx.fillText('— closed-form law', cv.width - 130, 26);
+    }
 
     const at = (z: number) => (crlbPositionSigma(z, sigmaB, moment) * 1e3).toFixed(3);
     readout.textContent = `σ_pos: ${at(0.2)} mm @0.2 m · ${at(0.3)} mm @0.3 m · ${at(0.5)} mm @0.5 m`;

@@ -15,10 +15,18 @@
     Colour = log₁₀|B| from the point-dipole field (eq. 4.1); the 1/r³ falloff and
     the 2:1 axis/equator anisotropy are visible. Moment magnitude 1 A·m².
   </p>
+  <p id="df-py" class="mt-1 text-xs text-red-700"></p>
 </div>
 
 <script>
   import { dipoleField, bMag, type Vec3 } from '../lib/physics';
+  import { fetchJson } from '../lib/clientdata';
+
+  fetchJson('coupling_checks.json').then((d) => {
+    if (d) document.getElementById('df-py')!.innerHTML =
+      `● Python (run_all.py): on-axis/equator |B| ratio = ${d.onaxis_equator_ratio.toFixed(3)}, ` +
+      `coupling-tensor eigenvalues [${d.K_eigenvalues_over_scale.join(', ')}] (the {2,−1,−1} structure).`;
+  });
 
   const cv = document.getElementById('df-canvas') as HTMLCanvasElement;
   const ctx = cv.getContext('2d')!;

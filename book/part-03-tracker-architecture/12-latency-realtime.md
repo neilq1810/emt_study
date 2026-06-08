@@ -1,6 +1,6 @@
 # Chapter 12 — Latency & Real-Time Constraints
 
-> **Status:** DRAFT · **Part III — Tracker Architecture**
+> **Status:** DEEPENED (awaiting review) · **Part III — Tracker Architecture**
 > Closes Part III. Builds on Ch. 8–11. Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -40,6 +40,26 @@ The **architecture-fixed** dominant terms are usually $t_\text{integrate}$ (AC)
 or $t_\text{excite/settle}$ (pulsed-DC) — exactly the terms that also set update
 rate (Ch. 10) and noise (Ch. 11). This is not a coincidence; it is the trilemma.
 
+**Two worked budgets** (engineering estimates from the deepened subsystem
+chapters; conf: med pending per-product sourcing):
+
+| Term | AC FDM (τ = 5 ms) | Pulsed-DC (TDM, clean room) | Pulsed-DC (5 cm conductor) |
+|---|---:|---:|---:|
+| $t_\text{excite/settle}$ | ~0 (continuous) | $5\tau_e\approx4$ ms (1 cm Cu) | $5\tau_e\approx90$ ms (Ch. 6 §6.4) |
+| $t_\text{integrate}$ + decim/demod group delay | ~5–7 ms (≈τ + τ/2 of the lock-in/CIC, Ch. 20/22) | ~2 ms ×3 axes | ~2 ms ×3 axes |
+| $t_\text{solve}$ | ~0.3 ms (LM, Ch. 22) | ~0.3 ms | ~0.3 ms |
+| $t_\text{filter}$ (light Kalman) | ~1 ms | ~1 ms | ~1 ms |
+| $t_\text{transport}$ (USB) | ~1 ms | ~1 ms | ~1 ms |
+| **Total** | **≈ 8 ms** | **≈ 12 ms** | **≈ 100 ms** |
+
+The lesson is stark: an **AC system is integration-dominated** (~8 ms, fixed by
+the SNR window), while a **pulsed-DC system is settling-dominated and
+*environment-dependent*** — a few milliseconds in a clean room but, per the
+eddy-decay law (Ch. 6 eq. 6.3), an order of magnitude worse when a fist-sized
+conductor enters the volume. This is a decisive, often-overlooked architectural
+difference: pulsed-DC's distortion immunity is bought partly with a *variable*
+latency.
+
 ## 12.2 The accuracy–rate–latency trilemma
 
 The three headline specs are coupled through **integration time** $\tau$:
@@ -66,13 +86,46 @@ free lunches:
 > routes 1–3 to move the frontier. Trying to specify all three independently is
 > the most common way an EMT requirement becomes infeasible.
 
+### Worked trilemma — when a catheter sensor cannot meet the spec
+Suppose the requirement is **σ ≤ 1 mm at the volume edge ($z=0.5$ m), update rate
+≥ 100 Hz**, with a small catheter sensor ($N_sA_s = 10^{-4}\,\text{m}^2{\cdot}$turn).
+Trace the trilemma:
+
+1. **Rate pins $\tau$.** $\ge100$ Hz with overhead → $\tau\lesssim5$ ms →
+   $\mathrm{ENBW}\approx1/(2\tau)=100$ Hz (Ch. 20). $\tau$ is now *fixed*; it
+   cannot be the free variable.
+2. **$\tau$ and the noise floor fix $\sigma_B$.** Demodulated voltage noise
+   $\sigma_\varepsilon = e_n\sqrt{\mathrm{ENBW}} = 1.3\,\tfrac{\text{nV}}{\sqrt{\text{Hz}}}\times\sqrt{100}=13$ nV
+   (Ch. 20). Field-referred:
+   $\sigma_B=\sigma_\varepsilon/(N_sA_s\,\omega)=13\,\text{nV}/(10^{-4}\times6.28\times10^4)=2.1$ nT.
+3. **$\sigma_B$ and geometry fix accuracy.** At $z=0.5$ m the CRLB gain is
+   $0.66\,\text{mm/nT}$ (Ch. 24, Phase-5), so
+   $\sigma_\text{pos}=2.1\times0.66\approx\mathbf{1.4\ mm} > 1\ \text{mm}$ — the
+   spec **fails**.
+
+The trilemma is now explicit: with $\tau$ pinned by the rate, accuracy is
+*determined*, not free. The only escapes are route 1 (SNR-per-time): **double the
+generator moment** $m_t$ (halves $\sigma_B$ → 0.7 mm ✓), **halve the AFE noise**
+$e_n$ (same effect), or **shrink the working volume** (at $z=0.45$ m the CRLB gain
+drops as $z^4$, to ~0.43 mm/nT → 0.9 mm ✓). What you *cannot* do is simply
+"integrate longer" — that would violate the rate requirement. This is exactly the
+master link budget (Ch. 8 eq. 8.1) read as a constraint, and it resolves how a
+requirement is made feasible (or shown infeasible) *before* building. (conf: high
+— assembled from eqs. 5.2, 20.3, 24.1 and the Phase-5 CRLB gain.)
+
 ## 12.3 Latency vs. lag: a subtle distinction
 
 - **Pure latency** (a fixed delay) shifts the pose in time; for constant
   velocity it produces a position error $\approx v\cdot t_\text{total}$.
 - **Filter lag** (from smoothing) is velocity-dependent and *frequency-shaped*:
   it attenuates and delays fast motion more than slow motion, which can feel
-  like "sluggishness" distinct from a constant delay.
+  like "sluggishness" distinct from a constant delay. Quantitatively, a
+  linear-phase FIR of length $L$ contributes a *constant* group delay
+  $(L-1)/(2f_s)$ (the decimation/lock-in low-pass, Ch. 18/20/22); a Kalman filter
+  contributes a velocity-lag set by its effective bandwidth (the $\mathbf Q/\mathbf R$
+  tuning, Ch. 21 §21.8) — tighter smoothing (small $\mathbf Q$) means more lag.
+  The FIR part is a pure delay (compensable by timestamping); the Kalman part is a
+  dynamic distortion that prediction (route 3) partly offsets.
 
 A 10 ms total latency at a catheter tip speed of $0.1\,\text{m/s}$ yields a
 1 mm dynamic position error — comparable to the *static* accuracy of good
@@ -110,14 +163,14 @@ hybrid-system frontier of Part XIII.
 ---
 
 ## Open questions / to verify
-- Populate §12.1 with representative measured per-term latencies for at least one
-  AC and one pulsed-DC architecture, from sourced material (Ch. 28), with
-  conditions.
-- Add a worked trilemma example: given a clinical accuracy + rate requirement,
-  derive the required AFE/ADC noise spec (ties Ch. 16/18/25 together).
+- ✅ **Resolved (engineering estimate):** §12.1 now has worked AC/pulsed-DC latency
+  budgets (~8 ms vs 12–100 ms, settling-dependent) and §12.2 a worked trilemma
+  deriving the SNR/noise spec from a rate+accuracy requirement. Remaining: replace
+  the per-term estimates with *measured* per-product figures (Ch. 28).
 - Verify typical clinical latency requirements per application (EP, bronchoscopy,
   robotics) for Ch. 29 and cross-reference here.
 
 ## Sources cited
 - [@hummel2005] static-accuracy reference for the §12.3 dynamic-error comparison.
-  Per-architecture latency figures flagged for primary-source attachment above.
+  Latency budget assembled from Ch. 6 (settling), 20 (integration/group delay),
+  22 (decimation), 8 (link budget); per-product figures flagged above.

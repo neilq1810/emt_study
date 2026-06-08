@@ -2,6 +2,10 @@
 dist/
 .astro/
 
+# copied sim artifacts (source of truth lives in repo-root /figures and /data)
+public/figures/
+public/data/
+
 # dependencies
 node_modules/
 

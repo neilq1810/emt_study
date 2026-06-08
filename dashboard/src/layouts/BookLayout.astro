@@ -38,6 +38,16 @@ const home = base.endsWith('/') ? base : base + '/';
         <p class="mt-1 text-xs text-slate-500">Digital textbook · draft</p>
         <nav class="mt-5 text-sm">
           <h2 class="mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400">
+            Simulations
+          </h2>
+          <ul class="mb-4 space-y-0.5">
+            {[['results', 'Computed results'], ['figures', 'Figure gallery']].map(([path, label]) => (
+              <li>
+                <a class="block rounded px-2 py-1 text-slate-700 hover:bg-slate-100" href={home + path}>{label}</a>
+              </li>
+            ))}
+          </ul>
+          <h2 class="mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400">
             Interactive tools
           </h2>
           <ul class="space-y-0.5">
@@ -49,6 +59,7 @@ const home = base.endsWith('/') ? base : base + '/';
                 ['tools/dof', '5-DOF vs 6-DOF demo'],
                 ['tools/sensor-orientation', 'Sensor orientation (3-D)'],
                 ['tools/distortion', 'Distortion / eddy visualizer'],
+                ['tools/skin-depth', 'Skin-depth & eddy explorer'],
                 ['tools/lock-in', 'Lock-in simulator'],
                 ['tools/noise-budget', 'Noise-budget calculator'],
                 ['tools/adc', 'ADC performance explorer'],

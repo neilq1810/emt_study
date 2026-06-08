@@ -5,7 +5,10 @@
   "private": true,
   "description": "Interactive digital-textbook site for the EM-Tracking-Definitive-Guide (Astro static site, GitHub Pages).",
   "scripts": {
+    "sync:assets": "node scripts/copy-assets.mjs",
+    "predev": "node scripts/copy-assets.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/copy-assets.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check"
