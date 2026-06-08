@@ -59,9 +59,23 @@ Anser/Grover reused). All build clean.
 |---:|-------|-------|-------|
 | 13 | Sensor physics & geometries | 🟢 DEEPENED → review | exact roll-null derivation (Jacobian null space), **dual-coil 6-DOF roll observability ∝ sin θ — derived + Phase-5 validated (0 / 0.55 / 1.0 at 0/45/90°)**, Schneider patent; new sim9 + figure (→1433 w) |
 | 14 | Construction & technologies (TMR) | 🟢 DEEPENED → review | +ferrite demag tie (why catheter coils long/thin), **Hooge 1/f law (bias²/A → constant detectivity)**, **MR-array tracking demo cited (capsule 3.3 mm)** resolving the key open Q, Barkhausen link (→2027 w). NB: mr_capsule authors/venue to re-confirm (search API down) |
-| 15 | Manufacturing, tolerance & noise | ⬜ DRAFT | |
+| 15 | Manufacturing, tolerance & noise | 🟢 DEEPENED → review | +tolerance→error propagation rules (area→range ÷3, angle→orientation), **worked tolerance→pose table**, **thermal-drift coefficients** (Cu +0.39%/°C, ferrite μ_r, TMR) → recalibration interval (~1.5mm/5°C); resolved both open Qs (1109→1618 w) |
+
+**✅ Part IV (Ch. 13–15) fully deepened.** +Schneider, mr_capsule citations
+(mr_capsule authors/venue to re-confirm). Build clean.
 
 (Other chapters remain DRAFT; will be scheduled next.)
+
+## Flagged for upcoming chapter passes
+- **Ch. 17 (AFE/EMC/safety) deep pass — ADD:** electrical-safety contrast between
+  **biased sensors (TMR/MR, Hall, fluxgate) and passive coils** in patient-applied
+  EMT tools. A passive coil carries no power at the patient end (only the induced
+  µV EMF), so leakage/shock risk and isolation are minimal. A *biased* sensor
+  needs DC bias + a stable reference delivered to the sensor at/near the body →
+  active conductors carrying power into a Type CF applied part: patient-leakage
+  limits (10/50 µA), single-fault analysis of the bias rail, tip self-heating, and
+  galvanic-isolation of the bias supply all become first-order (IEC 60601-1).
+  Tie to Ch. 14.3 (TMR bias) and Ch. 25 (bias-reference noise). [user-requested]
 
 ## User-review queue
 - [ ] Ch. 19–25 — awaiting review (batch)
