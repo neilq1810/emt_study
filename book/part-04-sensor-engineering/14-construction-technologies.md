@@ -1,6 +1,6 @@
 # Chapter 14 — Sensor Construction, Miniaturization & Technologies
 
-> **Status:** DRAFT · **Part IV — Sensor Engineering**
+> **Status:** DEEPENED (awaiting review) · **Part IV — Sensor Engineering**
 > Builds on Ch. 13 (sensing principles & DOF). Noise/tolerance detail in Ch. 15.
 > Citation keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -26,9 +26,13 @@ $N_sA_s$** within a size budget, while controlling self-resonance and noise
   ferrite core to multiply effective $A_s$). The clinical standard: "miniature
   inductive coils are the gold standard" for passive sensing [@yaniv2009]. To
   fit a catheter, coils are **elongated** — typical length 10–20× the diameter —
-  trading a long thin cross-section for usable area-turns at sub-millimeter
-  diameter (conf: med — reported design ratio for elongated EMT sensors). A
-  ferrite core both boosts signal and defines the sensitive axis.
+  for two reasons that reinforce each other: more turns/length raises $N_s$, and
+  the slender geometry **minimizes the demagnetizing factor $D$**, so the ferrite
+  core's apparent permeability approaches its ceiling $\mu_\text{app}\to1/D$
+  (Ch. 5 §5.1) — a stubby core wastes most of its $\mu_r$. This is precisely *why*
+  the gold-standard catheter coil is long and thin (conf: high — the demag
+  argument; the 10–20× ratio is reported design practice). The core both boosts
+  signal and defines the sensitive axis.
 - **PCB / planar coils.** Spiral traces on (multilayer) PCB. Highly
   reproducible, cheap at volume, and easy to make *orthogonal triads* by
   stacking/arranging layers — but limited area-turns and thus lower sensitivity
@@ -118,11 +122,26 @@ sensor and directly shape the AFE (Ch. 16) and the noise budget.
 
 ### 14.3.4 Noise in MR sensors: the 1/f floor
 The decisive limitation for EMT (which operates at low frequencies) is
-**low-frequency 1/f (flicker) noise**:
-- GMR and TMR show **larger 1/f noise than AMR**; in TMR the low-frequency noise
-  is dominated by **resistance fluctuations in the tunnel barrier** (largely
-  field-independent), plus a magnetic 1/f component tied to the active sensor
-  area [@davies2021].
+**low-frequency 1/f (flicker) noise**. Its voltage power spectral density follows
+a **Hooge-type** form
+$$
+S_V(f) \;=\; \frac{\gamma_H\,V_\text{bias}^2}{A\,f},
+$$
+where $\gamma_H$ is the (dimensionless) Hooge parameter, $V_\text{bias}$ the bias
+voltage, $A$ the active junction area, and $f$ the frequency. Three consequences
+flow directly from this expression:
+- **It scales with bias², so it does *not* improve the field-referred floor.**
+  Raising $V_\text{bias}$ raises both the sensitivity (signal) and the noise
+  ($\propto V_\text{bias}$ in amplitude), so the **detectivity is roughly constant
+  with bias** — exactly the experimental result of Monteblanco et al.
+  [@monteblanco2021]. You cannot bias your way to a lower noise floor.
+- **It scales as $1/A$, so detectivity improves with junction area** — the
+  area-limited floor below — which is the central tension for *catheter-scale*
+  (small-$A$) MR sensors.
+- GMR and TMR show **larger 1/f noise than AMR**; in TMR it is dominated by
+  **charge-trap resistance fluctuations in the tunnel barrier** (largely
+  field-independent) plus a **magnetic** 1/f component from domain-wall hopping in
+  the free layer (the Barkhausen mechanism, Ch. 25 §25.2) [@davies2021].
 - Detectivity (minimum detectable field, in **T/√Hz**) **improves with larger
   die area** and follows a similar inverse-power-law trend across MR types,
   suggesting a quasi-fundamental area-limited floor; when normalized for linear
@@ -160,8 +179,18 @@ what an induction coil lacks, making it the enabling sensor for **pulsed-DC**
 architectures (sampling a static field after eddy settling, Ch. 6 §6.4). Its
 **silicon-scale size, low power, and batch fabrication** make dense **sensor
 arrays** and chip-integrated front ends feasible (cf. transmitter arrays,
-Ch. 9 / [@plotkin2003]). The open question is pushing detectivity low enough at
-catheter die sizes — an active research area (Part XIII).
+Ch. 9 / [@plotkin2003]).
+
+**This is not hypothetical.** A magnetoresistive *tracking* system has been
+demonstrated: an array of **16 three-axis MR sensors** localizes a magnetic
+marker (capsule endoscope) to ~**3.3 mm position / ~3° orientation** with the
+marker 100 mm above the array [@mr_capsule] — a reciprocal-topology EMT system
+(the tracked object is the source, the MR array is the receiver). It confirms
+both the promise (passive, arrayable, low-power DC sensing) and the open
+challenge: that accuracy, at 100 mm with millimetre-class MR detectivity, is
+coarser than the sub-mm of coil systems at shorter range — so pushing MR/TMR
+detectivity low enough at *catheter die sizes* remains the active frontier
+(Part XIII). (conf: med — see citation note.)
 
 ## 14.4 MEMS and other emerging approaches
 - **MEMS Lorentz-force / resonant magnetometers** sense field via
@@ -196,16 +225,19 @@ excitation architecture chosen back in Ch. 8.
 ---
 
 ## Open questions / to verify
-- Replace §14.3.4's detectivity range with a small sourced table of specific
-  TMR-bridge devices (value @ 1 Hz, die area, linear range), each cited.
-- Find and cite a peer-reviewed demonstration of **TMR/MR sensors used in an
-  actual position-tracking system** (vs. current/NDE/biomedical sensing) to
-  firm up §14.3.6; tag confidence accordingly.
+- ✅ **Resolved:** §14.3.4 now gives the Hooge 1/f law (bias² and 1/A scaling,
+  explaining the constant-detectivity-with-bias result [@monteblanco2021]); and
+  §14.3.6 cites a peer-reviewed **MR-sensor tracking demonstration** (capsule
+  endoscope, 3.3 mm) [@mr_capsule]. Remaining: re-confirm the [@mr_capsule]
+  authors/venue (search API was rate-limited), and add a small table of specific
+  TMR-bridge devices (value @ 1 Hz, die area).
 - Verify the elongated-coil 10–20× and 115 mm tip-offset figures against primary
   sources (currently conf: med from design literature).
 - Confirm fluxgate pT-class and Hall sensitivity numbers against [@lenz2006].
 
 ## Sources cited
 - [@lenz2006] sensor-family taxonomy & comparison. [@davies2021] MR/TMR
-  detectivity & 1/f noise. [@yaniv2009] inductive coils as clinical gold
-  standard. [@ndi_aurora] miniature sensor form factors. [@plotkin2003] arrays.
+  detectivity & 1/f noise. [@monteblanco2021] TMR bias-vs-detectivity.
+  [@mr_capsule] MR-array tracking demonstration. [@yaniv2009] inductive coils as
+  clinical gold standard. [@ndi_aurora] miniature sensor form factors.
+  [@plotkin2003] arrays.

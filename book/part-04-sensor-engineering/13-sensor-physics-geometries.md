@@ -1,6 +1,6 @@
 # Chapter 13 — Sensor Physics & Geometries
 
-> **Status:** DRAFT · **Part IV — Sensor Engineering**
+> **Status:** DEEPENED (awaiting review) · **Part IV — Sensor Engineering**
 > Opens Part IV. Builds on Ch. 5 (coupling), Ch. 9 (sensor overview). Hands off
 > to Ch. 14 (construction/technologies) and Part VIII (why DOF is lost).
 > Citation keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -55,11 +55,19 @@ therefore yields a 3-vector (one number per transmit axis) — enough to determi
   has two free angles),
 
 for a total of **5 DOF**. What it *cannot* sense is **rotation about its own
-axis** $\hat{\mathbf n}_s$: spinning the element about $\hat{\mathbf n}_s$ leaves
-every projection $\mathbf B\!\cdot\!\hat{\mathbf n}_s$ unchanged. This is the
-**roll ambiguity**, and it is geometric — no amount of signal processing
-recovers information the sensor never encoded. A single straight coil or a single
-MR die is intrinsically a **5-DOF** sensor [@yaniv2009].
+axis** $\hat{\mathbf n}_s$. The argument is exact: rolling the body by angle
+$\varphi$ about its own axis replaces the orientation $\mathbf R\to\mathbf R\,\mathbf R_{\hat{\mathbf n}_s}(\varphi)$,
+but since $\mathbf R_{\hat{\mathbf n}_s}(\varphi)\,\hat{\mathbf n}_s=\hat{\mathbf n}_s$,
+the lab-frame axis $\mathbf R\hat{\mathbf n}_s$ is **unchanged**, so every
+measurement $(\mathbf R\hat{\mathbf n}_s)\!\cdot\!\mathbf B_i$ is unchanged. The
+roll direction is therefore an exact **null space of the orientation Jacobian**
+($\partial(\text{measurement})/\partial\varphi\equiv0$): $\mathbf J$ is
+rank-deficient by one and the CRLB for roll is infinite (Ch. 24 §24.1). This is
+the **roll ambiguity** — geometric, not a processing failure; no algorithm
+recovers information the sensor never encoded. The observable state is exactly
+$(\mathbf r,\ \text{2 angles of }\hat{\mathbf n}_s)$ — five numbers. A single
+straight coil or a single MR die is intrinsically a **5-DOF** sensor
+[@yaniv2009].
 
 > **Why this matters clinically.** A 5-DOF sensor fully localizes the *tip and
 > pointing direction* of a needle or catheter — which is all many procedures
@@ -87,12 +95,21 @@ the central miniaturization tension of Ch. 14.
 
 Strict orthogonality is a convenience, not a requirement. Practical variants:
 
-- **Two askew 5-DOF elements → 6-DOF.** Two single elements with **non-parallel
-  (e.g. perpendicular) axes** jointly resolve roll; "larger angles between the
-  normal vectors generally provide better measurement accuracy," and a common
-  6-DOF construction uses exactly two coils with askew normals (conf: med —
-  reported in the catheter-sensor design literature/patents). This packs into a
-  catheter more easily than a full orthogonal triad.
+- **Two askew 5-DOF elements → 6-DOF.** Two elements with body-frame axes
+  $\hat{\mathbf n}_1,\hat{\mathbf n}_2$ separated by angle $\theta$ resolve roll
+  because rolling about $\hat{\mathbf n}_1$ now *moves* $\hat{\mathbf n}_2$ (only a
+  vector along the roll axis is invariant, §13.1), so the second element's
+  projections vary with roll. The sensitivity scales with the component of
+  $\hat{\mathbf n}_2$ perpendicular to the roll axis — i.e. **∝ sin θ** — so roll
+  observability is **zero at $\theta=0$** (parallel axes ⇒ degenerate back to
+  5-DOF) and **maximal at $\theta=90°$**. A Phase-5 simulation confirms this
+  exactly: the normalized roll observability (smallest singular value of the
+  orientation Jacobian) rises from $0.0$ at $0°$ through $0.55$ at $45°$ to $1.0$
+  at $90°$, tracking $\sin\theta$ (`figures/ch13_dual_coil_observability.png`,
+  `data/dual_coil_obs.json`). This is the rigorous basis for the patent claim that
+  "larger angles give better accuracy" [@schneider2000]; in a catheter the two
+  coils are tilted within the wall to maximize $\theta$ while staying thin.
+  (conf: high — derived and numerically validated.)
 - **Spatially separated 5-DOF pair.** Two 5-DOF sensors at known separation
   along a rigid shaft jointly determine 6-DOF of a base frame — used when the
   payload region must stay thin (conf: med — catheter shape/pose literature).
@@ -134,16 +151,17 @@ Everything else is packaging and conditioning.
 ---
 
 ## Open questions / to verify
-- Attach a primary peer-reviewed source (beyond patent literature) for the
-  "two askew coils → 6-DOF, accuracy improves with angle" claim and quantify the
-  angle/conditioning relationship in Ch. 24.
+- ✅ **Resolved:** the "two askew coils → 6-DOF, accuracy ∝ sin θ" claim is now
+  derived (§13.3) and numerically validated (`sim_dual_coil_obs`,
+  `figures/ch13_dual_coil_observability.png`), and grounded in the Schneider
+  dual-coil patent [@schneider2000]. The roll-ambiguity demonstration is the
+  Phase-6 *5-DOF vs 6-DOF* and *3-D sensor-orientation* tools.
 - Confirm the smallest-sensor dimension figures against a current NDI datasheet
   rather than the marketing page [@ndi_aurora].
-- Add a worked roll-ambiguity demonstration (Phase 5 simulation / Phase 6
-  interactive "5DOF vs 6DOF" module from the brief).
 
 ## Sources cited
 - [@lenz2006] magnetic-sensor taxonomy & field/vector distinction.
   [@yaniv2009] inductive coils as clinical gold standard; 5-DOF clinical use.
-  [@raab1979] orthogonal-triad 6-DOF template. [@davies2021] MR/TMR noise (Ch. 14).
-  [@ndi_aurora] vendor sensor form factors.
+  [@raab1979] orthogonal-triad 6-DOF template. [@schneider2000] dual-coil 6-DOF
+  sensor (angle/accuracy). [@davies2021] MR/TMR noise (Ch. 14). [@ndi_aurora]
+  vendor sensor form factors.

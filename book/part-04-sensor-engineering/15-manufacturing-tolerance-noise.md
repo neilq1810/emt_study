@@ -1,6 +1,6 @@
 # Chapter 15 — Manufacturing, Tolerance & Noise
 
-> **Status:** DRAFT · **Part IV — Sensor Engineering**
+> **Status:** DEEPENED (awaiting review) · **Part IV — Sensor Engineering**
 > Closes Part IV. Builds on Ch. 13–14. Feeds the AFE (Ch. 16), ADC (Ch. 18),
 > and the error budget (Ch. 25). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -44,6 +44,24 @@ calibration can capture it, and stable enough that the calibration stays valid.*
 Reproducibility (PCB/MEMS/MR batch processes) and stability (materials,
 mechanical design) are therefore first-class manufacturing goals.
 
+**How tolerances map to error (the propagation rules).** Each tolerance enters
+through a known sensitivity coefficient (Ch. 25 §25.5):
+- **Effective-area / gain error** $\delta A/A=\varepsilon$ is a fractional
+  amplitude error. Because the dipole amplitude $\propto r^{-3}$, it maps to range
+  via the **cube root**: $\delta r/r = \tfrac13\varepsilon$ (the "cube-root
+  forgiveness" of Ch. 25). So a **±1% area tolerance → ±0.33% range** → ±1.0 mm at
+  $r=0.3$ m.
+- **Axis misalignment** $\delta\theta_n$ rotates the sensed projection, mapping
+  ~1:1 into an **orientation bias** of order $\delta\theta_n$ (with a small
+  coupled position term).
+- **Inter-element angle error** $\delta\alpha$ in a triad/dual sensor corrupts the
+  off-diagonal couplings → a **roll/orientation bias** of order $\delta\alpha$
+  (and, near the small-angle degeneracy of Ch. 13 §13.3, with amplified
+  sensitivity).
+
+These are *deterministic* contributions — calibration removes the stable part;
+the residual and the drift (§15.5) are what remain in the budget.
+
 ## 15.2 Sensitivity analysis
 
 Sensitivity analysis asks: *given a perturbation $\delta p$ in some parameter
@@ -64,6 +82,25 @@ $\partial \mathbf{x}/\partial p$, evaluated through the measurement-to-pose map
 - Sensitivity analysis is the bridge from component specs (this chapter) to the
   system **error budget** and **Monte Carlo** analysis of Ch. 25, and to the
   **covariance/CRLB** of Ch. 24.
+
+**Worked tolerance → pose table** (mid-volume, $r=0.3$ m; using the §15.1
+propagation rules). This is the *residual* after calibration would normally be
+much smaller; the values are pre-calibration to size the manufacturing spec:
+
+| Tolerance | Example value | Maps to | Pose contribution |
+|---|---|---|---|
+| Effective area $\delta A/A$ | ±1% | range (÷3) | ±0.33% → **±1.0 mm** |
+| Axis misalignment $\delta\theta_n$ | ±1° | orientation bias | **±1°** (+ small position) |
+| Inter-element angle $\delta\alpha$ | ±0.5° | roll/orientation | **±0.5°** (amplified near small angles, Ch. 13) |
+| Element position offset | ±0.1 mm | position | **±0.1 mm** |
+| Tip offset error (115 mm lever) | ±0.5° pointing | tip position | **±1.0 mm** at the tip (Ch. 14.2) |
+
+The table shows where to spend precision: **area/gain dominates *range*,
+angles dominate *orientation*, and the tip lever-arm can dominate the
+*clinically relevant* tip error** even when the sensor itself is accurate — which
+is why calibration (Ch. 26) targets exactly these parameters. The stochastic
+counterpart (noise → pose) is validated by the Phase-5 Monte-Carlo (Ch. 24,
+`data/monte_carlo_vs_crlb.json`).
 
 ## 15.3 Sensor self-noise: the fundamental floor
 
@@ -90,7 +127,8 @@ parasitic capacitance) bounds the usable frequency from above. (conf: high —
 *Worked floor:* a coil with $R = 100\,\Omega$ at $T=300\,\text{K}$ has
 $\overline{v_n}=\sqrt{4(1.38\times10^{-23})(300)(100)}\approx 1.29\,\text{nV}/\sqrt{\text{Hz}}$.
 Over a $1\,\text{Hz}$ effective bandwidth (long integration, Ch. 11) that is
-~1.3 nV RMS — setting the scale the AFE (Ch. 16) must not spoil. (conf: high.)
+~1.3 nV RMS — setting the scale the AFE (Ch. 16) must not spoil. (conf: high —
+Johnson–Nyquist [@horowitz_hill].)
 
 ### Magnetoresistive sensors — 1/f-dominated
 MR/TMR sensors are limited at EMT frequencies by **1/f (flicker) noise**, not
@@ -122,11 +160,25 @@ more moment, lower-noise sensor/AFE, longer integration, and better-conditioned
 geometry all reduce $\sigma_\text{pose}$, each at a known cost (size, latency,
 update rate, working volume).
 
-## 15.5 Manufacturing for stability and the calibration handoff
-The manufacturing goals that make all of the above work:
+## 15.5 Thermal drift and stability
+
+Thermal drift is the leading reason a valid calibration goes stale, so its
+coefficients deserve real numbers (conf: med — material- and part-dependent):
+
+| Source | Typical tempco | What it moves | EMT effect |
+|---|---|---|---|
+| Copper winding resistance | **+0.39 %/°C** | $R$ (hence coil noise, $Q$, resonant tuning) | shifts AC sensitivity & resonance, not gain directly |
+| Ferrite core $\mu_r$ | ~+0.1 to +1 %/°C (grade-dependent) | effective area $A_\text{eff}$ → **gain** | **range** drift via the cube root |
+| TMR/MR sensitivity & offset | ~−0.1 to −0.3 %/°C + offset drift | bias point | gain + bias drift (bridge & set/reset mitigate) |
+
+A worked implication: a ±5 °C swing on a ferrite-cored coil at ~0.3 %/°C is a
+~1.5% gain drift → ~0.5% range drift → **~1.5 mm at $r=0.3$ m** — comparable to
+the entire static budget (Ch. 25), and far larger than the ~nV noise floor. This
+is *the* number that sets the **recalibration interval** and motivates warm-up
+procedures, temperature compensation (bridge sensors, Ch. 14.3.2; referenced
+gain), and thermally stable cores/formers. The manufacturing goals follow:
 - **Reproducibility** so factory calibration (Ch. 26) is feasible at scale.
-- **Mechanical & thermal stability** so calibration stays valid in the field;
-  thermal drift of core/area/MR-offset is a leading recalibration driver.
+- **Mechanical & thermal stability** so calibration stays valid in the field.
 - **Low and characterized noise** so the budget is predictable.
 - **Documented, traceable variation** so the error budget (Ch. 25) and
   regulatory submissions (Ch. 29) rest on data, not assumption.
@@ -137,14 +189,15 @@ This is the clean handoff into Part V (the AFE that must preserve the
 ---
 
 ## Open questions / to verify
-- Add a quantitative tolerance→pose sensitivity table from the Phase-5 Monte
-  Carlo simulation (ties to Ch. 25), for a concrete sensor geometry.
-- Source representative thermal-drift coefficients for ferrite-cored coils and
-  TMR-bridge offsets, with citations, for §15.3/15.5.
+- ✅ **Resolved:** §15.2 now has a worked tolerance→pose table (area→range via
+  cube root, angles→orientation, tip lever-arm), and §15.5 gives thermal-drift
+  coefficients with the recalibration-interval implication. Remaining: replace the
+  representative tempco ranges with values for the *specific* ferrite grade / TMR
+  part chosen in a given design (cite per design).
 - Verify the self-resonance frequency bound example for a realistic catheter
-  coil.
+  coil (Ch. 9 §9.5).
 
 ## Sources cited
-- [@davies2021] MR/TMR 1/f noise & area-limited detectivity. [@lenz2006]
-  fluxgate/other noise floors. (Johnson noise (15.1): Johnson–Nyquist, standard;
-  textbook citation to add.)
+- [@horowitz_hill] Johnson–Nyquist noise (15.1) & low-noise design. [@davies2021]
+  MR/TMR 1/f & area-limited detectivity. [@lenz2006] fluxgate/other noise floors.
+  Copper tempco & ferrite μ_r(T): standard material data (grade-dependent).

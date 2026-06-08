@@ -74,6 +74,13 @@ export const FIGURES: FigureMeta[] = [
     caption: 'Amplitude error ∝ T^−0.49 (≈ 1/√T) even with the signal buried 5× under noise.',
   },
   {
+    file: 'ch13_dual_coil_observability.png',
+    title: 'Dual-coil roll observability vs axis angle',
+    chapter: 'Ch. 13 §13.3',
+    chapterSlug: 'part-04-sensor-engineering/13-sensor-physics-geometries',
+    caption: 'Roll observability of a two-coil 6-DOF sensor: ~0 when the coil axes are parallel, maximal (∝ sin θ) at 90°.',
+  },
+  {
     file: 'ch24_crlb_map.png',
     title: 'CRLB position-uncertainty map',
     chapter: 'Ch. 24 §24.5',
