@@ -1,0 +1,101 @@
+---
+// Skin-depth & eddy explorer (Ch. 6 / Ch. 4): how deep an AC field penetrates a
+// material vs frequency — the same physics that makes metal distort but tissue
+// transparent.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 flex flex-wrap items-center gap-4 text-sm">
+    <label class="flex items-center gap-2">frequency:
+      <input id="sd-f" type="range" min="2" max="5" step="0.05" value="4" />
+      <span id="sd-f-v" class="tabular-nums">10 kHz</span></label>
+  </div>
+  <canvas id="sd-canvas" width="520" height="320" class="w-full max-w-[560px] rounded"></canvas>
+  <div id="sd-out" class="mt-3 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
+  <p id="sd-py" class="mt-1 text-xs text-red-700"></p>
+  <p class="mt-1 text-xs text-slate-400">
+    δ = 1/√(πfμσ) (eq. 6.1). When δ ≫ object the field passes ~unperturbed; when
+    δ ≪ object the field is excluded and eddy currents distort. This single number
+    explains why a copper tool distorts (δ ≈ 0.66 mm) but the body does not
+    (δ ≈ 7 m ≫ 0.3 m).
+  </p>
+</div>
+
+<script>
+  import { skinDepth } from '../lib/physics';
+  import { fetchJson } from '../lib/clientdata';
+
+  const materials = [
+    { name: 'Copper', sigma: 5.8e7, color: '#b45309' },
+    { name: 'Aluminium', sigma: 3.5e7, color: '#64748b' },
+    { name: 'Titanium', sigma: 2.4e6, color: '#7c3aed' },
+    { name: 'Stainless 304', sigma: 1.4e6, color: '#0e7490' },
+    { name: 'Tissue', sigma: 0.5, color: '#dc2626' },
+  ];
+  const BODY = 0.3; // m, reference body size
+
+  const fS = document.getElementById('sd-f') as HTMLInputElement;
+  const cv = document.getElementById('sd-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const out = document.getElementById('sd-out')!;
+
+  const padL = 52, padB = 32, padT = 12, padR = 12;
+  const fLo = 2, fHi = 5;            // log10 Hz: 100 Hz .. 100 kHz
+  const yLo = -4, yHi = 2;           // log10 m: 0.1 mm .. 100 m
+  const px = (lf: number) => padL + ((lf - fLo) / (fHi - fLo)) * (cv.width - padL - padR);
+  const py = (lm: number) => padT + (1 - (lm - yLo) / (yHi - yLo)) * (cv.height - padT - padB);
+
+  function draw() {
+    const f = Math.pow(10, +fS.value);
+    document.getElementById('sd-f-v')!.textContent =
+      f >= 1000 ? `${(f / 1000).toFixed(1)} kHz` : `${f.toFixed(0)} Hz`;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+
+    // gridlines
+    ctx.strokeStyle = '#e2e8f0'; ctx.fillStyle = '#94a3b8'; ctx.font = '10px system-ui';
+    for (let d = yLo; d <= yHi; d++) {
+      const y = py(d); ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(cv.width - padR, y); ctx.stroke();
+      const m = Math.pow(10, d);
+      ctx.fillText(m >= 1 ? `${m} m` : `${(m * 1000).toFixed(m < 0.01 ? 1 : 0)} mm`, 2, y + 3);
+    }
+    for (let d = fLo; d <= fHi; d++) ctx.fillText(`1e${d}`, px(d) - 8, cv.height - 14);
+    ctx.fillText('frequency [Hz]', cv.width / 2 - 30, cv.height - 1);
+
+    // body-size reference line
+    ctx.strokeStyle = '#cbd5e1'; ctx.setLineDash([4, 4]); ctx.beginPath();
+    ctx.moveTo(padL, py(Math.log10(BODY))); ctx.lineTo(cv.width - padR, py(Math.log10(BODY))); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle = '#94a3b8'; ctx.fillText('~body (0.3 m)', cv.width - 90, py(Math.log10(BODY)) - 3);
+
+    // curves
+    for (const mat of materials) {
+      ctx.strokeStyle = mat.color; ctx.lineWidth = 2; ctx.beginPath();
+      for (let i = 0; i <= 100; i++) {
+        const lf = fLo + (i / 100) * (fHi - fLo);
+        const d = skinDepth(Math.pow(10, lf), mat.sigma);
+        const Y = py(Math.log10(d)); i === 0 ? ctx.moveTo(px(lf), Y) : ctx.lineTo(px(lf), Y);
+      }
+      ctx.stroke();
+    }
+    // frequency marker
+    ctx.strokeStyle = '#0f172a'; ctx.setLineDash([3, 3]); ctx.beginPath();
+    ctx.moveTo(px(+fS.value), padT); ctx.lineTo(px(+fS.value), cv.height - padB); ctx.stroke(); ctx.setLineDash([]);
+
+    // readout
+    const row = (l: string, v: string, c: string) =>
+      `<div class="flex justify-between"><span style="color:${c}">${l}</span><b>${v}</b></div>`;
+    out.innerHTML = materials.map((m) => {
+      const d = skinDepth(f, m.sigma);
+      const txt = d >= 1 ? `${d.toFixed(2)} m` : `${(d * 1000).toFixed(2)} mm`;
+      const note = d > BODY ? ' (≫ body → transparent)' : d < 0.01 ? ' (≪ tool → distorts)' : '';
+      return row(m.name, txt + note, m.color);
+    }).join('');
+  }
+
+  fS.addEventListener('input', draw);
+  draw();
+
+  fetchJson('skin_depth.json').then((d) => {
+    const t = d?.skin_depth_mm_at_10kHz;
+    if (t) document.getElementById('sd-py')!.innerHTML = '● Python (run_all.py) @ 10 kHz: ' +
+      Object.entries(t).map(([k, v]: any) => `${k.split(' ')[0]} ${(v as number).toFixed(2)} mm`).join(' · ');
+  });
+</script>

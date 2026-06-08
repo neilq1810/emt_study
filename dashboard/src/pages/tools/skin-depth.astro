@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import SkinDepthExplorer from '../../components/SkinDepthExplorer.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="Skin-depth & eddy explorer" toc={toc}>
+  <h1>Skin-depth &amp; eddy explorer</h1>
+  <p>
+    The magnetic skin depth δ = 1/√(πfμσ) (Ch. 6 §6.2) decides which nearby
+    materials distort the field and which are transparent. It is the single number
+    behind two opposite facts: a conductor with δ ≪ its size hosts eddy currents
+    that corrupt the measurement, while the body — non-magnetic and weakly
+    conducting — has δ ≈ 7 m at 10 kHz, far larger than itself, so the field
+    passes through it almost unperturbed (Ch. 4 §4.2). Sweep the frequency and
+    compare materials against the ~0.3 m body reference.
+  </p>
+  <SkinDepthExplorer />
+</BookLayout>
