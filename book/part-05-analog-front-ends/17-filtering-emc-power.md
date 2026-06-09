@@ -1,6 +1,6 @@
 # Chapter 17 — Filtering, EMC, Shielding & Medical-Grade Power
 
-> **Status:** DRAFT · **Part V — Analog Front Ends**
+> **Status:** DEEPENED (awaiting review) · **Part V — Analog Front Ends**
 > Closes Part V. Builds on Ch. 16 (AFE noise/DR). Feeds Ch. 18 (ADC) and the
 > regulatory material of Ch. 29. Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -98,6 +98,47 @@ design:
 - **Isolation barriers** between the patient-connected front end and the rest of
   the system (isolated amplifiers, isolated power, digital isolators) — which add
   their own noise and bandwidth constraints the AFE designer must budget (Ch. 16).
+  (Strictly, the two means are **Means of Patient Protection, MOPP**, with larger
+  creepage/clearance and higher dielectric-test voltages than the Means of
+  Operator Protection, MOOP, applied elsewhere.)
+
+### Biased sensors vs. passive coils: the patient-power burden
+A safety distinction that the AC-coil-vs-biased-sensor choice (Ch. 8, 13–14, 16
+§16.6) forces, and which often decides what is usable *in* the body:
+
+- **Passive induction coil — no power at the patient.** The sensor is a piece of
+  wire; it sources only the induced µV EMF. There is **no energized conductor in
+  the body**, so the only patient-leakage path is fault current coupling *from*
+  the system through the leads — bounded by a single isolation barrier and easily
+  held under the Type CF limits. This is a major, under-stated reason inductive
+  coils remain the default for **intracardiac and catheter** EMT.
+- **Biased sensor (TMR/MR, Hall, fluxgate) — power delivered to a Type CF part.**
+  These require a DC bias (voltage *and* current), plus set/reset/flip currents
+  (Ch. 14.3.3), **delivered to the sensor at the patient end** — i.e. an
+  *energized conductor inside or against the body*. The consequences are
+  first-order:
+  1. **Fault containment.** The bias supply is an additional source that must be
+     galvanically isolated to **two MOPP**; single-fault analysis must keep
+     patient leakage < 50 µA even if a barrier fails. The bias rail, not just the
+     signal, now needs isolation.
+  2. **Self-heating.** Bias power $P=V_b I_b$ dissipates *at the sensor*. For a
+     TMR bridge ($V_b\!\sim\!0.3$ V, $R_b\!\sim\!\text{kΩ}$) this is only tens of
+     µW — usually negligible — but it must be **bounded against the surface-
+     temperature limits** of IEC 60601-1, and set/reset current pulses raise the
+     peak. A coil dissipates nothing at the tip.
+  3. **More conductors.** Bias + reference + return wires thicken the lead bundle,
+     adding leakage paths, cable capacitance, and triboelectric noise (§17.2) —
+     partly eroding the size advantage TMR brought (Ch. 14).
+  4. **Reference isolation.** The bias/reference must be both **low-noise**
+     (its noise multiplies into the signal, Ch. 25 §25.2) *and* isolated — a
+     harder combination than powering a passive coil's (nonexistent) supply.
+
+**Net trade:** biased sensors buy DC capability and chip-scale integration but pay
+an isolation/leakage/heating/lead-count burden that a passive coil avoids
+entirely — a concrete reason coils persist clinically despite TMR's other merits,
+and a key entry in any pulsed-DC/MR design's safety case. (conf: med–high — the
+isolation/leakage requirements are direct from IEC 60601-1; magnitudes are
+design-dependent.)
 
 ### Electromagnetic compatibility: IEC 60601-1-2
 The EMC collateral standard [@iec60601_1_2] governs both **emissions** (the
@@ -113,10 +154,23 @@ high — per IEC and compliance literature.)
 
 The EMT-specific implication: **"essential performance" must be defined in pose
 terms** — e.g. "position error remains within X mm or the system flags loss of
-tracking" — and the immunity test plan must exercise the realistic threats
-(electrosurgery, nearby imaging). This couples directly to the error budget
-(Ch. 25), the fault/flagging behavior of the solver (Ch. 12 §12.4, Ch. 24), and
-the clinical validation of Ch. 29.
+tracking" — and the immunity test plan must exercise the realistic threats. The
+worst OR offenders, concretely:
+- **Electrosurgical units (ESU):** ~0.3–3 MHz at hundreds of watts with violent
+  arcing transients — broadband interference whose harmonics/transients couple
+  into the receive chain. Band-select (§17.1) and the lock-in's narrow ENBW
+  (Ch. 20) reject most, but ESU bursts can saturate an un-limited AFE (Ch. 16
+  §16.4 dynamic reserve).
+- **Fluoroscopy / C-arm:** doubly hostile — an EMC emitter *and* a large moving
+  conductive/ferromagnetic **distorter** (Ch. 6, 27), so it corrupts the field
+  itself, not just the electronics.
+- **Defibrillation:** a cardiac-applied (Type CF) sensor must be **defibrillation-
+  proof** — survive the high-energy pulse without hazard and recover tracking —
+  an explicit IEC 60601-1 requirement for intracardiac parts that shapes the input
+  protection of the patient-side AFE.
+
+This couples directly to the error budget (Ch. 25), the fault/flagging behavior of
+the solver (Ch. 12 §12.4, Ch. 24), and the clinical validation of Ch. 29.
 
 ### Power systems
 Medical-grade power adds: isolated, low-noise supplies (switching-supply noise
@@ -139,13 +193,13 @@ and synchronous detection (Ch. 20).
 ---
 
 ## Open questions / to verify
-- Cite the *exact* clause numbers and current limits from IEC 60601-1 (rather
-  than secondary compliance summaries) for the Type CF figures, once the standard
-  text is accessible.
+- ✅ **Resolved (this pass):** added the biased-sensor vs. passive-coil
+  patient-power/leakage/heating safety contrast (§17.3) and a concrete OR
+  threat list (ESU, C-arm, defibrillation/defib-proof). Remaining: attach **exact
+  IEC 60601-1 clause numbers** and the precise immunity *test levels* (V/m, kV)
+  from the standard text (currently from compliance summaries / general knowledge).
 - Add a worked isolated-AFE noise budget showing the isolation barrier's
   contribution relative to the coil floor (ties Ch. 16).
-- Source a representative OR EMC threat list (electrosurgery spectrum,
-  fluoroscopy) with levels for the §17.3 immunity discussion.
 - Confirm current edition/amendment status of IEC 60601-1 and -1-2 as of
   publication date (standards evolve).
 

@@ -1,6 +1,6 @@
 # Chapter 18 — ADC Systems
 
-> **Status:** DRAFT · **Part VI — Data Conversion**
+> **Status:** DEEPENED (awaiting review) · **Part VI — Data Conversion**
 > The whole of Part VI. Picks up the AFE output of Ch. 16–17 (band-limited,
 > isolated, ~100 dB dynamic range) and hands digital samples to the DSP of
 > Part VII. Citation keys resolve to
@@ -107,11 +107,28 @@ far above the Nyquist rate for the signal band — in two ways:
   This is how a 1-bit modulator becomes a 24-bit converter — a structural match
   to EMT's narrow signal band sitting at a known frequency.
 
-**Decimation** then low-pass filters and down-samples to the output rate. The
-decimation filter is simultaneously the anti-alias guard for the output rate and
-a band-limiter that aids interference rejection — but its **group delay is a
-latency term** (Ch. 12) and its **phase response is a calibration constant** for
-the synchronous detector (Ch. 20, Ch. 26).
+  Mechanistically, the modulator places a **noise-transfer function (NTF)** —
+  a high-pass of order $L$, e.g. $(1-z^{-1})^L$ — on the quantization noise,
+  pushing it out of the signal band; the $(6L+3)$ dB/octave follows from
+  integrating the shaped noise over the band [@schreier2017]. The result holds
+  only for a **stable** modulator: single-loop orders $\ge3$ need careful NTF
+  design (bounded out-of-band gain, Lee's rule), or one uses a **MASH** (cascaded
+  lower-order) structure that is unconditionally stable [@schreier2017]. The
+  practical EMT recipe is a 2nd–4th-order modulator at moderate OSR — comfortably
+  reaching the 20-bit ENOB the dynamic range demands (§18.2).
+
+  *Worked plan:* a 1-bit, 2nd-order ($L=2$) modulator at $\text{OSR}=256$
+  (8 octaves) yields $\approx(6\cdot2+3)\times8 = 120$ dB of shaping gain over the
+  baseband — ~20 bits ENOB — exactly the 120 dB / 20-bit target of §18.2 and the
+  AFE gain plan of Ch. 16 §16.4, *without* a PGA.
+
+**Decimation** then low-pass filters and down-samples to the output rate,
+typically a multiplier-free **CIC stage followed by a compensating FIR** (Ch. 22
+§22.2). The decimation filter is simultaneously the anti-alias guard for the
+output rate and a band-limiter that aids interference rejection — but its
+**group delay is a latency term** (Ch. 12, often the dominant one) and its
+**phase response is a calibration constant** for the synchronous detector
+(Ch. 20, Ch. 26).
 
 **Coherent sampling.** When possible, lock $f_s$ to the excitation frequency
 (both derived from the master clock, Ch. 10 §10.3) so an integer number of signal
@@ -119,7 +136,27 @@ cycles fits the analysis window. Coherent sampling makes the single-bin DFT /
 lock-in estimate exact (no spectral leakage) and is the cleanest way to estimate
 the channel amplitudes of Ch. 11 §11.1.
 
-## 18.4 Clock jitter and quantization-error propagation
+## 18.4 Multi-channel conversion: simultaneous vs. multiplexed
+
+An EMT receiver digitizes several channels at once — three sensor axes, often
+across many generator coils (Ch. 9, 19). *How* the ADC serves them is an
+architecture choice with a coherence consequence:
+
+- **Simultaneous sampling** (one ADC per channel, or a sample-and-hold bank on a
+  common clock) captures all channels at the *same instant*, preserving their
+  **relative phase**. Coherent detection (Ch. 10/20) recovers the *signed*
+  coupling $M_{ij}$ from that phase, so phase fidelity across channels is not
+  optional — and per-channel Σ-Δ ADCs are cheap enough that this is the norm.
+- **Multiplexed sampling** (one ADC time-shared across channels) introduces a
+  **fixed inter-channel phase skew** $\Delta\phi = \omega\,\Delta t_\text{mux}$.
+  If known and stable it is a calibration constant (Ch. 26), but it consumes part
+  of the phase budget of Ch. 10 §10.2 and is brittle if the mux timing drifts.
+
+For a coherent, phase-sensitive system the safe default is **per-channel
+simultaneous Σ-Δ conversion**, which also keeps the FPGA demodulation (Ch. 22)
+fully parallel.
+
+## 18.5 Clock jitter and quantization-error propagation
 
 **Aperture jitter.** Random sample-instant error $\sigma_t$ caps SNR (the same
 relation introduced in Ch. 10 eq. 10.1, here a property of the ADC clock):
@@ -150,7 +187,7 @@ through the forward-model Jacobian (Ch. 11 §11.5, Ch. 24). Two practical points
    *deterministic* error term of the budget (Ch. 25), distinct from the
    stochastic noise term.
 
-## 18.5 Putting Part VI in the chain
+## 18.6 Putting Part VI in the chain
 The ADC converts the clean, scaled, band-limited analog signal (Parts IV–V) into
 samples whose in-band noise sits below the sensor floor and whose dynamic range
 covers the working volume. With coherent, oversampled, noise-shaped conversion,
@@ -161,16 +198,16 @@ by the converter — which is the whole point of the receive chain. The next par
 ---
 
 ## Open questions / to verify
-- Add a worked conversion plan for a target system: choose OSR, Σ-Δ order, output
-  rate, and decimation group delay to hit a stated ENOB and latency, as a figure
-  (Phase 4) / notebook (Phase 5).
-- Source representative ENOB/SFDR/noise-density numbers for ADC parts actually
-  used in commercial EMT (Ch. 28), with conditions, rather than asserting.
-- Cross-check the (6L+3) dB/octave noise-shaping result and state assumptions
-  (ideal modulator, no instability) with a primary data-conversion reference to
-  add to the bibliography (e.g. a Σ-Δ text / Schreier–Temes).
+- ✅ **Resolved:** §18.3 now has a worked conversion plan (1-bit, $L=2$, OSR 256 →
+  120 dB / 20-bit) with the NTF/stability/MASH framing grounded in Schreier &
+  Temes [@schreier2017]; §18.4 adds simultaneous-vs-muxed conversion. Remaining:
+  source ENOB/SFDR/noise-density for ADC parts in *named* commercial EMT systems
+  (Ch. 28), with conditions.
+- Add the decimation group-delay number to the §12.1 latency budget for the
+  specific OSR/order chosen (ties Ch. 12/22).
 
 ## Sources cited
 - [@walden1999] ADC architecture/limits survey; jitter and resolution-vs-rate
-  trends. [@ieee1241] ENOB/SINAD/SNR definitions and test methods. AFE/sensor
-  floor and dynamic-range requirements from Ch. 9, 15, 16.
+  trends. [@schreier2017] Σ-Δ noise shaping, NTF, stability, MASH, decimation.
+  [@ieee1241] ENOB/SINAD/SNR definitions and test methods. AFE/sensor floor and
+  dynamic-range requirements from Ch. 9, 15, 16; decimation hardware Ch. 22.

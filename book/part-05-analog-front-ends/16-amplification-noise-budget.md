@@ -1,6 +1,6 @@
 # Chapter 16 — Amplification & Noise Budgeting
 
-> **Status:** DRAFT · **Part V — Analog Front Ends**
+> **Status:** DEEPENED (awaiting review) · **Part V — Analog Front Ends**
 > Opens Part V. Picks up the ~nV-class coil noise floor of Ch. 15 (eq. 15.1) and
 > the 60 dB dynamic range of Ch. 9 §9.6. Hands off to the ADC (Ch. 18).
 > Citation keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -51,11 +51,31 @@ coil front ends. This is a point routinely missed by designers who reflexively
 reach for the lowest-$e_n$ part. (conf: high — direct from (16.1) with inductive
 $Z_s$.)
 
+**Worked bipolar-vs-JFET choice.** Take a sensor coil with $R_s=50\,\Omega$ and
+inductive reactance giving $|Z_s|\approx300\,\Omega$ at the operating frequency,
+rising to several k$\Omega$ near self-resonance (§16.3). Compare two LNA inputs
+(typical numbers, in nV/√Hz at the input):
+
+| Input | $e_n$ | $i_n$ | $R_{s,\text{opt}}=e_n/i_n$ | $i_n\lvert Z_s\rvert$ @300 Ω | $i_n\lvert Z_s\rvert$ @5 kΩ |
+|---|---|---|---|---|---|
+| Bipolar | 1 nV/√Hz | 2 pA/√Hz | 500 Ω | 0.6 nV | **10 nV** |
+| JFET | 3 nV/√Hz | 5 fA/√Hz | 600 kΩ | 0.02 nV | 0.03 nV |
+
+At the operating point the **bipolar wins** (total ≈ √(1²+0.6²+0.9²) ≈ 1.5 nV/√Hz
+vs the JFET's ≈ 3 nV), because $\lvert Z_s\rvert\approx R_{s,\text{opt}}$. But
+**near self-resonance** the bipolar's current-noise term explodes to 10 nV/√Hz
+while the JFET is unmoved — so a system that must operate near resonance, or with
+a very high-impedance coil, flips to a **JFET/CMOS input**. The design rule:
+compare $\lvert Z_s\rvert$ *at the operating frequency* (and its worst-case excursion)
+against each candidate's $R_{s,\text{opt}}$. (conf: high — eq. (16.1) with the
+tabulated device numbers.)
+
 **Figure of merit.** When power is constrained (implantable/wearable AFEs), the
 **noise efficiency factor (NEF)** captures the noise-per-unit-bandwidth achieved
 per unit bias current, letting designers compare LNA topologies on equal power
 footing. Lower NEF = more noise performance per microamp. (conf: high — standard
-low-power AFE metric.)
+low-power AFE metric; the NEF originates with Steyaert & Sansen, 1987 — citation
+to add.)
 
 ## 16.2 Instrumentation amplifiers and CMRR
 
@@ -90,6 +110,15 @@ capacitance and any cable capacitance. Consequences the AFE designer must manage
   behavior; a **transimpedance (current-mode)** front end holds the coil in a
   virtual short, flattening the response and taming resonance at some noise
   cost. The choice is a response-flatness vs. noise trade.
+- **Tuned (resonant) pickup.** Deliberately tuning the sensor coil with a
+  capacitor to resonate at the excitation frequency multiplies the signal by the
+  loaded $Q$ (the receive analogue of the resonant *generator* drive, Ch. 9 §9.4)
+  — buying SNR for free in principle. The costs are the same: a narrow bandwidth
+  $f_0/Q$ that must contain the channel and demands frequency stability (Ch. 10),
+  and strong temperature sensitivity of the tuning. It also conflicts with FDM if
+  one sensor must receive *several* transmit frequencies. Resonant pickup is
+  therefore common in single-frequency/TDM systems and avoided in
+  broadband-FDM ones — a genuine architecture-coupled choice.
 - **Cable capacitance** between sensor and AFE shifts $f_0$ and can pick up
   interference; for catheter sensors with long thin leads this is a real error
   source (Ch. 14.2, Part IX) and argues for amplification as close to the sensor
@@ -115,6 +144,22 @@ No single fixed-gain stage spans this. Standard responses:
   the *entire* coupling matrix estimate (Ch. 11), not just one channel, because
   the solver expects consistent $M_{ij}$.
 
+**Worked gain plan for 120 dB.** Two ways to cover it (Ch. 18 gives the ADC
+side):
+- **Single high-resolution Σ-Δ, no PGA.** A 20-bit-ENOB converter has
+  $6.02\times20+1.76\approx122$ dB of dynamic range (Ch. 18 eq. 18.1) — enough to
+  digitize the full span directly, with fixed analog gain. Simplest and
+  gain-error-free, at the cost of a premium ADC and the decimation latency
+  (Ch. 12). This is the modern default.
+- **PGA + modest ADC.** A 16-bit ADC gives ~96 dB; adding a PGA with, say, three
+  ranges (0 / 24 / 48 dB) extends the reachable span to ~144 dB. Cheaper ADC, but
+  each gain range carries its own calibrated error (Ch. 26), the switch must
+  settle within the frame (Ch. 10/12), and auto-ranging logic must avoid
+  oscillating near a threshold.
+
+Either way the binding rule is **never clip the strong-axis signal**: a clipped
+near-generator sample corrupts the *whole* coupling matrix (Ch. 11), so the
+gain/headroom is set by the strongest pose, and the noise floor by the weakest.
 This is one of the hardest AFE problems in EMT and a place where naive designs
 fail in the field (works on the bench at mid-range, clips near the generator,
 disappears at the edge).
@@ -148,6 +193,30 @@ referred to the input [@horowitz_hill]. Design procedure:
 > = e_n/i_n$ versus the coil's $|Z_s|$ at the excitation frequency. (conf: high —
 > direct application of (16.1).)
 
+## 16.6 The AFE differs for AC coils vs. biased (MR/DC) sensors
+
+A subtle architecture coupling: *where the signal sits in frequency* dictates the
+AFE's 1/f strategy.
+
+- **AC coil systems** place the signal at the excitation frequency (several–tens
+  of kHz), comfortably **above the amplifier's 1/f corner**, and the lock-in
+  (Ch. 20) already rejects everything off-band. The AFE's own flicker noise and
+  offset are therefore largely irrelevant — a plain low-noise LNA suffices.
+- **Biased/DC sensors** (MR/TMR, fluxgate baseband, pulsed-DC) put the signal at
+  or near **baseband**, *in* the amplifier's 1/f region. Here the AFE needs
+  **chopper-stabilization or auto-zeroing** — modulate the signal above the 1/f
+  corner, amplify, then demodulate — to remove amplifier flicker noise and offset
+  drift. This is the analog counterpart to the sensor's own set/reset chopping
+  (Ch. 14.3.3).
+
+The biased-sensor path also carries an electrical-safety burden the passive coil
+does not: it must **deliver a stable bias/reference to the sensor at the patient
+end**, i.e. active conductors into a (possibly Type CF) applied part, with the
+attendant leakage-current, isolation, and self-heating constraints — developed in
+Ch. 17 §17.3. A passive coil delivers *no* power to the patient and largely
+sidesteps this. The AFE choice (chopper vs. plain LNA) and the safety architecture
+are thus both downstream of the AC-coil-vs-biased-sensor decision of Ch. 8/13.
+
 The result of this chapter — an input-referred noise density and a dynamic-range
 spec — is the direct input to the ADC requirements of Ch. 18 and the stochastic
 term of the error budget (Ch. 25).
@@ -155,13 +224,16 @@ term of the error budget (Ch. 25).
 ---
 
 ## Open questions / to verify
-- Add a concrete LNA topology comparison (bipolar vs JFET vs paralleled) with
-  sourced $e_n$/$i_n$ numbers and the resulting NEF for a representative coil.
+- ✅ **Resolved:** §16.1 now has a worked bipolar-vs-JFET noise-matching table
+  (operating vs near-resonance), and §16.4 a worked 120 dB gain plan
+  (single 20-bit Σ-Δ vs PGA + 16-bit). Remaining: replace the representative
+  $e_n/i_n$ with specific candidate-part datasheet numbers (cite per design).
+- Add the NEF origin reference (Steyaert & Sansen, *IEEE JSSC*, 1987) to the
+  bibliography once the search index is available to verify it.
 - Quantify achievable AC CMRR vs. frequency for a candidate in-amp at the
   excitation band, with datasheet citations.
-- Produce a worked 100 dB dynamic-range gain-plan (PGA steps + ADC bits) tied to
-  Ch. 18, as a figure (Phase 4) and a notebook (Phase 5).
 
 ## Sources cited
-- [@horowitz_hill] amplifier noise model, in-amps/CMRR, cascade/noise-figure.
-  Sensor floor from Ch. 15; dynamic range from Ch. 9 §9.6.
+- [@horowitz_hill] amplifier noise model, noise matching/NEF, in-amps/CMRR,
+  chopper/auto-zero, cascade/noise-figure. Sensor floor from Ch. 15; dynamic range
+  from Ch. 9 §9.6; biased-sensor safety → Ch. 17.

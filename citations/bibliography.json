@@ -1015,6 +1015,22 @@
       "verified": true
     },
     {
+      "id": "schreier2017",
+      "type": "book",
+      "title": "Understanding Delta-Sigma Data Converters, 2nd Edition",
+      "authors": ["Pavan, Shanthi", "Schreier, Richard", "Temes, Gabor C."],
+      "year": 2017,
+      "venue": "Wiley–IEEE Press",
+      "url": "https://www.wiley.com/en-us/Understanding+Delta-Sigma+Data+Converters,+2nd+Edition-p-9781119258308",
+      "publisher": "Wiley–IEEE Press",
+      "source_type": "book",
+      "keywords": ["sigma-delta", "noise shaping", "NTF", "oversampling", "MASH", "decimation"],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "The standard Sigma-Delta data-converter reference (noise-shaping NTF, order/OSR SNR, stability, MASH, decimation) for Ch.18. 2nd ed ISBN 9781119258278; 1st ed (2004) ISBN 9780471465850.",
+      "verified": true
+    },
+    {
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
