@@ -94,10 +94,23 @@ Anser/Grover reused). All build clean.
 | 2 | Patent & academic genealogy | 🟢 DEEPENED → review | already had verified patents; +patent-expiry→open-source IP-cycle note (Kuipers ~1992, Blood ~2010 → Anser/wireless) |
 | 3 | Technology timelines & trees | 🟢 DEEPENED → review | already had sourced timeline; +open-source/wireless era rows (Anser 2017, FM-wireless 2023) |
 
-**✅ Part I (Ch. 1–3) fully deepened.** Remaining: Parts XI–XIV (ecosystem,
-medical, frontiers, build-from-scratch — survey/applied).
+**✅ Part I (Ch. 1–3) fully deepened.**
 
-(Other chapters remain DRAFT; will be scheduled next.)
+### Parts XI–XIV — Ecosystem, Medical, Frontiers, Capstone (final batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 28 | Vendor survey | 🟢 DEEPENED → review | +"why fuse magnetic with impedance" explainer (absolute-accurate vs scalable-warped, EM+IMU pattern); cross-vendor table tied to system link budget (eq 8.1) + 3 error classes; fixed pre-existing KaTeX \$-amount/J&J bug |
+| 29 | Clinical applications & workflows | 🟢 DEEPENED → review | **+clinical-accuracy-chain RSS** σ_clin=√(track²+reg²+tip²+motion²+distort²), worked (1mm tracker behind 2mm reg+0.9mm tip → 2.4mm) → halving tracker barely moves it → attack dominant term |
+| 30 | Research frontiers & open problems | 🟢 DEEPENED → review | **+frontier-readiness scorecard** (binding-constraint/maturity/hardest-issue: fusion near-term, quantum far/niche), **+worked quantum dynamic-range mismatch** (~106 dB needed; SERF lacks range+BW not sensitivity) |
+| 31 | End-to-end design (capstone) | 🟢 DEEPENED → review | **+SNR number chain** (coil 1.3nV/√Hz → 13nV@100Hz ENBW → σ_B≈0.1–1nT matching CRLB sim); **+worked error budget by class × location** (RSS 0.50/0.62/0.92mm near/mid/far — calib+distortion dominate mid, z⁴ CRLB dominates far); **+worked latency budget** (≈8.7ms, τ dominates, vs 20ms spec) |
+
+**✅ Parts XI–XIV (Ch. 28–31) fully deepened.** Capstone Ch. 31 now carries numbers
+end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), grounded in the
+`crlb_vs_range` sim. Build clean (0 KaTeX errors).
+
+**✅✅✅ DEEPEN PASS COMPLETE: all 31 chapters (Parts I–XIV) DEEPENED.**
+
+(All chapters now DEEPENED → awaiting user review/verification.)
 
 ## Flagged for upcoming chapter passes
 - ✅ **DONE (Ch. 17 deepened):** electrical-safety contrast between
