@@ -72,6 +72,15 @@ Anser/Grover reused). All build clean.
 
 **✅ Part V (Ch. 16–17) fully deepened.** Build clean.
 
+### Part VI — Data Conversion (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 18 | ADC systems | 🟢 DEEPENED → review | +NTF/stability/MASH (Schreier-Temes), **worked Σ-Δ plan (1-bit, L=2, OSR 256 → 120 dB/20-bit)**, simultaneous-vs-muxed multi-channel conversion (phase coherence), CIC decimation tie (1333→1651 w) |
+
+**✅✅ TECHNICAL CORE COMPLETE: Parts II–IX (Ch. 4–25) all deepened.**
+Remaining: Part I (Ch. 1–3 survey), Part X (Ch. 26–27 calibration), Parts XI–XIV
+(ecosystem, medical, frontiers, build-from-scratch). +Schreier-Temes citation.
+
 (Other chapters remain DRAFT; will be scheduled next.)
 
 ## Flagged for upcoming chapter passes
