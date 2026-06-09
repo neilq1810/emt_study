@@ -91,10 +91,11 @@ Anser/Grover reused). All build clean.
 | Ch | Title | State | Notes |
 |---:|-------|-------|-------|
 | 1 | History | 🟢 DEEPENED → review | resolved conf:low SPASYN (Kuipers nutating-field US3868565), firmed founding/acquisition dates from verified Ch.2/3 patents; timeline + sources cleaned (→2275 w) |
-| 2 | Patent & academic genealogy | 🟢 already deep (verified patents) | written with Kuipers/Blood/Ben-Haim verified patents; light pass |
-| 3 | Technology timelines & trees | 🟢 already deep (sourced timeline) | written with sourced capability timeline; light pass |
+| 2 | Patent & academic genealogy | 🟢 DEEPENED → review | already had verified patents; +patent-expiry→open-source IP-cycle note (Kuipers ~1992, Blood ~2010 → Anser/wireless) |
+| 3 | Technology timelines & trees | 🟢 DEEPENED → review | already had sourced timeline; +open-source/wireless era rows (Anser 2017, FM-wireless 2023) |
 
-Remaining: Parts XI–XIV (ecosystem, medical, frontiers, build-from-scratch).
+**✅ Part I (Ch. 1–3) fully deepened.** Remaining: Parts XI–XIV (ecosystem,
+medical, frontiers, build-from-scratch — survey/applied).
 
 (Other chapters remain DRAFT; will be scheduled next.)
 
