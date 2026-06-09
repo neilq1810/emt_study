@@ -1,6 +1,6 @@
 # Chapter 28 — Commercial Ecosystem: Vendor Survey
 
-> **Status:** DRAFT · **Part XI — Commercial Ecosystem** (the whole of Part XI)
+> **Status:** DEEPENED (awaiting review) · **Part XI — Commercial Ecosystem** (the whole of Part XI)
 > Connects the engineering of Parts II–X to the products that embody it. Citation
 > keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -45,7 +45,7 @@ story of Parts IX–X).
   (a Raab et al. co-author, Ch. 1 §1.6), Vermont; pioneers of **pulsed-DC**
   tracking, famed for the **Flock of Birds** and **microBIRD**, plus OEM medical
   modules (**trakSTAR/driveBAY**) [@ascension_roper2012]. Acquired by **Roper
-  Industries (~US$19M, 2012)** and operated under **NDI** [@ascension_roper2012].
+  Industries (~US\$19M, 2012)** and operated under **NDI** [@ascension_roper2012].
 - **Technology/architecture.** **Pulsed-DC** excitation: energize, wait for
   eddy-current settling, sample the static field (Ch. 6 §6.4) — using
   (quasi-)static field sensing rather than pure AC pickup. Native 6-DOF.
@@ -81,7 +81,7 @@ story of Parts IX–X).
 ## 28.4 Biosense Webster — CARTO and the EP breakthrough
 
 - **History.** **Biosense** founded **1993 by Shlomo Ben-Haim**; acquired by
-  **Johnson & Johnson in 1997 (~$400M in shares)** and merged with Webster to form
+  **Johnson & Johnson in 1997 (~\$400M in shares)** and merged with Webster to form
   **Biosense Webster** [@globes_jnj_biosense]. The scientific basis is the
   Gepstein/Ben-Haim 1997 nonfluoroscopic electroanatomical-mapping paper
   [@gepstein1997] (Ch. 1 §1.8); **CARTO 3** launched 2009.
@@ -113,11 +113,27 @@ hybrid)** localization compete, and "EM tracking" in the cath lab often means a
 the fusion theme of Ch. 21). Exact architectures and performance require
 per-product primary sources (flagged below).
 
+**Why fuse magnetic with impedance?** The two localization principles are
+complementary in exactly the way Ch. 21 fusion exploits:
+- **Magnetic** (the subject of this book) is **absolute and geometrically
+  accurate** — pose comes from the known dipole field (Ch. 5) — but a 6-DOF
+  magnetic sensor on *every* electrode of a 64-electrode basket is impractical.
+- **Impedance** localization injects a small current between body-surface patches
+  and reads the resulting voltage at each catheter electrode; position follows
+  from the voltage gradient. It needs **no magnetic sensor per electrode** (so it
+  scales to many electrodes cheaply) but is **nonlinear and inhomogeneous** —
+  tissue conductivity varies, so the impedance "space" is warped and drifts.
+The clinical fusion uses a few **magnetically-tracked** points as ground truth to
+**warp the impedance field into real geometry**, getting magnetic accuracy *and*
+impedance's per-electrode scalability. It is the same absolute-reference-corrects-
+a-cheap-dense-modality pattern as EM+IMU (Ch. 21 §21.5). (conf: med — principle is
+standard; per-product implementation varies.)
+
 ## 28.6 Pulmonary, robotics, navigation platforms & emerging players
 
 - **superDimension (ENB).** Electromagnetic **navigation bronchoscopy**: a CT-
   derived 3-D airway map plus an EM-tracked steerable catheter to reach
-  peripheral lung lesions. Acquired by **Covidien (~$300M, 2012)**; **Medtronic**
+  peripheral lung lesions. Acquired by **Covidien (~\$300M, 2012)**; **Medtronic**
   closed its Covidien acquisition in **Jan 2015** [@covidien_superdimension2012]
   (Ch. 29). (conf: med — trade-press figures.)
 - **Robotic bronchoscopy/navigation** (e.g. robotic platforms integrating EM or
@@ -147,14 +163,20 @@ datasheets:
 volume, distance, distorter presence, static vs. dynamic), prefer **Hummel-
 protocol** or peer-reviewed numbers [@hummel2005; @franz2014], and treat any
 single accuracy figure without conditions as marketing (Ch. 25 §25.1). The
-engineering chapters explain *why* two systems differ: excitation choice (Ch. 6,
-8), sensor type (Ch. 13–14), and calibration/compensation maturity (Ch. 26–27).
+engineering chapters explain *why* two systems differ, and the **system link
+budget (Ch. 8 eq. 8.1)** lets you reason about it quantitatively: a vendor's
+accuracy is set by generator moment, sensor area-turns × frequency, AFE noise,
+integration time, and PDOP — so a larger generator or a bigger sensor buys
+accuracy, a smaller catheter coil costs it (the z⁴ penalty, Ch. 24), and the
+excitation choice (Ch. 6, 8) sets the distortion term. Reading a datasheet
+through eq. 8.1 and the three error classes (Ch. 25) turns "which is better?" into
+"better *where*, and *why*."
 
 ---
 
 ## Open questions / to verify
 - Corroborate all corporate dates/figures (Polhemus 1969; Ascension 1986 / Roper
-  2012 / $19M; J&J–Biosense 1997 / $400M; Covidien–superDimension 2012 / $300M;
+  2012 / \$19M; J&J–Biosense 1997 / \$400M; Covidien–superDimension 2012 / \$300M;
   Medtronic–Covidien 2015) against a second independent source each; several are
   currently single-source trade press (conf: med).
 - Replace qualitative EnSite/Rhythmia architecture notes with per-product primary/
