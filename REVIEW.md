@@ -83,9 +83,11 @@ Anser/Grover reused). All build clean.
 | Ch | Title | State | Notes |
 |---:|-------|-------|-------|
 | 26 | Sensor/generator/system calibration | 🟢 DEEPENED → review | +sampling density (h⁻³ cost/h² residual), **spherical-harmonic compact field model (Ch.7 tie)**, bias-variance/overfitting (Phase-6 tool), worked recalibration interval (~1.5mm/5°C) (1015→1350 w) |
-| 27 | Distortion compensation | ⬜ DRAFT | next |
+| 27 | Distortion compensation | 🟢 DEEPENED → review | +witness-sensor induced-dipole physics & placement (eq 6.4), **unification with Ch.20 adaptive cancellation (Widrow)**, NIS χ² distortion-alarm threshold, compensation reduces ~5-10× not to zero (1091→1446 w) |
 
-Remaining after Part X: Part I (Ch. 1–3 survey), Parts XI–XIV. +Schreier-Temes.
+**✅ Part X (Ch. 26–27) fully deepened.** Build clean.
+Remaining: Part I (Ch. 1–3 survey), Parts XI–XIV (ecosystem, medical, frontiers,
+build-from-scratch).
 
 (Other chapters remain DRAFT; will be scheduled next.)
 
