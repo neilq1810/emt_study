@@ -78,8 +78,14 @@ Anser/Grover reused). All build clean.
 | 18 | ADC systems | 🟢 DEEPENED → review | +NTF/stability/MASH (Schreier-Temes), **worked Σ-Δ plan (1-bit, L=2, OSR 256 → 120 dB/20-bit)**, simultaneous-vs-muxed multi-channel conversion (phase coherence), CIC decimation tie (1333→1651 w) |
 
 **✅✅ TECHNICAL CORE COMPLETE: Parts II–IX (Ch. 4–25) all deepened.**
-Remaining: Part I (Ch. 1–3 survey), Part X (Ch. 26–27 calibration), Parts XI–XIV
-(ecosystem, medical, frontiers, build-from-scratch). +Schreier-Temes citation.
+
+### Part X — Calibration (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 26 | Sensor/generator/system calibration | 🟢 DEEPENED → review | +sampling density (h⁻³ cost/h² residual), **spherical-harmonic compact field model (Ch.7 tie)**, bias-variance/overfitting (Phase-6 tool), worked recalibration interval (~1.5mm/5°C) (1015→1350 w) |
+| 27 | Distortion compensation | ⬜ DRAFT | next |
+
+Remaining after Part X: Part I (Ch. 1–3 survey), Parts XI–XIV. +Schreier-Temes.
 
 (Other chapters remain DRAFT; will be scheduled next.)
 
