@@ -64,6 +64,12 @@ Anser/Grover reused). All build clean.
 **✅ Part IV (Ch. 13–15) fully deepened.** +Schneider, mr_capsule citations
 (mr_capsule authors/venue to re-confirm). Build clean.
 
+### Part V — Analog Front Ends (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 16 | Amplification & noise budgeting | 🟢 DEEPENED → review | +worked bipolar-vs-JFET noise table (operating vs near-resonance), tuned-pickup option, worked 120 dB gain plan, **§16.6 AC-coil vs biased-sensor AFE (chopper for baseband MR/DC) + forward-ref to Ch.17 safety** (1299→1985 w). NB: NEF-origin (Steyaert-Sansen 1987) to add when search up |
+| 17 | Filtering, shielding, EMC, power | ⬜ DRAFT | next — **ADD biased-sensor vs passive-coil safety (flagged item above)** |
+
 (Other chapters remain DRAFT; will be scheduled next.)
 
 ## Flagged for upcoming chapter passes
