@@ -1,6 +1,6 @@
 # Chapter 29 — Clinical Applications & Workflows
 
-> **Status:** DRAFT · **Part XII — Medical Applications** (the whole of Part XII)
+> **Status:** DEEPENED (awaiting review) · **Part XII — Medical Applications** (the whole of Part XII)
 > Connects the technology (Parts II–X) and products (Ch. 28) to clinical use.
 > Citation keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -101,8 +101,19 @@ A theme across §§29.1–29.5: **clinical accuracy ≠ sensor accuracy.** The p
 facing error is the composition of (i) sensor/tracking error (Parts IV–IX),
 (ii) **registration** (patient/image-to-tracker), (iii) **tip/instrument offset**
 (Ch. 14.2), (iv) **target motion** (respiration, cardiac) between imaging and
-action, and (v) residual **distortion** (Ch. 27). Often (ii)–(iv) dominate (i).
-A rigorous clinical claim budgets all five (Ch. 25).
+action, and (v) residual **distortion** (Ch. 27). These are independent, so they
+combine in **root-sum-square** (Ch. 25 §25.5):
+$$
+\sigma_\text{clinical} = \sqrt{\sigma_\text{track}^2 + \sigma_\text{reg}^2 + \sigma_\text{tip}^2 + \sigma_\text{motion}^2 + \sigma_\text{distort}^2}.
+$$
+The decisive, counter-intuitive point: terms (ii)–(iv) usually **dominate** (i).
+A 1 mm tracker behind a 2 mm registration and a 0.5° pointing error over a
+100 mm instrument (≈0.9 mm tip lever-arm, Ch. 15 §15.2) yields
+$\sqrt{1^2+2^2+0.9^2}\approx 2.4$ mm — so spending engineering effort halving the
+*tracker* error (→ 0.5 mm) barely moves the clinical number (→ 2.3 mm). The
+clinical lesson mirrors the system one (Ch. 12 trilemma): **attack the dominant
+term.** A rigorous clinical claim budgets all five (Ch. 25) and states the
+conditions (respiratory phase, distorter proximity).
 
 ### Regulatory framework
 A tracker used clinically is a regulated **medical device**:

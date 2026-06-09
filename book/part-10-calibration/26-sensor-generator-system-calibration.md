@@ -1,6 +1,6 @@
 # Chapter 26 — Calibration of Sensors, Generators & Systems
 
-> **Status:** DRAFT · **Part X — Calibration**
+> **Status:** DEEPENED (awaiting review) · **Part X — Calibration**
 > Opens Part X. The remedy for the *deterministic* error terms of Ch. 25 §25.3.
 > Distortion compensation (the environmental terms) follows in Ch. 27. Citation
 > keys resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -87,6 +87,31 @@ pose response over the working volume** and builds a correction:
 - *ML/NN*: flexible, handles position+orientation jointly [@kindratenko2005]; risks
   overfitting and opaque failure (Ch. 27 §27.5).
 
+**Sampling density.** The grid spacing $h$ must resolve the field's spatial
+variation: the residual of a *linear* interpolant scales as
+$\sim \tfrac18\|\nabla^2 \mathbf B\|\,h^2$, so accuracy improves quadratically as
+the grid tightens — but the **acquisition cost scales as $h^{-3}$** (a 0.5 m
+volume at a 5 cm grid is $\sim10^3$ points, each measured at several orientations
+with the ground-truth fixture). Dense where the gradient is steep (near metal, the
+volume edge), coarse where smooth.
+
+**The compact alternative — spherical harmonics.** For the *generator's own*
+(source-free) field, a far cheaper representation than a dense LUT is the
+solid-harmonic fit of Ch. 7 §7.2 (eq. 7.1): a few dozen coefficients $a_{lm}$
+($L\!\sim\!3$–$5$) fit from sparse, well-placed samples give an **analytic,
+exactly source-free, closed-form-differentiable** model — which also hands the
+solver its Jacobian for free (Ch. 24). The division of labour is clean: harmonics
+for the smooth generator field; an interpolation/polynomial **residual map** only
+for the part that is *not* source-free (installation distortion, §26.1).
+
+**Model order is a bias–variance trade.** Fitting a degree-$d$ polynomial (or an
+NN with $N$ parameters) to $M$ calibration points: too low an order **underfits**
+(leaves real structure uncorrected); too high an order with too few points
+**overfits** (excellent at the samples, *worse* between them). The right order is
+chosen by cross-validation (the no-test-on-training rule of §26.5). The Phase-6
+*calibration-workflow* tool demonstrates exactly this: raising the polynomial
+degree past what the sample count supports increases the between-sample residual.
+
 A field map captures *installation-specific static distortion* too — but only as
 long as the environment does not change (§26.1, Ch. 27).
 
@@ -114,8 +139,14 @@ state:
 
 - **Thermal drift** of coil area/core permeability, MR/TMR offset and bias point,
   and electronics gain is the leading driver of calibration decay (Ch. 15 §15.5,
-  Ch. 25 §25.3). Temperature compensation (bridge sensors, Ch. 14.3.2;
-  referenced gain) and warm-up procedures mitigate it.
+  Ch. 25 §25.3). The magnitude is concrete: a ferrite-cored coil at ~0.3 %/°C over
+  a ±5 °C swing drifts ~1.5% in gain → ~0.5% in range → **~1.5 mm at $r=0.3$ m**
+  (Ch. 15 §15.5) — comparable to the *entire* static budget. So the
+  **recalibration interval is set by the allowed drift ÷ the drift rate**: if the
+  budget allots 0.5 mm to drift and the system drifts ~0.3 mm/°C, a ~1.5 °C
+  excursion exhausts it — hence warm-up procedures, temperature compensation
+  (bridge sensors, Ch. 14.3.2; referenced gain), and a stated thermal operating
+  window, not an open-ended "calibrate once."
 - **Aging and mechanical change** (cable wear, connector resistance, fixture
   shift) require periodic **field recalibration** or verification.
 - **Self-check.** Some systems include reference/witness coils enabling in-situ
@@ -130,13 +161,16 @@ state:
 ---
 
 ## Open questions / to verify
-- Add a worked field-map example: sampling density vs. residual error for
-  interpolation vs. polynomial vs. NN, generated in Phase 5 and compared to the
-  Kindratenko survey taxonomy [@kindratenko2000; @kindratenko2005].
+- ✅ **Partially resolved:** §26.4 now covers sampling density ($h^{-3}$ cost,
+  $h^2$ residual), the spherical-harmonic compact model, and the bias–variance/
+  overfitting trade (Phase-6 calibration tool); §26.6 gives a worked recalibration-
+  interval calculation. Remaining: a Phase-5 notebook quantifying *residual vs.
+  sampling density* for interpolation vs. polynomial vs. NN, vs. the Kindratenko
+  taxonomy [@kindratenko2000; @kindratenko2005].
 - Source typical recalibration intervals / drift rates from vendor or clinical
   literature (Ch. 28/29).
 - Confirm the exact Hummel phantom geometry parameters (grid pitch, hole count)
-  against the primary text for the figure caption [@hummel2005].
+  against the primary text [@hummel2005].
 
 ## Sources cited
 - [@hummel2005] standardized verification protocol/phantom. [@kindratenko2000]

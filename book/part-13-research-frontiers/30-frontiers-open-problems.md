@@ -1,6 +1,6 @@
 # Chapter 30 — Research Frontiers & Open Problems
 
-> **Status:** DRAFT · **Part XIII — Research Frontiers** (the whole of Part XIII)
+> **Status:** DEEPENED (awaiting review) · **Part XIII — Research Frontiers** (the whole of Part XIII)
 > Surveys the state of the art and what remains unsolved. Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
 
@@ -29,6 +29,26 @@ compensation methods, Ch. 28.6) is therefore concentrated less on the core dipol
 physics than on **robustness, miniaturization, and intelligent compensation**.
 The three threads below are not independent — the most promising systems combine
 them.
+
+**A frontier-readiness scorecard.** It is easy to be dazzled by a headline number
+(a femtotesla sensitivity, a millimetre ML correction) and miss whether it
+attacks an *actual* EMT binding constraint. The discipline of this book — judge
+every claim against the real requirement — turns the frontier into a triage table
+(conf: med — frontier judgment, by design):
+
+| Frontier | Attacks which binding constraint? | Maturity | Hardest open issue |
+|---|---|---|---|
+| EM+IMU fusion | latency/rate trilemma (Ch. 12); 5→6 DOF (Ch. 13) | **near-term** (deployed) | time alignment, disagreement handling |
+| EM+optical fusion | in-situ accuracy, distortion cross-check | **near-term** | occlusion logic, online cross-calib |
+| ML distortion compensation | the moving-distorter problem (Ch. 6, 27) | **mid-term** | generalization + trust in a regulated loop |
+| TMR/MR arrays | catheter-scale DC sensing, many points | **mid-term** | area-limited 1/f at sub-mm die (Ch. 14, 25) |
+| Quantum (OPM/NV) | *sensitivity* — which EMT does **not** lack | **far/niche** | dynamic range & bandwidth, not sensitivity |
+
+The scorecard's lesson is the chapter's thesis in one glance: the **highest-payoff
+frontiers (fusion) are the least exotic**, because they attack the constraints that
+actually bind (latency, distortion, in-situ accuracy), while the most spectacular
+sensitivity advances (quantum) target a quantity EMT already has in surplus. *Read
+every frontier through the binding constraint, not the press release.*
 
 ## 30.2 Hybrid optical + EM (+ IMU) systems
 
@@ -106,6 +126,24 @@ judgment):
   pickup for very-low-field or deep-volume regimes, or biomagnetic co-sensing),
   not wholesale replacement of pickup coils or MR bridges. This is a place where
   the literature's excitement must be matched against EMT's actual requirements.
+
+> **Worked check — the dynamic-range mismatch (why sensitivity is the wrong axis).**
+> Put numbers on it. An EMT sensor must span from the **far-volume floor** (~1 nT,
+> the σ_B at which the Ch. 24 CRLB sim delivers sub-mm accuracy) up to the
+> **near-field maximum**: a $1\,\text{A·m}^2$ generator gives $|\mathbf B| =
+> \mu_0 m_t/2\pi r^3$, which at $r=0.1\,\text{m}$ on-axis is ≈ 200 µT (Ch. 4 §4.7).
+> The required **instantaneous dynamic range** is therefore
+> $20\log_{10}(200\,\mu\text{T}/1\,\text{nT}) \approx 106\,\text{dB}$ — and it must
+> hold *while immersed in those µT-class structured fields*, at the kHz excitation
+> band. A SERF magnetometer saturates within nanotesla of zero field and is
+> bandwidth-limited to ~hundreds of Hz: it has neither the **range** nor the
+> **bandwidth**, however stunning its $10^{-15}\,\text{T}/\sqrt{\text{Hz}}$ floor.
+> A pickup coil, by contrast, is *naturally* range-unlimited (it integrates flux)
+> and its sensitivity *rises* with the excitation frequency EMT deliberately uses
+> (Faraday, Ch. 5). The quantum sensor wins the axis (sensitivity) EMT does not
+> care about and loses the two (range, bandwidth) it does — the quantitative core
+> of "promise vs. EMT reality." (conf: med — frontier judgment; numbers are
+> order-of-magnitude.)
 
 ### MEMS and other approaches
 CMOS-MEMS Lorentz-force/resonant magnetometers (Ch. 14.4) offer integration at the

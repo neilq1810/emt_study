@@ -1,6 +1,6 @@
 # Chapter 3 — Technology Timelines & Trees
 
-> **Status:** DRAFT · **Part I — Foundations** (closes Part I)
+> **Status:** DEEPENED (awaiting review) · **Part I — Foundations** (closes Part I)
 > Synthesizes the history (Ch. 1) and genealogy (Ch. 2) into structured timelines
 > and technology trees. Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -101,8 +101,9 @@ Ch. 28, conf: med):
 | 2011–12 | Roper acquires NDI; NDI acquires Ascension | OEM medical-tracking consolidation | [@ascension_roper2012] |
 | 2012 | Covidien acquires superDimension (ENB) | pulmonary navigation scales | [@covidien_superdimension2012] (conf: med) |
 | 2014 | Franz et al. definitive medical-EMT review | field consolidation | [@franz2014] |
+| 2017 | Anser — first open-source EMT (FDM, 8-coil) | foundations now public-domain | [@jaeger2017] |
 | 2019 | NAVIGATE ENB one-year results (~73% yield) | large-scale clinical evidence | [@folch2019] |
-| 2020–23 | NV-diamond review; TMR detectivity/bias; witness-sensor ML compensation | sensor & compensation frontier | [@barry2020; @davies2021; @monteblanco2021; @cavaliere2023] |
+| 2020–23 | NV-diamond review; TMR detectivity/bias; witness-sensor ML compensation; FM-wireless EMT | sensor / compensation / wireless frontier | [@barry2020; @davies2021; @monteblanco2021; @cavaliere2023; @crowley2023] |
 
 Reading the timeline by **capability axis**:
 - **Working volume & moment** — steady engineering improvement (Ch. 9), not a

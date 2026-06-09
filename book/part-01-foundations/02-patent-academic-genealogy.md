@@ -1,6 +1,6 @@
 # Chapter 2 — Patent & Academic Genealogy
 
-> **Status:** DRAFT · **Part I — Foundations**
+> **Status:** DEEPENED (awaiting review) · **Part I — Foundations**
 > Follows Ch. 1 (history). Resolves several Ch. 1 open questions (esp. the
 > SPASYN/Kuipers attribution). Citation keys resolve to
 > [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -144,6 +144,17 @@ The causal arrows from IP to product:
   concentrating the OEM medical-tracking IP.
 - **The locus of innovation moved to robustness IP** (§2.2): the patent frontier is
   now distortion compensation and fusion (Ch. 27, 30), matching the open problems.
+- **Patent expiry reopened the foundations.** The 1970s–80s core patents
+  (Kuipers 1975, expiring ~1992; the early Raab/Polhemus AC IP) are long expired,
+  and Blood's 1990 pulsed-DC patent expired ~2010 — placing the *foundational
+  methods* in the public domain. This is exactly what enabled the **open-source**
+  era: academic platforms such as Anser (FDM, 2017 [@jaeger2017]) and the
+  FM-wireless work (2023 [@crowley2023]) implement the now-unencumbered core, while
+  active patents concentrate on the robustness/compensation layer above it. The IP
+  cycle — foundational patents → expiry → open implementations, with new IP moving
+  up the stack — is the same one seen across maturing technologies. (conf: med —
+  expiry inferred from issue dates + 20-year term; precedence uses filing dates,
+  §2.2.)
 
 > **Takeaway.** EMT's three foundational patents — Kuipers (AC lineage, via a
 > nutating field), Blood (pulsed-DC, metal immunity), and Ben-Haim/Acker (medical

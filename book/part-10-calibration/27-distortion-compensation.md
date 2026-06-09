@@ -1,6 +1,6 @@
 # Chapter 27 — Distortion Compensation
 
-> **Status:** DRAFT · **Part X — Calibration**
+> **Status:** DEEPENED (awaiting review) · **Part X — Calibration**
 > Closes Part X. The remedy for the *environmental* distortion terms of Ch. 25
 > §25.4 / Ch. 6, where static calibration (Ch. 26) is insufficient. Citation keys
 > resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
@@ -59,6 +59,27 @@ from its undistorted (calibrated) value:
   — reported result; generalization to other distorters/geometries is the open
   question the authors themselves frame.)
 
+**The physics behind it.** A witness at known pose reads
+$\mathbf B_\text{meas}-\mathbf B_\text{expected}=\mathbf B_\text{distortion}$
+directly. Because a compact distorter acts as an **induced dipole**
+$\mathbf m_\text{ind}$ (Ch. 6 §6.3/6.5), a few witnesses sample enough of that
+dipole's field to estimate $\mathbf m_\text{ind}$ *and* its location, from which
+the perturbation at the *sensor* can be predicted and subtracted — the model
+[@cavaliere2023] inverts. Witness **placement** is governed by the same scaling
+law that governs the error itself (Ch. 6 eq. 6.4, distortion $\propto
+a^3 r^3/d_t^3 d_s^3$): a witness must be *close enough to the distorter to feel a
+comparable perturbation* yet *outside the working volume* so it does not corrupt
+tracking.
+
+**A unifying view.** Witness-sensor compensation is the spatial analogue of the
+**adaptive noise cancellation** of Ch. 20 §20.7: the witness is a *reference
+input* that observes the disturbance (not the signal), and the corrector subtracts
+the learned mapping from reference to corruption — exactly Widrow's LMS canceller
+[@widrow1975]. §20.7 cancels a temporal interferer; §27.3 cancels a spatial
+distorter; both fail the same way — if the reference is contaminated by the signal
+(a witness *inside* the volume sensing the tracking field), the canceller erodes
+the signal. Seeing them as one idea clarifies both.
+
 Witness methods turn distortion from a pure nuisance into an *observable* — a
 powerful inversion of the problem, and a bridge to the fusion methods below.
 
@@ -75,7 +96,13 @@ trusting corrupted measurements:
   down-weights EM (inflates $\mathbf R$) until it passes (Ch. 21 §21.5) — arguably
   the single most practical real-world distortion defense.
 - **Innovation gating** in the Kalman filter rejects distortion spikes as outliers
-  (Ch. 21 §21.6, Ch. 23 §23.6).
+  (Ch. 21 §21.6, Ch. 23 §23.6). Quantitatively, the **normalized innovation
+  squared** $\text{NIS}=\boldsymbol\nu^\top\mathbf S^{-1}\boldsymbol\nu$ is
+  $\chi^2_m$-distributed for $m$ measurement DOF under nominal conditions; a
+  sustained $\text{NIS}$ above its 95–99% threshold (e.g. $\chi^2_{9,0.99}\approx
+  21.7$ for a 9-channel coupling vector) is a statistically principled
+  **distortion alarm** — not a hand-tuned threshold. This is the same test used
+  for filter consistency (Ch. 21 §21.8), now read as a detector.
 
 Detection-plus-flagging is weaker than correction but far more robust: it converts
 a *silent* error (dangerous) into a *known* loss of accuracy (manageable, and
@@ -119,9 +146,14 @@ No method fully escapes physics:
 - **Strong, close, fast-moving distorters** can overwhelm any compensation; the
   honest response is detect-and-flag (§27.4), keep distorters away (the clinical
   protocol lesson of [@poulin2002]), or fall back to fused/other modalities.
-- **Compensation adds its own error and latency** (model residual, witness noise,
-  inference time) that must re-enter the error budget (Ch. 25) — compensation is
-  not free.
+- **Compensation reduces, it does not eliminate.** Reported reductions are
+  $\sim$5–10×, not to zero: static mapping took a ~1.56% raw distortion to ~0.20%
+  residual in the Ch. 25 worked budget (~8×), and witness compensation took a
+  C-arm's centimetre-scale error to 1.52 mm RMS [@cavaliere2023]. The **residual**
+  is what enters the environmental term of the error budget (Ch. 25 §25.4/§25.7),
+  alongside the compensation's own added noise and latency (witness-sensor noise,
+  model error, inference time). Compensation is not free, and its residual must be
+  budgeted like any other term.
 
 > **Engineering takeaway.** The distortion hierarchy is: **keep distorters out**
 > (protocol) → **map static distortion** (Ch. 26) → **observe it** (witness
@@ -132,16 +164,20 @@ No method fully escapes physics:
 ---
 
 ## Open questions / to verify
+- ✅ **Partially resolved:** the **distortion-field visualizer** and
+  **skin-depth/eddy explorer** Phase-6 tools are built (and the distortion viz uses
+  the induced-dipole model of §27.3 / Ch. 6 eq. 6.4). Remaining: a *witness-sensor
+  compensation* interactive demo, and a Phase-5 sim quantifying residual vs.
+  witness count/placement.
 - Source quantitative generalization results for witness-sensor and ML
   compensation across *different* rooms/distorters (beyond the original
   demonstrations) to gauge real-world robustness [@cavaliere2023; @kindratenko2005].
 - Add the online/uncertainty-aware compensation literature (e.g. spatial-
   uncertainty online error compensation) with verified citations.
-- Build a Phase-5 "distortion field visualizer" + "eddy-current simulator" and a
-  worked witness-sensor compensation demo (project brief modules).
 
 ## Sources cited
 - [@cavaliere2023] witness-sensor pre-trained distortion compensation (C-arm
-  1.52 mm RMS). [@kindratenko2005] neural-network calibration; [@kindratenko2000]
+  1.52 mm RMS). [@widrow1975] adaptive (LMS) reference cancellation — the unifying
+  view of §27.3. [@kindratenko2005] neural-network calibration; [@kindratenko2000]
   correction-method survey. [@poulin2002; @birkfellner1998] distortion magnitudes/
   characterization. Fusion/gating from Ch. 21; error re-entry to Ch. 25.
