@@ -1,6 +1,6 @@
 # Chapter 1 — History of Electromagnetic Tracking
 
-> **Status:** DRAFT · **Part I — Foundations**
+> **Status:** DEEPENED (awaiting review) · **Part I — Foundations**
 > Citation keys `[@key]` resolve to [`../../citations/bibliography.json`](../../citations/bibliography.json).
 > Confidence tags follow [`../../ROADMAP.md`](../../ROADMAP.md#research-quality-control).
 
@@ -69,7 +69,8 @@ document in the field and is treated in detail in §1.5.
 ## 1.4 The Polhemus lineage and AC magnetic tracking
 
 The earliest commercial magnetic trackers grew out of work associated with
-**Polhemus** (Vermont, USA). Polhemus systems are built on **AC (alternating
+**Polhemus** (founded 1969 by Bill Polhemus, Colchester, Vermont, USA)
+[@polhemus_history]. Polhemus systems are built on **AC (alternating
 current) electromagnetic tracking**: the transmitter continuously drives a
 triad of mutually orthogonal coils with sinusoidal currents (in early systems by
 *frequency-* or *time-multiplexing* the three axes), and a triad of sensor coils
@@ -78,14 +79,16 @@ pose — is recovered. Polhemus describes its core technology as proprietary AC
 electromagnetic tracking delivering true 6-DOF (position in x, y, z plus pitch,
 roll, yaw) (conf: med — vendor self-description) [@polhemus_tech].
 
-A recurring name in the early patent and academic record is **Jack B. Kuipers**,
-associated with early "space position and orientation" sensing (sometimes
-referred to by the acronym **SPASYN**). (conf: low — the SPASYN attribution and
-exact patent priority dates are reported in secondary sources and require
-verification against the original US patent record; see *Open questions*.) The
-precise priority chain among the early Polhemus and Kuipers patents is an
-important piece of the patent genealogy developed in Chapter 2 and is **flagged
-as not yet verified** here.
+The IP root of this lineage is **Jack Kuipers**' 1975 patent (US 3,868,565,
+"Object tracking and orientation determination means, system and process")
+[@kuipers1975] — work sometimes referred to by the acronym **SPASYN**. A
+historically important nuance, now verified against the patent record (Ch. 2
+§2.1) and *resolving the SPASYN attribution flagged in earlier drafts*: the
+Kuipers patent describes a **nutating** field (a DC signal on one coil plus an
+AC-modulated carrier on the others), *not* a clean continuous-AC scheme — the
+continuous-AC quasi-static dipole formulation was the **1979 Raab et al.**
+academic contribution (§1.5). The full priority chain is developed in the patent
+genealogy of Chapter 2. (conf: high — patent verified.)
 
 The key physical limitation of AC excitation, recognized early, is its
 **sensitivity to eddy currents**: a continuously varying magnetic field induces
@@ -129,10 +132,12 @@ the working volume, the coil sizes, and the distortion environment did.
 
 ## 1.6 Ascension Technology and pulsed-DC tracking
 
-**Ernest B. Blood** — a co-author of the 1979 paper [@raab1979] — went on to
-found **Ascension Technology Corporation** (Vermont, USA) and is closely
-associated with the second great architectural idea in EMT: **pulsed-DC
-(transient) magnetic tracking**. Instead of continuous sinusoidal excitation,
+**Ernest B. Blood** — a co-author of the 1979 paper [@raab1979] — co-founded
+**Ascension Technology Corporation** (with Jack Scully, 1986, Vermont, USA)
+[@ascension_roper2012] and is closely associated with the second great
+architectural idea in EMT: **pulsed-DC (transient) magnetic tracking**, patented
+in Blood's US 4,945,305 (1990, "…in the presence of metals…", Ch. 2 §2.1)
+[@blood1990]. Instead of continuous sinusoidal excitation,
 each transmitter axis is energized with a *DC pulse*; the system then **waits**
 for the transient eddy currents in surrounding conductors to **decay** before
 sampling the (now eddy-current-free) static field at the sensor (conf: high — the
@@ -201,30 +206,36 @@ literature; specific product-by-product adoption is developed in Chapter 28.)
 
 ## 1.10 Commercial evolution & consolidation (timeline)
 
-A compressed timeline (precise dates to be fully sourced in Chapter 3; entries
-below carry the confidence appropriate to current verification):
+A compressed timeline (the full, sourced version is Chapter 3 §3.3):
 
+- **1969** — Polhemus founded [@polhemus_history]. (conf: med)
+- **1975** — Kuipers patent (US 3,868,565), the AC-lineage IP root [@kuipers1975].
+  (conf: high)
 - **1979** — Raab et al. formalize 6-DOF magnetic dipole tracking [@raab1979].
   (conf: high)
-- **1980s** — Polhemus AC trackers in aerospace/HMS and early VR. (conf: med)
-- **late 1980s–1990s** — Ascension founded; pulsed-DC "Bird" family. (conf: med)
+- **1986** — Ascension founded (Scully & Blood) [@ascension_roper2012]. (conf: med)
+- **1990** — Blood patent (US 4,945,305), pulsed-DC "in the presence of metals"
+  [@blood1990]. (conf: high)
 - **1997** — Gepstein/Ben-Haim nonfluoroscopic electroanatomical mapping;
-  basis of CARTO [@gepstein1997]. (conf: high)
+  basis of CARTO; J&J acquires Biosense [@gepstein1997; @globes_jnj_biosense].
+  (conf: high / med)
 - **early 2000s** — NDI Aurora brings medical-grade EMT to broad OEM/research
-  use. (conf: med)
+  use [@ndi_history]. (conf: med)
 - **2005** — Hummel standardized assessment protocol enables apples-to-apples
   accuracy comparison [@hummel2005]. (conf: high)
-- **2012** — superDimension electromagnetic navigation bronchoscopy and others
-  expand pulmonary applications (acquired by Covidien/Medtronic). (conf: low —
-  acquisition/date to verify in Ch. 28)
+- **2011–12** — Roper acquires NDI; NDI acquires Ascension
+  [@ascension_roper2012]. (conf: med)
+- **2012** — superDimension electromagnetic navigation bronchoscopy acquired by
+  Covidien (→ Medtronic 2015) [@covidien_superdimension2012]. (conf: med)
 - **2014** — Franz et al. consolidate the field in the definitive medical EMT
   review [@franz2014]. (conf: high)
 
 ## 1.11 Key researchers, institutions, and a note on performance claims
 
 **People.** F. H. Raab (system theory, also prolific in RF power-amplifier
-theory); E. B. Blood (AC and pulsed-DC, Ascension); J. B. Kuipers (early
-SPASYN, *to verify*); L. Gepstein and S. A. Ben-Haim (clinical EP / CARTO);
+theory); E. B. Blood (AC and pulsed-DC, Ascension); Jack Kuipers (the nutating-
+field US 3,868,565, the AC-lineage root, Ch. 2 [@kuipers1975]); S. Ben-Haim and
+L. Gepstein (clinical EP / CARTO);
 W. Birkfellner, K. Cleary, T. M. Peters, L. Maier-Hein, J. Hummel, T. Haidegger
 (medical EMT validation and review) [@franz2014; @hummel2005].
 
@@ -247,20 +258,21 @@ discipline is developed formally in Part IX (error budgets) and Chapter 28
 ---
 
 ## Open questions / to verify (gating VERIFIED status)
-- Exact US patent numbers, inventors, and **priority dates** for the early
-  Polhemus / Kuipers (SPASYN) AC tracking IP, and for Ascension's pulsed-DC IP
-  (Chapter 2). Current SPASYN attribution is **(conf: low)**.
-- Founding year of Ascension Technology and first Bird product date.
-- Aurora first-release year and first medical 510(k) clearance date.
-- superDimension product timeline and Covidien/Medtronic acquisition year.
-- Confirm Hummel (2005) *Medical Physics* volume/issue/pages (currently 32(7),
-  2371–2379, **to re-confirm** against the Wiley record).
-- Confirm Raab (1979) DOI `10.1109/TAES.1979.308860` against the IEEE record
-  (page range 709–718 is confirmed).
+- ✅ **Resolved:** patent numbers/inventors (Kuipers US 3,868,565; Blood
+  US 4,945,305; Ben-Haim US 5,391,199) and the SPASYN/nutating-field attribution
+  are verified in Ch. 2 §2.1; founding years (Polhemus 1969, Ascension 1986) and
+  acquisition timeline (Roper/NDI 2011–12, Covidien/Medtronic 2012/2015) in
+  Ch. 3/28. Remaining: **priority (filing) dates** vs. issue dates for precedence.
+- Aurora first-release year and first medical 510(k) clearance date (single-source).
+- Confirm Hummel (2005) *Medical Physics* volume/issue/pages (32(7):2371–2379)
+  and Raab (1979) DOI against the publisher records.
 
 ## Sources cited in this chapter
 - [@raab1979] Raab, Blood, Steiner, Jones (1979), *IEEE T-AES* — verified.
+- [@kuipers1975; @blood1990] foundational AC/pulsed-DC patents (Ch. 2).
 - [@franz2014] Franz et al. (2014), *IEEE T-MI* 33(8):1702–1725 — verified.
 - [@hummel2005] Hummel et al. (2005), *Medical Physics* — DOI verified.
-- [@gepstein1997] Gepstein, Hayam, Ben-Haim (1997), *Circulation* 95(6) — verified (PMID 9118532).
-- [@polhemus_tech] Polhemus, "Our Technology" (vendor) — **to add to bibliography** as a vendor source.
+- [@gepstein1997] Gepstein, Hayam, Ben-Haim (1997), *Circulation* 95(6) — verified.
+- [@polhemus_history; @polhemus_tech; @ascension_roper2012; @ndi_history;
+  @globes_jnj_biosense; @covidien_superdimension2012] corporate history/dates
+  (vendor/trade-press, conf: med).

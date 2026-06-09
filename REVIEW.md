@@ -86,8 +86,15 @@ Anser/Grover reused). All build clean.
 | 27 | Distortion compensation | 🟢 DEEPENED → review | +witness-sensor induced-dipole physics & placement (eq 6.4), **unification with Ch.20 adaptive cancellation (Widrow)**, NIS χ² distortion-alarm threshold, compensation reduces ~5-10× not to zero (1091→1446 w) |
 
 **✅ Part X (Ch. 26–27) fully deepened.** Build clean.
-Remaining: Part I (Ch. 1–3 survey), Parts XI–XIV (ecosystem, medical, frontiers,
-build-from-scratch).
+
+### Part I — Foundations (current batch)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 1 | History | 🟢 DEEPENED → review | resolved conf:low SPASYN (Kuipers nutating-field US3868565), firmed founding/acquisition dates from verified Ch.2/3 patents; timeline + sources cleaned (→2275 w) |
+| 2 | Patent & academic genealogy | 🟢 already deep (verified patents) | written with Kuipers/Blood/Ben-Haim verified patents; light pass |
+| 3 | Technology timelines & trees | 🟢 already deep (sourced timeline) | written with sourced capability timeline; light pass |
+
+Remaining: Parts XI–XIV (ecosystem, medical, frontiers, build-from-scratch).
 
 (Other chapters remain DRAFT; will be scheduled next.)
 
