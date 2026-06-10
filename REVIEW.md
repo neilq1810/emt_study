@@ -110,6 +110,11 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 
 **✅✅✅ DEEPEN PASS COMPLETE: all 31 chapters (Parts I–XIV) DEEPENED.**
 
+### Part XV — Interactive Capstone (new, web-embedded)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 32 | Interactive system-design lab | 🟢 DEEPENED → review | New companion to Ch. 31: four integrated **dashboards embedded live** on the web edition (system-design/link-budget+trilemma, error-budget by class×location, clinical accuracy chain, distortion+compensation). Manuscript documents each so the prose is complete; dedicated Astro route renders the .md + embeds the islands |
+
 (All chapters now DEEPENED → awaiting user review/verification.)
 
 ## Flagged for upcoming chapter passes

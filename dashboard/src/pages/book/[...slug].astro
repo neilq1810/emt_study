@@ -4,12 +4,17 @@ import BookLayout from '../../layouts/BookLayout.astro';
 import { buildToc, chapterMeta } from '../../lib/toc';
 
 export async function getStaticPaths() {
+  // This chapter has a dedicated route that embeds live dashboard islands; the
+  // generic Markdown route must skip it to avoid two pages resolving to one URL.
+  const embeddedSlugs = new Set(['part-15-interactive-capstone/32-system-design-lab']);
   const entries = await getCollection('book');
   const toc = buildToc(entries);
-  return entries.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry, toc },
-  }));
+  return entries
+    .filter((entry) => !embeddedSlugs.has(entry.id))
+    .map((entry) => ({
+      params: { slug: entry.id },
+      props: { entry, toc },
+    }));
 }
 
 const { entry, toc } = Astro.props;

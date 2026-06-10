@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import ErrorBudgetDashboard from '../../components/ErrorBudgetDashboard.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="Error-budget dashboard" toc={toc}>
+  <h1>Error-budget dashboard</h1>
+  <p class="lead">
+    The Ch. 31 worked error budget, made live. Position error is the root-sum-square
+    of three independent <strong>error classes</strong> (Ch. 25) — stochastic
+    (the CRLB), deterministic (tolerance ⊕ calibration residual), and environmental
+    (post-compensation distortion) — and the balance between them <em>changes with
+    where you are in the volume</em>.
+  </p>
+  <p>
+    The stacked bars show the budget at near, mid, and far positions. The lesson the
+    book repeats falls straight out of the picture: across most of the volume the
+    tracker's own noise is <em>not</em> the limit — calibration and distortion are —
+    so the high-value engineering is there, not in a quieter amplifier. Only at the
+    far edge does the z⁴ CRLB take over, and only there do generator moment and
+    sensor area-turns (the eq. 8.1 levers) buy accuracy.
+  </p>
+  <ErrorBudgetDashboard />
+</BookLayout>

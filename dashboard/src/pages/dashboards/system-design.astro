@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import SystemDesignDashboard from '../../components/SystemDesignDashboard.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="System-design dashboard" toc={toc}>
+  <h1>System-design dashboard</h1>
+  <p class="lead">
+    The synthesizing tool. Every other module isolates one effect; this one ties
+    them together through the <strong>system link budget</strong> (Ch. 8, eq. 8.1)
+    and the <strong>accuracy / rate / latency trilemma</strong> (Ch. 12), the way
+    the capstone design walks them (Ch. 31).
+  </p>
+  <p>
+    Turn the six design knobs — generator moment, sensor area-turns, excitation
+    frequency, AFE noise, integration time, and geometry (PDOP) — and watch the
+    field-referred noise σ<sub>B</sub>, the position accuracy across the working
+    volume, and the resulting update rate and latency all move together. Push the
+    accuracy up by lengthening the integration time and the rate falls and the
+    latency rises: the trilemma is not a slogan but a budget.
+  </p>
+  <SystemDesignDashboard />
+  <p class="mt-4 text-sm text-slate-500">
+    Defaults reproduce the Ch. 31 worked design (≈1 nT σ<sub>B</sub>, sub-mm
+    mid-volume, ~8.7 ms latency). The σ<sub>pos</sub> curve uses the same CRLB law
+    the Python <code>crlb_vs_range</code> simulation computes.
+  </p>
+</BookLayout>

@@ -48,6 +48,21 @@ const home = base.endsWith('/') ? base : base + '/';
             ))}
           </ul>
           <h2 class="mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400">
+            Dashboards
+          </h2>
+          <ul class="mb-4 space-y-0.5">
+            {[
+              ['dashboards/system-design', 'System-design dashboard'],
+              ['dashboards/error-budget', 'Error-budget dashboard'],
+              ['dashboards/clinical-accuracy', 'Clinical accuracy chain'],
+              ['dashboards/distortion-compensation', 'Distortion & compensation'],
+            ].map(([path, label]) => (
+              <li>
+                <a class="block rounded px-2 py-1 text-slate-700 hover:bg-slate-100" href={home + path}>{label}</a>
+              </li>
+            ))}
+          </ul>
+          <h2 class="mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400">
             Interactive tools
           </h2>
           <ul class="space-y-0.5">

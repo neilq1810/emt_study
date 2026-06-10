@@ -173,3 +173,36 @@ export function crlbCov3(p: Vec3, sigma: number, moment = 1): number[][] | null 
   return invert3(fisher3(jacobian9x3(p, moment), sigma));
 }
 
+// --- System link budget & budgets (Ch. 8 eq. 8.1, Ch. 12, 25, 29, 31) ---
+
+/** Equivalent noise bandwidth of an integrate-for-τ estimator [Hz] (Ch. 20). */
+export function enbw(tauSec: number): number {
+  return 1 / (2 * Math.max(tauSec, 1e-9));
+}
+
+/**
+ * Field-referred noise σ_B [T] from the AFE chain (Ch. 31 §31.5 number chain):
+ * σ_B = e_n·√(ENBW) / (N·A_eff·ω). Inputs: voltage-noise density [V/√Hz],
+ * area-turns N·A_eff [m²], excitation frequency [Hz], integration time [s].
+ */
+export function fieldReferredNoise(enV: number, areaTurns: number, freq: number, tauSec: number): number {
+  const vNoise = enV * Math.sqrt(enbw(tauSec));
+  return vNoise / (areaTurns * 2 * Math.PI * freq);
+}
+
+/** Root-sum-square of any number of independent terms (Ch. 25 §25.5). */
+export function rss(...terms: number[]): number {
+  return Math.sqrt(terms.reduce((s, t) => s + t * t, 0));
+}
+
+/**
+ * Distortion fraction from an induced/permeable sphere (Ch. 6 eq. 6.4 scaling):
+ * Δ = k · a³ r³ / (d_t³ d_s³). A transmitter induces a dipole ∝ a³/d_t³ in a
+ * sphere of radius a (transmitter–sphere distance d_t); its field at the sensor
+ * ∝ 1/d_s³, compared to the direct field ∝ 1/r³ (transmitter–sensor range r).
+ * k (default 1) absorbs the polarizability/shape factor (Ch. 6 eq. 6.2).
+ */
+export function distortionFraction(a: number, dT: number, dS: number, r: number, k = 1): number {
+  return (k * Math.pow(a, 3) * Math.pow(r, 3)) / (Math.pow(dT, 3) * Math.pow(dS, 3));
+}
+

@@ -1,0 +1,144 @@
+---
+// Error-Budget Dashboard (Ch. 25 §25.5 + Ch. 31 §31.6 worked budget).
+// The three error classes — stochastic (the CRLB, from σ_B), deterministic
+// (tolerance ⊕ calibration residual), environmental (post-compensation
+// distortion ⊕ ambient) — combine in root-sum-square, mapped across the volume.
+// Stacked bars at near / mid / far show *which class dominates where*: calib +
+// distortion mid-volume, the z⁴ CRLB at the far edge.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 text-sm">
+    <label class="flex items-center justify-between gap-2">
+      <span>σ_B field-referred noise [nT]</span>
+      <span><input id="eb-sb" type="range" min="0.1" max="5" step="0.1" value="1" /> <span id="eb-sb-v" class="tabular-nums">1.0</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>moment m<sub>t</sub> [A·m²]</span>
+      <span><input id="eb-m" type="range" min="0.5" max="10" step="0.5" value="1" /> <span id="eb-m-v" class="tabular-nums">1.0</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>deterministic σ_det [mm] (tol ⊕ calib)</span>
+      <span><input id="eb-det" type="range" min="0" max="1.5" step="0.05" value="0.36" /> <span id="eb-det-v" class="tabular-nums">0.36</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>environmental σ_env [mm] (distortion)</span>
+      <span><input id="eb-env" type="range" min="0" max="2" step="0.05" value="0.5" /> <span id="eb-env-v" class="tabular-nums">0.50</span></span>
+    </label>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <canvas id="eb-canvas" width="520" height="320" class="w-full max-w-[560px] rounded"></canvas>
+    <div class="text-sm">
+      <table class="w-full border-collapse text-xs">
+        <thead><tr class="text-slate-500"><th class="text-left">class</th><th>near</th><th>mid</th><th>far</th></tr></thead>
+        <tbody id="eb-rows"></tbody>
+      </table>
+      <p id="eb-note" class="mt-3 rounded bg-slate-50 p-2 text-xs text-slate-600"></p>
+    </div>
+  </div>
+  <p class="mt-2 text-xs text-slate-400">
+    Stochastic = CRLB(z, σ_B, m) from <code>src/lib/physics.ts</code> (the same z⁴ law
+    the Python <code>crlb_vs_range</code> sim computes); RSS total =
+    √(σ_sto² + σ_det² + σ_env²) (Ch. 25). Deterministic/environmental are illustrative
+    inputs (Ch. 31 flags them for measurement).
+  </p>
+</div>
+
+<script>
+  import { crlbPositionSigma, rss } from '../lib/physics';
+
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const cv = $('eb-canvas') as unknown as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const sb = $('eb-sb'), m = $('eb-m'), det = $('eb-det'), env = $('eb-env');
+  const sbV = $('eb-sb-v'), mV = $('eb-m-v'), detV = $('eb-det-v'), envV = $('eb-env-v');
+  const rows = document.getElementById('eb-rows')!;
+  const note = document.getElementById('eb-note')!;
+
+  const LOCS: [string, number][] = [['near', 0.2], ['mid', 0.3], ['far', 0.5]];
+  const COLORS = { sto: '#0e7490', det: '#7c3aed', env: '#d97706' };
+
+  function budget() {
+    const sigmaB = Number(sb.value) * 1e-9, moment = Number(m.value);
+    const d = Number(det.value), e = Number(env.value);
+    return LOCS.map(([name, z]) => {
+      const sto = crlbPositionSigma(z, sigmaB, moment) * 1e3; // mm
+      const total = rss(sto, d, e);
+      return { name, z, sto, det: d, env: e, total };
+    });
+  }
+
+  function draw() {
+    const data = budget();
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    const padL = 44, padB = 40, padT = 16, padR = 12;
+    const maxV = Math.max(1.0, ...data.map((b) => b.total)) * 1.15;
+    const y0 = cv.height - padB;
+    const plotH = y0 - padT;
+    const sy = (v: number) => (v / maxV) * plotH;
+
+    // y axis (mm) + 1 mm spec line
+    ctx.strokeStyle = '#e2e8f0'; ctx.fillStyle = '#64748b'; ctx.font = '11px system-ui';
+    for (let v = 0; v <= maxV; v += 0.5) {
+      const y = y0 - sy(v);
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(cv.width - padR, y); ctx.stroke();
+      ctx.fillText(v.toFixed(1), 8, y + 3);
+    }
+    ctx.strokeStyle = '#94a3b8'; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(padL, y0 - sy(1)); ctx.lineTo(cv.width - padR, y0 - sy(1)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillText('mm', 8, padT - 2);
+
+    const bw = (cv.width - padL - padR) / data.length;
+    data.forEach((b, i) => {
+      const x = padL + i * bw + bw * 0.22, w = bw * 0.56;
+      let yc = y0;
+      for (const [key, col] of [['sto', COLORS.sto], ['det', COLORS.det], ['env', COLORS.env]] as const) {
+        const h = sy((b as any)[key]);
+        ctx.fillStyle = col; ctx.fillRect(x, yc - h, w, h); yc -= h;
+      }
+      // total marker (RSS < arithmetic sum, so a tick at the RSS height)
+      ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x - 3, y0 - sy(b.total)); ctx.lineTo(x + w + 3, y0 - sy(b.total)); ctx.stroke();
+      ctx.fillStyle = '#0f172a'; ctx.font = 'bold 11px system-ui';
+      ctx.fillText(`${b.total.toFixed(2)}`, x + w / 2 - 10, y0 - sy(b.total) - 4);
+      ctx.fillStyle = '#475569'; ctx.font = '11px system-ui';
+      ctx.fillText(`${b.name} (${b.z} m)`, x + w / 2 - 22, y0 + 14);
+    });
+    // legend
+    ctx.font = '11px system-ui';
+    const leg: [string, string][] = [['stochastic (CRLB)', COLORS.sto], ['deterministic', COLORS.det], ['environmental', COLORS.env]];
+    leg.forEach(([t, c], i) => {
+      ctx.fillStyle = c; ctx.fillRect(padL + 4, padT + i * 14, 10, 10);
+      ctx.fillStyle = '#475569'; ctx.fillText(t, padL + 18, padT + i * 14 + 9);
+    });
+
+    // table
+    const fmt = (v: number) => v.toFixed(3);
+    rows.innerHTML =
+      `<tr><td class="text-left" style="color:${COLORS.sto}">stochastic</td>${data.map((b) => `<td class="text-center tabular-nums">${fmt(b.sto)}</td>`).join('')}</tr>` +
+      `<tr><td class="text-left" style="color:${COLORS.det}">deterministic</td>${data.map((b) => `<td class="text-center tabular-nums">${fmt(b.det)}</td>`).join('')}</tr>` +
+      `<tr><td class="text-left" style="color:${COLORS.env}">environmental</td>${data.map((b) => `<td class="text-center tabular-nums">${fmt(b.env)}</td>`).join('')}</tr>` +
+      `<tr class="border-t border-slate-300 font-semibold"><td class="text-left">RSS total</td>${data.map((b) => `<td class="text-center tabular-nums">${b.total.toFixed(2)}</td>`).join('')}</tr>`;
+
+    // dominant-term note
+    const mid = data[1], far = data[2];
+    const domMid = mid.sto >= Math.max(mid.det, mid.env) ? 'stochastic' : (mid.det >= mid.env ? 'deterministic' : 'environmental');
+    note.innerHTML =
+      `At <b>mid</b> volume the dominant class is <b>${domMid}</b> — ` +
+      (domMid !== 'stochastic'
+        ? `halving σ_B barely moves the ${mid.total.toFixed(2)} mm total. <i>Attack the dominant term</i> (Ch. 12/29).`
+        : `the tracker noise itself limits here.`) +
+      ` At the <b>far</b> edge the z⁴ CRLB drives stochastic to ${far.sto.toFixed(2)} mm — where more moment / area-turns (eq. 8.1) pays off.`;
+  }
+
+  for (const [el, span, f] of [
+    [sb, sbV, (v: string) => Number(v).toFixed(1)],
+    [m, mV, (v: string) => Number(v).toFixed(1)],
+    [det, detV, (v: string) => Number(v).toFixed(2)],
+    [env, envV, (v: string) => Number(v).toFixed(2)],
+  ] as const) {
+    el.addEventListener('input', () => { span.textContent = f(el.value); draw(); });
+  }
+  draw();
+</script>
