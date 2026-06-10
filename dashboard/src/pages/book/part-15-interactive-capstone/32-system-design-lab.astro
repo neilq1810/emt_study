@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import BookLayout from '../../../layouts/BookLayout.astro';
+import { buildToc, chapterMeta } from '../../../lib/toc';
+import SystemDesignDashboard from '../../../components/SystemDesignDashboard.astro';
+import ErrorBudgetDashboard from '../../../components/ErrorBudgetDashboard.astro';
+import ClinicalAccuracyDashboard from '../../../components/ClinicalAccuracyDashboard.astro';
+import DistortionCompensationDashboard from '../../../components/DistortionCompensationDashboard.astro';
+
+const SLUG = 'part-15-interactive-capstone/32-system-design-lab';
+const entries = await getCollection('book');
+const toc = buildToc(entries);
+const entry = entries.find((e) => e.id === SLUG)!;
+const { Content } = await render(entry);
+const { title } = chapterMeta(entry);
+---
+
+<BookLayout title={title} toc={toc} current={SLUG}>
+  <Content />
+
+  <hr class="my-10 border-slate-200" />
+  <h2 id="live-dashboards">Live dashboards</h2>
+  <p>
+    The four instruments described above, embedded and interactive. Each is the
+    same physics the manuscript derives, with the constants exposed as controls.
+  </p>
+
+  <h3>§32.1 — System-design dashboard</h3>
+  <p class="text-sm text-slate-600">
+    Link budget (eq. 8.1) + the accuracy/rate/latency trilemma (Ch. 12) in one
+    view. Defaults reproduce the Ch. 31 worked design.
+  </p>
+  <SystemDesignDashboard />
+
+  <h3 class="mt-10">§32.2 — Error-budget dashboard</h3>
+  <p class="text-sm text-slate-600">
+    Stochastic (CRLB) / deterministic / environmental, RSS, mapped across the
+    volume (Ch. 25/31) — which error class dominates where.
+  </p>
+  <ErrorBudgetDashboard />
+
+  <h3 class="mt-10">§32.3 — Clinical accuracy-chain dashboard</h3>
+  <p class="text-sm text-slate-600">
+    track ⊕ registration ⊕ tip ⊕ motion ⊕ distortion (Ch. 29) — why the tracker
+    is rarely the limiting term.
+  </p>
+  <ClinicalAccuracyDashboard />
+
+  <h3 class="mt-10">§32.4 — Distortion &amp; compensation dashboard</h3>
+  <p class="text-sm text-slate-600">
+    Distortion fraction (eq. 6.4), post-compensation residual, and the
+    detect-and-flag NIS alarm (Ch. 6/27).
+  </p>
+  <DistortionCompensationDashboard />
+</BookLayout>
