@@ -1,0 +1,120 @@
+---
+// Clinical Accuracy-Chain Dashboard (Ch. 29 §29.7).
+// Clinical accuracy ≠ sensor accuracy. The patient-facing error is the RSS of
+// five independent terms: tracking, registration, tip/instrument offset, target
+// motion, residual distortion. Sliders reveal the counter-intuitive lesson —
+// registration/motion usually dominate, so halving the tracker barely moves the
+// clinical number. Attack the dominant term.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 text-sm">
+    <label class="flex items-center justify-between gap-2">
+      <span>σ_track [mm] (the tracker)</span>
+      <span><input id="cl-tr" type="range" min="0.1" max="3" step="0.05" value="1" /> <span id="cl-tr-v" class="tabular-nums">1.00</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>σ_reg [mm] (patient↔image)</span>
+      <span><input id="cl-rg" type="range" min="0" max="5" step="0.1" value="2" /> <span id="cl-rg-v" class="tabular-nums">2.0</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>σ_tip [mm] (offset/lever-arm)</span>
+      <span><input id="cl-tp" type="range" min="0" max="3" step="0.05" value="0.9" /> <span id="cl-tp-v" class="tabular-nums">0.90</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>σ_motion [mm] (respiration/cardiac)</span>
+      <span><input id="cl-mo" type="range" min="0" max="5" step="0.1" value="1" /> <span id="cl-mo-v" class="tabular-nums">1.0</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2 sm:col-span-2">
+      <span>σ_distort [mm] (residual, post-comp)</span>
+      <span><input id="cl-ds" type="range" min="0" max="3" step="0.05" value="0.5" /> <span id="cl-ds-v" class="tabular-nums">0.50</span></span>
+    </label>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <canvas id="cl-canvas" width="520" height="300" class="w-full max-w-[560px] rounded"></canvas>
+    <div class="text-sm">
+      <p class="text-slate-700">σ<sub>clinical</sub> = √(σ_track² + σ_reg² + σ_tip² + σ_motion² + σ_distort²)</p>
+      <p id="cl-total" class="mt-2 text-2xl font-semibold tabular-nums text-slate-800"></p>
+      <p id="cl-lesson" class="mt-3 rounded bg-slate-50 p-2 text-xs text-slate-600"></p>
+      <button id="cl-halve" class="mt-3 rounded border border-slate-300 px-3 py-1 text-xs hover:bg-slate-50">
+        Halve the tracker → watch the clinical number
+      </button>
+      <p id="cl-halve-out" class="mt-2 text-xs text-slate-500"></p>
+    </div>
+  </div>
+  <p class="mt-2 text-xs text-slate-400">
+    Five independent terms in root-sum-square (Ch. 25 §25.5). The bar length is each
+    term's <i>variance share</i> (σ²/Σσ²) — what actually drives the total.
+  </p>
+</div>
+
+<script>
+  import { rss } from '../lib/physics';
+
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const cv = $('cl-canvas') as unknown as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const ctrls: [HTMLInputElement, HTMLElement, string, string][] = [
+    [$('cl-tr'), $('cl-tr-v'), 'tracking', '#0e7490'],
+    [$('cl-rg'), $('cl-rg-v'), 'registration', '#be123c'],
+    [$('cl-tp'), $('cl-tp-v'), 'tip offset', '#7c3aed'],
+    [$('cl-mo'), $('cl-mo-v'), 'motion', '#d97706'],
+    [$('cl-ds'), $('cl-ds-v'), 'distortion', '#0891b2'],
+  ];
+  const totalEl = document.getElementById('cl-total')!;
+  const lessonEl = document.getElementById('cl-lesson')!;
+  const halveOut = document.getElementById('cl-halve-out')!;
+
+  function terms() { return ctrls.map(([el, , name, col]) => ({ name, col, v: Number(el.value) })); }
+
+  function draw() {
+    const t = terms();
+    const total = rss(...t.map((x) => x.v));
+    const varSum = t.reduce((s, x) => s + x.v * x.v, 0) || 1;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+
+    const padL = 92, padR = 60, padT = 18, rowH = 44;
+    const maxShare = Math.max(...t.map((x) => (x.v * x.v) / varSum), 0.01);
+    const barMax = cv.width - padL - padR;
+    ctx.font = '12px system-ui';
+    t.forEach((x, i) => {
+      const y = padT + i * rowH;
+      const share = (x.v * x.v) / varSum;
+      const w = (share / maxShare) * barMax;
+      ctx.fillStyle = '#475569'; ctx.textAlign = 'right';
+      ctx.fillText(x.name, padL - 8, y + 16);
+      ctx.fillStyle = x.col; ctx.fillRect(padL, y, Math.max(w, 1), 22);
+      ctx.fillStyle = '#334155'; ctx.textAlign = 'left';
+      ctx.fillText(`${x.v.toFixed(2)} mm  (${(share * 100).toFixed(0)}%)`, padL + Math.max(w, 1) + 6, y + 16);
+    });
+    ctx.textAlign = 'left';
+
+    totalEl.textContent = `σ_clinical ≈ ${total.toFixed(2)} mm`;
+
+    const dom = [...t].sort((a, b) => b.v - a.v)[0];
+    const trackShare = (t[0].v * t[0].v) / varSum;
+    lessonEl.innerHTML =
+      `Dominant term: <b style="color:${dom.col}">${dom.name}</b> ` +
+      `(${(((dom.v * dom.v) / varSum) * 100).toFixed(0)}% of the variance). ` +
+      `The tracker contributes only <b>${(trackShare * 100).toFixed(0)}%</b> — ` +
+      `${trackShare < 0.3 ? 'engineering a better tracker is the wrong lever here.' : 'the tracker is a meaningful share here.'} ` +
+      `<i>Attack the dominant term</i> (Ch. 12 trilemma, Ch. 29).`;
+  }
+
+  document.getElementById('cl-halve')!.addEventListener('click', () => {
+    const t = terms();
+    const before = rss(...t.map((x) => x.v));
+    const after = rss(t[0].v / 2, ...t.slice(1).map((x) => x.v));
+    halveOut.textContent =
+      `Tracker ${t[0].v.toFixed(2)} → ${(t[0].v / 2).toFixed(2)} mm shifts clinical ` +
+      `${before.toFixed(2)} → ${after.toFixed(2)} mm (Δ ${(before - after).toFixed(2)} mm).`;
+  });
+
+  for (const [el, span] of ctrls) {
+    el.addEventListener('input', () => {
+      span.textContent = Number(el.value).toFixed(el === ctrls[0][0] || el === ctrls[2][0] || el === ctrls[4][0] ? 2 : 1);
+      draw(); halveOut.textContent = '';
+    });
+  }
+  draw();
+</script>

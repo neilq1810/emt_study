@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import ClinicalAccuracyDashboard from '../../components/ClinicalAccuracyDashboard.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="Clinical accuracy-chain dashboard" toc={toc}>
+  <h1>Clinical accuracy-chain dashboard</h1>
+  <p class="lead">
+    <strong>Clinical accuracy ≠ sensor accuracy</strong> (Ch. 29 §29.7). What reaches
+    the patient is the root-sum-square of five independent terms: the tracker, the
+    patient-to-image registration, the tip/instrument offset, target motion
+    (respiration, cardiac), and residual distortion.
+  </p>
+  <p>
+    Drag the sliders and watch the variance shares. With a 1 mm tracker behind a 2 mm
+    registration and a 0.9 mm tip lever, the clinical number sits near 2.4 mm — and
+    the <em>Halve the tracker</em> button shows that engineering the sensor to 0.5 mm
+    barely moves it. The dominant term is registration or motion, not the tracker;
+    that is where the clinical accuracy is won or lost.
+  </p>
+  <ClinicalAccuracyDashboard />
+</BookLayout>

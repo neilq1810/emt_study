@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import DistortionCompensationDashboard from '../../components/DistortionCompensationDashboard.astro';
+
+const toc = buildToc(await getCollection('book'));
+---
+
+<BookLayout title="Distortion & compensation dashboard" toc={toc}>
+  <h1>Distortion & compensation dashboard</h1>
+  <p class="lead">
+    Bring a conductor or ferromagnet near the working volume and watch the whole
+    error path: the induced-dipole <strong>distortion fraction</strong> (Ch. 6,
+    eq. 6.4, scaling as a³r³/d_t³d_s³), the position error it causes, the
+    <strong>post-compensation residual</strong> (Ch. 27 — compensation buys about
+    5–10×, never zero), and the <strong>detect-and-flag</strong> NIS alarm (Ch. 21,
+    27) that must fire when the residual exceeds the tracking budget.
+  </p>
+  <p>
+    The steep geometry dependence is the headline: distortion falls as the cube of
+    distance on <em>both</em> legs, so a distorter twice as far away perturbs the
+    field ~8× less. Compensation lowers the floor but cannot reach zero — so the
+    honest system detects when it has been beaten and flags, rather than reporting a
+    confidently wrong pose.
+  </p>
+  <DistortionCompensationDashboard />
+</BookLayout>

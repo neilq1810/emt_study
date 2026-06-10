@@ -1,0 +1,144 @@
+---
+// Distortion & Compensation Dashboard (Ch. 6 physics + Ch. 27 compensation).
+// Place a conductor/ferromagnet near the working volume: see the induced-dipole
+// distortion fraction (eq. 6.4 scaling a³r³/d_t³d_s³), the position error it
+// causes, the post-compensation residual (Ch. 27: ~5–10× reduction, never to
+// zero), and the detect-and-flag NIS alarm (Ch. 21/27) that fires when the
+// distortion exceeds what the consistency check tolerates.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 text-sm">
+    <label class="flex items-center justify-between gap-2">
+      <span>distorter radius a [cm]</span>
+      <span><input id="dc-a" type="range" min="0.5" max="10" step="0.5" value="3" /> <span id="dc-a-v" class="tabular-nums">3.0</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>distorter ↔ sensor d_s [cm]</span>
+      <span><input id="dc-ds" type="range" min="2" max="40" step="1" value="10" /> <span id="dc-ds-v" class="tabular-nums">10</span></span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>material (polarizability k)</span>
+      <span>
+        <select id="dc-k" class="rounded border border-slate-300 px-1 py-0.5 text-xs">
+          <option value="0.5">Cu/Al (eddy, AC)</option>
+          <option value="1" selected>steel (ferromag.)</option>
+          <option value="3">large ferrous mass</option>
+        </select>
+      </span>
+    </label>
+    <label class="flex items-center justify-between gap-2">
+      <span>compensation factor (Ch. 27)</span>
+      <span><input id="dc-c" type="range" min="1" max="12" step="0.5" value="7" /> <span id="dc-c-v" class="tabular-nums">7.0</span>×</span>
+    </label>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <canvas id="dc-canvas" width="520" height="300" class="w-full max-w-[560px] rounded"></canvas>
+    <div class="text-sm space-y-2">
+      <div class="rounded border border-slate-200 p-3 text-xs">
+        <div>Distortion fraction Δ: <b id="dc-frac" class="tabular-nums"></b></div>
+        <div>Raw position error: <b id="dc-raw" class="tabular-nums"></b></div>
+        <div>After compensation: <b id="dc-res" class="tabular-nums"></b></div>
+      </div>
+      <p id="dc-alarm" class="rounded p-2 text-sm font-medium"></p>
+      <p class="text-xs text-slate-500">
+        NIS χ² alarm fires when the residual exceeds the tracking budget (~1 mm here):
+        compensation that cannot get below the threshold must <b>detect-and-flag</b>,
+        not silently report a distorted pose (Ch. 27 §27.4).
+      </p>
+    </div>
+  </div>
+  <p class="mt-2 text-xs text-slate-400">
+    Δ = k·a³·r³/(d_t³·d_s³) (Ch. 6 eq. 6.4 scaling, <code>distortionFraction</code> in
+    <code>src/lib/physics.ts</code>); error ≈ Δ × range (small-perturbation map of the
+    1/r³ field). Illustrative constants; compensation reduces but never eliminates.
+  </p>
+</div>
+
+<script>
+  import { distortionFraction } from '../lib/physics';
+
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const sel = (id: string) => document.getElementById(id) as HTMLSelectElement;
+  const cv = $('dc-canvas') as unknown as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const a = $('dc-a'), ds = $('dc-ds'), c = $('dc-c'), k = sel('dc-k');
+  const aV = $('dc-a-v'), dsV = $('dc-ds-v'), cV = $('dc-c-v');
+  const fracEl = document.getElementById('dc-frac')!;
+  const rawEl = document.getElementById('dc-raw')!;
+  const resEl = document.getElementById('dc-res')!;
+  const alarmEl = document.getElementById('dc-alarm')!;
+
+  const RANGE = 0.3;        // nominal transmitter–sensor range [m]
+  const BUDGET_MM = 1.0;    // tracking budget the NIS check tolerates
+
+  function compute() {
+    const aM = Number(a.value) / 100;       // m
+    const dsM = Number(ds.value) / 100;     // m
+    const dT = RANGE;                        // assume distorter near transmitter side
+    const frac = distortionFraction(aM, dT, dsM, RANGE, Number(k.value));
+    const rawMm = frac * RANGE * 1e3;        // perturbation maps ~linearly to position error
+    const resMm = rawMm / Number(c.value);
+    return { frac, rawMm, resMm };
+  }
+
+  function draw() {
+    const { frac, rawMm, resMm } = compute();
+    ctx.clearRect(0, 0, cv.width, cv.height);
+
+    // schematic: transmitter (left), sensor (right), distorter (top), perturbed field
+    const txX = 70, txY = cv.height / 2, snX = cv.width - 90, snY = cv.height / 2;
+    const dsM = Number(ds.value) / 100;
+    const dxX = (txX + snX) / 2, dxY = txY - Math.min(120, dsM * 600);
+
+    // direct field line
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(txX, txY); ctx.lineTo(snX, snY); ctx.stroke(); ctx.setLineDash([]);
+
+    // distorter (size ∝ radius) + perturbation arcs (opacity ∝ fraction)
+    const rPix = 6 + Number(a.value) * 2.2;
+    const op = Math.min(1, Math.sqrt(frac) * 6);
+    ctx.fillStyle = `rgba(217,119,6,${0.25 + 0.5 * op})`;
+    ctx.beginPath(); ctx.arc(dxX, dxY, rPix, 0, 7); ctx.fill();
+    ctx.strokeStyle = `rgba(217,119,6,${op})`; ctx.lineWidth = 2;
+    for (let i = 1; i <= 3; i++) { ctx.beginPath(); ctx.arc(dxX, dxY, rPix + i * 10, 0, 7); ctx.stroke(); }
+    // perturbation reaching the sensor
+    ctx.strokeStyle = `rgba(190,18,60,${op})`; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(dxX, dxY); ctx.lineTo(snX, snY); ctx.stroke();
+
+    // transmitter & sensor
+    ctx.fillStyle = '#0e7490'; ctx.beginPath(); ctx.arc(txX, txY, 9, 0, 7); ctx.fill();
+    ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.arc(snX, snY, 7, 0, 7); ctx.fill();
+    ctx.fillStyle = '#475569'; ctx.font = '11px system-ui';
+    ctx.fillText('generator', txX - 24, txY + 26);
+    ctx.fillText('sensor', snX - 16, snY + 24);
+    ctx.fillStyle = '#b45309'; ctx.fillText('distorter', dxX - 22, dxY - rPix - 8);
+
+    // true vs reported sensor position (error ∝ residual, exaggerated for view)
+    const errPx = Math.min(40, resMm * 12);
+    ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(snX, snY, 7 + errPx, 0, 7); ctx.stroke();
+
+    fracEl.textContent = frac < 1e-3 ? frac.toExponential(2) : (frac * 100).toFixed(2) + ' %';
+    rawEl.textContent = rawMm.toFixed(2) + ' mm';
+    resEl.textContent = resMm.toFixed(2) + ' mm  (÷' + c.value + ')';
+
+    if (resMm <= BUDGET_MM) {
+      alarmEl.textContent = `✓ Residual ${resMm.toFixed(2)} mm ≤ ${BUDGET_MM} mm budget — pose trusted.`;
+      alarmEl.className = 'rounded p-2 text-sm font-medium bg-emerald-50 text-emerald-700';
+    } else {
+      alarmEl.textContent = `⚠ NIS alarm: residual ${resMm.toFixed(2)} mm > ${BUDGET_MM} mm — flag & degrade, do not report.`;
+      alarmEl.className = 'rounded p-2 text-sm font-medium bg-rose-50 text-rose-700';
+    }
+  }
+
+  for (const [el, span, f] of [
+    [a, aV, (v: string) => Number(v).toFixed(1)],
+    [ds, dsV, (v: string) => v],
+    [c, cV, (v: string) => Number(v).toFixed(1)],
+  ] as const) {
+    el.addEventListener('input', () => { span.textContent = f(el.value); draw(); });
+  }
+  k.addEventListener('change', draw);
+  draw();
+</script>
