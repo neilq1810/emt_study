@@ -165,6 +165,15 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
       power/thermal vs Ch.17 patient-heating; build-vs-buy/lifecycle). Cross-refs
       Ch.22 for implementation techniques
 
+### Part XVIII — Power Architecture & Design
+- [x] Ch. 37 Power architecture & design — **DEEPENED** (EMT-specific, not generic:
+      system power tree; **generator drive** power — inductive/resonant load,
+      spectral-purity = field error, ratiometric & its limit, class-AB vs class-D
+      spurs, stability into reactive load, transient settling, current-mode/thermal;
+      **low-noise AFE rails** — PSRR/LDO budget, partitioned returns; **remote
+      biased-sensor bias/reference tree** — reference-stability = measurement-
+      stability, Type-CF isolation, tip self-heating). Cross-refs Ch.9/16/17/25
+
 > **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
 > figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
