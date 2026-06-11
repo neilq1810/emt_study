@@ -15,8 +15,9 @@ a repositioned ultrasound probe, a swinging fluoroscopy C-arm. This chapter
 covers the compensation toolbox, from static maps through **witness-sensor** and
 **fusion-based** methods to **machine learning**, and is honest about what each
 can and cannot do. It also quantifies the one **architectural** lever that rejects
-conductive distortion *at the source* rather than correcting it after — pulsed-DC
-excitation (§27.6) — and shows how it stacks with the rest.
+conductive distortion *at the source* — pulsed-DC excitation (§27.6) — and the
+**transmitter-side** dual of the witness sensor, in which the generator itself
+senses distortion through its own drive impedance (§27.7).
 
 ---
 
@@ -229,7 +230,89 @@ ferromagnetics dominate or high update rate is essential. (conf: high — eq. (2
 follows directly from the eq. 6.3 decay; absolute prefactor and the 1.5 % figure
 are illustrative/geometry-dependent.)
 
-## 27.7 The limits of compensation
+## 27.7 Transmitter-side sensing: generator current & impedance monitoring
+
+The witness sensor (§27.3) observes distortion at the **receive** end. Its
+**dual** is to observe distortion at the **transmit** end — by watching how a
+distorter loads the *generator*. This is the "build intelligence into the
+generator" idea, and it is real: a distorter perturbs not only the field at the
+sensor but the **drive current, voltage, and phase** of the transmitter itself.
+
+**The physics — reflected impedance (Ch. 5).** A nearby conductor or ferromagnet
+is a magnetically coupled secondary circuit, so it reflects an impedance back into
+the transmitter coil,
+$$
+Z_\text{reflected}\ \sim\ \frac{(\omega M)^2}{R_2 + j\omega L_2},
+\tag{27.2}
+$$
+shifting the transmitter's effective inductance and resistance and hence its
+drive current/phase. Chapter 5 §5.5 noted that the *sensor's* back-reaction
+($\sim k^2$, $k\ll10^{-3}$) is negligible — but a **distorter can be larger and
+closer to the transmitter** than the millimetric sensor, so *its* reflected
+impedance is measurable. This is precisely the operating principle of **metal
+detectors and eddy-current NDT**, turned on the EMT generator.
+
+The reflected signature also **discriminates the mechanism** (Ch. 6):
+- **Conductive (eddy):** raises reflected *resistance*, lowers inductance, with a
+  quadrature phase set by $\omega\tau_e$ — the conductive-vs-ferrous phase
+  discrimination metal detectors exploit.
+- **Ferromagnetic:** *raises* inductance, in phase, present even at DC.
+- **In pulsed-DC:** the drive-current **decay transient** after the step exposes
+  the nearby conductor's $L/R$ directly — a transmitter-side measurement of the
+  very $\tau_e$ that sets the §27.6 settling wait (closing an adaptive loop).
+
+**It has been built.** Jaeger & Cantillon-Murphy modify the field-generator array
+to **transmit *and* receive**, and invert a **mutual-inductance model** to estimate
+a static distorter's **location, magnitude, and material from the generator side
+alone** — the transmitter-side dual of the witness sensor, from the same group as
+Anser and the witness-sensor work [@jaeger2018]. A complementary, feed-forward
+form builds the intelligence into the **drive**: GE's Dumoulin patent
+**pre-emphasizes the transmit-coil current waveform** (an ideal current plus a
+compensation current defined by exponential amplitude/time-constant terms) so the
+*generated field* is pre-corrected for eddy distortion before it reaches the sensor
+[@dumoulin2001]. A broader family of vendor eddy-detection/compensation patents
+(NDI/GE lineage) works the same seam (conf: med — patents surfaced in search; the
+full set is an open-questions item).
+
+**Why it is powerful but bounded (observability).** The transmitter-side
+measurement is rich in *what* but poor in *where*:
+- A drive impedance is **one complex scalar per coil per frequency**; it
+  **integrates every distorter** in the volume into a single lump. Localizing from
+  it is ill-posed — multi-coil and multi-frequency (impedance spectroscopy) add
+  equations but the inverse stays hard [@jaeger2018].
+- Sensitivity is **highest for distorters near the transmitter, lowest for those
+  near the sensor** ($d_s\to0$). That is the exact *opposite* of where the error
+  is worst — a small steel tool at the sensor tip is catastrophic for the pose
+  (Ch. 6 eq. 6.4) yet almost invisible to the generator. The receiver-side witness
+  has the complementary sensitivity, which is why the two ends pair so well.
+- It is a **fractional impedance change on a coil carrying amps** — a real
+  dynamic-range/SNR challenge against the huge primary drive.
+
+**Where it earns its place (the intelligent generator).** Precisely because it is
+global-but-coarse, it excels at jobs that do not need localization:
+- **Environment-change / self-health monitor** — a measurable impedance shift is a
+  cheap, robust "the room changed, re-map or inflate uncertainty" trigger feeding
+  **detect-and-flag** (§27.4), even when it cannot correct.
+- **Adaptive pulsed-DC** — sense $\tau_e$ from the drive transient and set the
+  settling time adaptively (§27.6).
+- **Mechanism classification** — conductive vs. ferromagnetic from the reflected
+  phase, to choose *which* compensation to apply.
+- **Feed-forward pre-emphasis** of the drive to pre-cancel *static* eddy distortion
+  [@dumoulin2001].
+- **Coarse prior** to a receiver-side witness/fusion estimator — the two ends fuse.
+- It **reuses hardware already present**: the ratiometric drive-current monitor
+  used to normalize generator drift (Ch. 25 §25.4) is the same sensor, read for a
+  second purpose.
+
+**Unifying view.** §27.3 (witness, receive end) and §27.7 (generator, transmit
+end) are the **two ends of one observable** — the distortion field made visible by
+sampling it where it is created versus where it lands. The strongest systems use
+both: transmitter-side for a global *"something changed, and what kind,"*
+receiver-side for the local *"how much, at the sensor."* (conf: high for the
+reflected-impedance physics and [@jaeger2018; @dumoulin2001]; med for the broader
+vendor-patent landscape.)
+
+## 27.8 The limits of compensation
 
 No method fully escapes physics:
 
@@ -250,10 +333,11 @@ No method fully escapes physics:
 > **Engineering takeaway.** The distortion hierarchy is: **keep distorters out**
 > (protocol) → **reject at the source** (pulsed-DC, exponentially, for the
 > *conductive* part, §27.6) → **map static distortion** (Ch. 26) → **observe it**
-> (witness sensors) → **detect and down-weight it** (fusion/gating) → **model it**
-> (physics + ML, with validation and uncertainty). Real systems layer several of
-> these — pulsed-DC and post-hoc compensation are complementary, not competing.
-> The one thing never to do is silently trust a distorted measurement.
+> (witness sensors at the receive end *and* generator-impedance monitoring at the
+> transmit end, §27.3/§27.7) → **detect and down-weight it** (fusion/gating) →
+> **model it** (physics + ML, with validation and uncertainty). Real systems layer
+> several of these — they are complementary, not competing. The one thing never to
+> do is silently trust a distorted measurement.
 
 ---
 
@@ -268,10 +352,22 @@ No method fully escapes physics:
   demonstrations) to gauge real-world robustness [@cavaliere2023; @kindratenko2005].
 - Add the online/uncertainty-aware compensation literature (e.g. spatial-
   uncertainty online error compensation) with verified citations.
+- **Transmitter-side sensing (§27.7):** verify and enumerate the vendor
+  eddy-detection/compensation patent family (e.g. "metal disturbance detection,"
+  US 7,321,228; eddy-current compensation US 7,292,948 / US 7,957,925; multi-
+  transmitter distortion compensation US 9,459,124) and any quantitative
+  localization/accuracy results for generator-impedance distorter characterisation
+  beyond [@jaeger2018]. Tie to the Ch. 6 "dynamic metal immunity" open question.
+- A Phase-5 sim of the reflected-impedance signature (eq. 27.2) vs. distorter
+  size/distance/material, and a Phase-6 toggle in the distortion dashboard showing
+  the transmitter-side observable alongside the receiver-side error.
 
 ## Sources cited
 - [@cavaliere2023] witness-sensor pre-trained distortion compensation (C-arm
-  1.52 mm RMS). [@widrow1975] adaptive (LMS) reference cancellation — the unifying
-  view of §27.3. [@kindratenko2005] neural-network calibration; [@kindratenko2000]
-  correction-method survey. [@poulin2002; @birkfellner1998] distortion magnitudes/
+  1.52 mm RMS). [@jaeger2018] transmitter-side distorter characterisation via
+  mutual inductance (generator transmits *and* receives) — the dual of §27.3.
+  [@dumoulin2001] generator-side transmit-waveform pre-emphasis (US 6,201,987).
+  [@widrow1975] adaptive (LMS) reference cancellation — the unifying view of §27.3.
+  [@kindratenko2005] neural-network calibration; [@kindratenko2000] correction-
+  method survey. [@poulin2002; @birkfellner1998] distortion magnitudes/
   characterization. Fusion/gating from Ch. 21; error re-entry to Ch. 25.
