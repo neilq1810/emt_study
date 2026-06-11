@@ -5,7 +5,12 @@
       "id": "raab1979",
       "type": "article",
       "title": "Magnetic Position and Orientation Tracking System",
-      "authors": ["Raab, Frederick H.", "Blood, Ernest B.", "Steiner, Terry O.", "Jones, Herbert R."],
+      "authors": [
+        "Raab, Frederick H.",
+        "Blood, Ernest B.",
+        "Steiner, Terry O.",
+        "Jones, Herbert R."
+      ],
       "year": 1979,
       "venue": "IEEE Transactions on Aerospace and Electronic Systems",
       "volume": "AES-15",
@@ -15,7 +20,12 @@
       "url": "https://ieeexplore.ieee.org/document/4102227/",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["6-DOF", "magnetic dipole", "AC tracking", "foundational"],
+      "keywords": [
+        "6-DOF",
+        "magnetic dipole",
+        "AC tracking",
+        "foundational"
+      ],
       "relevance": 10,
       "confidence": "high",
       "notes": "Seminal formalization of quasi-static magnetic-dipole 6-DOF tracking. DOI inferred from IEEE TAES AES-15(5); page range 709-718 confirmed via multiple indexes.",
@@ -25,7 +35,14 @@
       "id": "franz2014",
       "type": "article",
       "title": "Electromagnetic Tracking in Medicine—A Review of Technology, Validation, and Applications",
-      "authors": ["Franz, Alfred M.", "Haidegger, Tamás", "Birkfellner, Wolfgang", "Cleary, Kevin", "Peters, Terry M.", "Maier-Hein, Lena"],
+      "authors": [
+        "Franz, Alfred M.",
+        "Haidegger, Tamás",
+        "Birkfellner, Wolfgang",
+        "Cleary, Kevin",
+        "Peters, Terry M.",
+        "Maier-Hein, Lena"
+      ],
       "year": 2014,
       "venue": "IEEE Transactions on Medical Imaging",
       "volume": "33",
@@ -35,7 +52,12 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/24816547/",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["review", "medical", "validation", "applications"],
+      "keywords": [
+        "review",
+        "medical",
+        "validation",
+        "applications"
+      ],
       "relevance": 10,
       "confidence": "high",
       "notes": "The definitive modern review of medical EMT. DOI and citation verified via PubMed/dblp.",
@@ -45,7 +67,16 @@
       "id": "hummel2005",
       "type": "article",
       "title": "Design and application of an assessment protocol for electromagnetic tracking systems",
-      "authors": ["Hummel, Johann B.", "Bax, Michael R.", "Figl, Michael L.", "Kang, Yan", "Maurer, Calvin R.", "Birkfellner, Wolfgang W.", "Bergmann, Helmar", "Shahidi, Ramin"],
+      "authors": [
+        "Hummel, Johann B.",
+        "Bax, Michael R.",
+        "Figl, Michael L.",
+        "Kang, Yan",
+        "Maurer, Calvin R.",
+        "Birkfellner, Wolfgang W.",
+        "Bergmann, Helmar",
+        "Shahidi, Ramin"
+      ],
       "year": 2005,
       "venue": "Medical Physics",
       "volume": "32",
@@ -55,7 +86,13 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/16121595/",
       "publisher": "AAPM / Wiley",
       "source_type": "journal",
-      "keywords": ["assessment protocol", "accuracy", "phantom", "Aurora", "microBIRD"],
+      "keywords": [
+        "assessment protocol",
+        "accuracy",
+        "phantom",
+        "Aurora",
+        "microBIRD"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "Standardized phantom/protocol for comparable EMT accuracy assessment. DOI verified. Volume/issue/pages to re-confirm against Wiley record.",
@@ -65,7 +102,11 @@
       "id": "gepstein1997",
       "type": "article",
       "title": "A Novel Method for Nonfluoroscopic Catheter-Based Electroanatomical Mapping of the Heart: In Vitro and In Vivo Accuracy Results",
-      "authors": ["Gepstein, Lior", "Hayam, Gal", "Ben-Haim, Shlomo A."],
+      "authors": [
+        "Gepstein, Lior",
+        "Hayam, Gal",
+        "Ben-Haim, Shlomo A."
+      ],
       "year": 1997,
       "venue": "Circulation",
       "volume": "95",
@@ -75,7 +116,12 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/9118532/",
       "publisher": "American Heart Association",
       "source_type": "journal",
-      "keywords": ["CARTO", "electroanatomical mapping", "electrophysiology", "clinical"],
+      "keywords": [
+        "CARTO",
+        "electroanatomical mapping",
+        "electrophysiology",
+        "clinical"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "Foundational clinical paper underlying the Biosense CARTO system. PMID 9118532 verified.",
@@ -85,7 +131,13 @@
       "id": "birkfellner1998",
       "type": "article",
       "title": "Systematic distortions in magnetic position digitizers",
-      "authors": ["Birkfellner, Wolfgang", "Watzinger, Franz", "Wanschitz, Felix", "Ewers, Rolf", "Bergmann, Helmar"],
+      "authors": [
+        "Birkfellner, Wolfgang",
+        "Watzinger, Franz",
+        "Wanschitz, Felix",
+        "Ewers, Rolf",
+        "Bergmann, Helmar"
+      ],
       "year": 1998,
       "venue": "Medical Physics",
       "volume": "25",
@@ -95,7 +147,13 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/9829256/",
       "publisher": "AAPM / Wiley",
       "source_type": "journal",
-      "keywords": ["distortion", "metal", "eddy current", "ferromagnetic", "characterization"],
+      "keywords": [
+        "distortion",
+        "metal",
+        "eddy current",
+        "ferromagnetic",
+        "characterization"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Early systematic characterization of field distortion in magnetic digitizers. DOI/pages to re-confirm against Wiley record; citation widely reported as Med Phys 25(11):2242-2248.",
@@ -105,7 +163,9 @@
       "id": "kindratenko2000",
       "type": "article",
       "title": "A survey of electromagnetic position tracker calibration techniques",
-      "authors": ["Kindratenko, Volodymyr V."],
+      "authors": [
+        "Kindratenko, Volodymyr V."
+      ],
       "year": 2000,
       "venue": "Virtual Reality",
       "volume": "5",
@@ -115,7 +175,12 @@
       "url": "https://link.springer.com/article/10.1007/BF01409422",
       "publisher": "Springer",
       "source_type": "journal",
-      "keywords": ["calibration", "distortion correction", "polynomial fit", "interpolation"],
+      "keywords": [
+        "calibration",
+        "distortion correction",
+        "polynomial fit",
+        "interpolation"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Survey of EMT calibration/distortion-correction methods (interpolation, polynomial, shape functions). DOI verified; volume/issue/pages to re-confirm.",
@@ -125,7 +190,11 @@
       "id": "paperno2001",
       "type": "article",
       "title": "A new method for magnetic position and orientation tracking",
-      "authors": ["Paperno, Eugene", "Sasada, Ichiro", "Leonovich, Eduard"],
+      "authors": [
+        "Paperno, Eugene",
+        "Sasada, Ichiro",
+        "Leonovich, Eduard"
+      ],
       "year": 2001,
       "venue": "IEEE Transactions on Magnetics",
       "volume": "37",
@@ -135,7 +204,12 @@
       "url": "https://ieeexplore.ieee.org/document/951014",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["rotating field", "2-axis excitation", "3-axis sensing", "phase/amplitude"],
+      "keywords": [
+        "rotating field",
+        "2-axis excitation",
+        "3-axis sensing",
+        "phase/amplitude"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Rotating quasi-static field method; alternative excitation/decoding strategy. DOI to re-confirm against IEEE record.",
@@ -145,7 +219,10 @@
       "id": "plotkin2003",
       "type": "article",
       "title": "3-D Magnetic Tracking of a Single Subminiature Coil with a Large 2-D Array of Uniaxial Transmitters",
-      "authors": ["Plotkin, Anton", "Paperno, Eugene"],
+      "authors": [
+        "Plotkin, Anton",
+        "Paperno, Eugene"
+      ],
       "year": 2003,
       "venue": "IEEE Transactions on Magnetics",
       "volume": "39",
@@ -155,7 +232,12 @@
       "url": "https://ieeexplore.ieee.org/document/1233321",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["transmitter array", "subminiature coil", "subarray", "computation"],
+      "keywords": [
+        "transmitter array",
+        "subminiature coil",
+        "subarray",
+        "computation"
+      ],
       "relevance": 6,
       "confidence": "med",
       "notes": "Array-of-transmitters architecture with subarray tracking for speed. DOI/article-id to re-confirm against IEEE record.",
@@ -165,7 +247,10 @@
       "id": "lenz2006",
       "type": "article",
       "title": "Magnetic Sensors and Their Applications",
-      "authors": ["Lenz, James E.", "Edelstein, Alan S."],
+      "authors": [
+        "Lenz, James E.",
+        "Edelstein, Alan S."
+      ],
       "year": 2006,
       "venue": "IEEE Sensors Journal",
       "volume": "6",
@@ -175,7 +260,16 @@
       "url": "https://ieeexplore.ieee.org/document/1634240",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["magnetic sensors", "search coil", "fluxgate", "Hall", "AMR", "GMR", "MTJ", "review"],
+      "keywords": [
+        "magnetic sensors",
+        "search coil",
+        "fluxgate",
+        "Hall",
+        "AMR",
+        "GMR",
+        "MTJ",
+        "review"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "Canonical review comparing all major magnetic sensor families incl. search coil, fluxgate, Hall, AMR, GMR, magnetic tunnel junctions. Vol 6, pp 631-649 confirmed; DOI to re-confirm against IEEE record.",
@@ -185,7 +279,13 @@
       "id": "davies2021",
       "type": "article",
       "title": "Magnetoresistive sensor detectivity: A comparative analysis",
-      "authors": ["Davies, J. E.", "Watts, J. D.", "Novotny, J.", "Huang, D.", "Eames, P. G."],
+      "authors": [
+        "Davies, J. E.",
+        "Watts, J. D.",
+        "Novotny, J.",
+        "Huang, D.",
+        "Eames, P. G."
+      ],
       "year": 2021,
       "venue": "Applied Physics Letters",
       "volume": "118",
@@ -195,7 +295,15 @@
       "url": "https://pubs.aip.org/aip/apl/article/118/6/062401/40119",
       "publisher": "AIP Publishing",
       "source_type": "journal",
-      "keywords": ["detectivity", "1/f noise", "GMR", "TMR", "MTJ", "die area", "fundamental limit"],
+      "keywords": [
+        "detectivity",
+        "1/f noise",
+        "GMR",
+        "TMR",
+        "MTJ",
+        "die area",
+        "fundamental limit"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Comparative noise/detectivity analysis of GMR vs TMR(MTJ); finds detectivity scales with die area and converges across types when normalized for linear range. DOI verified via AIP.",
@@ -205,7 +313,12 @@
       "id": "yaniv2009",
       "type": "article",
       "title": "Electromagnetic tracking in the clinical environment",
-      "authors": ["Yaniv, Ziv", "Wilson, Emmanuel", "Lindisch, David", "Cleary, Kevin"],
+      "authors": [
+        "Yaniv, Ziv",
+        "Wilson, Emmanuel",
+        "Lindisch, David",
+        "Cleary, Kevin"
+      ],
       "year": 2009,
       "venue": "Medical Physics",
       "volume": "36",
@@ -215,7 +328,13 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/19378748/",
       "publisher": "AAPM / Wiley",
       "source_type": "journal",
-      "keywords": ["clinical EMT", "accuracy", "distortion", "interventional", "assessment"],
+      "keywords": [
+        "clinical EMT",
+        "accuracy",
+        "distortion",
+        "interventional",
+        "assessment"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Clinical-environment characterization of EMT accuracy and distortion. Citation 36(3):876-892, DOI 10.1118/1.3075829, PMID 19378748 verified.",
@@ -225,13 +344,22 @@
       "id": "ndi_aurora",
       "type": "misc",
       "title": "Aurora Electromagnetic Tracking System — Sensors (5DOF/6DOF, micro 0.3 mm)",
-      "authors": ["Northern Digital Inc. (NDI)"],
+      "authors": [
+        "Northern Digital Inc. (NDI)"
+      ],
       "year": 2024,
       "venue": "NDI (vendor website)",
       "url": "https://www.ndigital.com/electromagnetic-tracking-technology/aurora/aurora-sensors/",
       "publisher": "Northern Digital Inc.",
       "source_type": "vendor",
-      "keywords": ["Aurora", "5DOF", "6DOF", "micro sensor", "catheter", "vendor"],
+      "keywords": [
+        "Aurora",
+        "5DOF",
+        "6DOF",
+        "micro sensor",
+        "catheter",
+        "vendor"
+      ],
       "relevance": 6,
       "confidence": "med",
       "notes": "Vendor source for medical-grade sensor form factors (e.g., micro 5DOF ~0.3 mm dia). Vendor-reported; access year approximate.",
@@ -241,13 +369,21 @@
       "id": "iec60601_1",
       "type": "standard",
       "title": "IEC 60601-1 Medical electrical equipment — Part 1: General requirements for basic safety and essential performance",
-      "authors": ["International Electrotechnical Commission"],
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
       "year": 2005,
       "venue": "IEC (3rd ed. 2005; Amendment 1:2012 = Ed. 3.1; Amendment 2:2020)",
       "url": "https://webstore.iec.ch/en/publication/2612",
       "publisher": "IEC",
       "source_type": "standard",
-      "keywords": ["medical safety", "leakage current", "means of protection", "isolation", "Type BF/CF"],
+      "keywords": [
+        "medical safety",
+        "leakage current",
+        "means of protection",
+        "isolation",
+        "Type BF/CF"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Governing safety standard for medical electrical equipment. Patient leakage limits e.g. Type CF 10 uA normal / 50 uA single-fault; two Means of Protection required. Edition history per IEC webstore.",
@@ -257,13 +393,21 @@
       "id": "iec60601_1_2",
       "type": "standard",
       "title": "IEC 60601-1-2 Medical electrical equipment — Part 1-2: General requirements for basic safety and essential performance — Collateral standard: Electromagnetic disturbances — Requirements and tests",
-      "authors": ["International Electrotechnical Commission"],
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
       "year": 2014,
       "venue": "IEC (4th ed. 2014; Edition 4.1 with Amendment 1:2020)",
       "url": "https://webstore.iec.ch/en/publication/2590",
       "publisher": "IEC",
       "source_type": "standard",
-      "keywords": ["EMC", "electromagnetic compatibility", "risk-based", "essential performance", "immunity"],
+      "keywords": [
+        "EMC",
+        "electromagnetic compatibility",
+        "risk-based",
+        "essential performance",
+        "immunity"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "EMC collateral standard. 4th ed (2014) shifted to risk/intended-use-based tests by environment (professional healthcare / home / special). Edition 4.1 = Amendment 1 (2020).",
@@ -273,13 +417,22 @@
       "id": "horowitz_hill",
       "type": "book",
       "title": "The Art of Electronics, 3rd Edition",
-      "authors": ["Horowitz, Paul", "Hill, Winfield"],
+      "authors": [
+        "Horowitz, Paul",
+        "Hill, Winfield"
+      ],
       "year": 2015,
       "venue": "Cambridge University Press",
       "url": "https://artofelectronics.net/",
       "publisher": "Cambridge University Press",
       "source_type": "book",
-      "keywords": ["analog", "low-noise amplifier", "op-amp noise", "instrumentation amplifier", "reference"],
+      "keywords": [
+        "analog",
+        "low-noise amplifier",
+        "op-amp noise",
+        "instrumentation amplifier",
+        "reference"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Standard reference for low-noise analog design (amplifier voltage/current noise, noise matching, instrumentation amps). ISBN 978-0521809269.",
@@ -289,7 +442,9 @@
       "id": "walden1999",
       "type": "article",
       "title": "Analog-to-Digital Converter Survey and Analysis",
-      "authors": ["Walden, Robert H."],
+      "authors": [
+        "Walden, Robert H."
+      ],
       "year": 1999,
       "venue": "IEEE Journal on Selected Areas in Communications",
       "volume": "17",
@@ -299,7 +454,14 @@
       "url": "https://ieeexplore.ieee.org/document/761034",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["ADC", "survey", "resolution vs sampling rate", "jitter", "thermal limit", "figure of merit"],
+      "keywords": [
+        "ADC",
+        "survey",
+        "resolution vs sampling rate",
+        "jitter",
+        "thermal limit",
+        "figure of merit"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Canonical ADC survey; establishes resolution-vs-rate trends and limiting mechanisms (thermal at low rate, ~1 bit/octave fall-off at high rate; aperture jitter). DOI 10.1109/49.761034 verified.",
@@ -309,14 +471,23 @@
       "id": "ieee1241",
       "type": "standard",
       "title": "IEEE Standard for Terminology and Test Methods for Analog-to-Digital Converters",
-      "authors": ["IEEE Instrumentation and Measurement Society"],
+      "authors": [
+        "IEEE Instrumentation and Measurement Society"
+      ],
       "year": 2010,
       "venue": "IEEE Std 1241 (editions 2000, 2010, 2023)",
       "doi": "10.1109/IEEESTD.2011.5692956",
       "url": "https://standards.ieee.org/ieee/1241/6797/",
       "publisher": "IEEE",
       "source_type": "standard",
-      "keywords": ["ADC test", "ENOB", "SINAD", "SNR", "FFT test", "terminology"],
+      "keywords": [
+        "ADC test",
+        "ENOB",
+        "SINAD",
+        "SNR",
+        "FFT test",
+        "terminology"
+      ],
       "relevance": 6,
       "confidence": "high",
       "notes": "Defines ADC error terminology and FFT-based test methods (ENOB from SINAD, etc.). Multiple editions (2000/2010/2023); cite the edition used in a given measurement.",
@@ -326,7 +497,9 @@
       "id": "scofield1994",
       "type": "article",
       "title": "Frequency-domain description of a lock-in amplifier",
-      "authors": ["Scofield, John H."],
+      "authors": [
+        "Scofield, John H."
+      ],
       "year": 1994,
       "venue": "American Journal of Physics",
       "volume": "62",
@@ -336,7 +509,12 @@
       "url": "https://pubs.aip.org/aapt/ajp/article-abstract/62/2/129/1054516",
       "publisher": "AAPT / AIP",
       "source_type": "journal",
-      "keywords": ["lock-in amplifier", "synchronous detection", "phase-sensitive", "noise bandwidth"],
+      "keywords": [
+        "lock-in amplifier",
+        "synchronous detection",
+        "phase-sensitive",
+        "noise bandwidth"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Clear pedagogical/quantitative treatment of lock-in (synchronous) detection. DOI 10.1119/1.17629 verified.",
@@ -346,7 +524,9 @@
       "id": "kalman1960",
       "type": "article",
       "title": "A New Approach to Linear Filtering and Prediction Problems",
-      "authors": ["Kalman, Rudolf E."],
+      "authors": [
+        "Kalman, Rudolf E."
+      ],
       "year": 1960,
       "venue": "Transactions of the ASME — Journal of Basic Engineering",
       "volume": "82",
@@ -356,7 +536,13 @@
       "url": "https://asmedigitalcollection.asme.org/fluidsengineering/article/82/1/35/397706",
       "publisher": "ASME",
       "source_type": "journal",
-      "keywords": ["Kalman filter", "state estimation", "recursive", "prediction", "foundational"],
+      "keywords": [
+        "Kalman filter",
+        "state estimation",
+        "recursive",
+        "prediction",
+        "foundational"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "The foundational Kalman filter paper. Vol 82(1):35-45, DOI 10.1115/1.3662552 verified.",
@@ -366,7 +552,10 @@
       "id": "julier2004",
       "type": "article",
       "title": "Unscented Filtering and Nonlinear Estimation",
-      "authors": ["Julier, Simon J.", "Uhlmann, Jeffrey K."],
+      "authors": [
+        "Julier, Simon J.",
+        "Uhlmann, Jeffrey K."
+      ],
       "year": 2004,
       "venue": "Proceedings of the IEEE",
       "volume": "92",
@@ -376,7 +565,12 @@
       "url": "https://ieeexplore.ieee.org/document/1271397",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["unscented Kalman filter", "UKF", "unscented transform", "nonlinear estimation"],
+      "keywords": [
+        "unscented Kalman filter",
+        "UKF",
+        "unscented transform",
+        "nonlinear estimation"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Definitive review of the unscented transform/UKF for nonlinear estimation. DOI 10.1109/JPROC.2003.823141 verified.",
@@ -386,14 +580,25 @@
       "id": "barshalom2001",
       "type": "book",
       "title": "Estimation with Applications to Tracking and Navigation: Theory, Algorithms and Software",
-      "authors": ["Bar-Shalom, Yaakov", "Li, X. Rong", "Kirubarajan, Thiagalingam"],
+      "authors": [
+        "Bar-Shalom, Yaakov",
+        "Li, X. Rong",
+        "Kirubarajan, Thiagalingam"
+      ],
       "year": 2001,
       "venue": "Wiley-Interscience",
       "doi": "10.1002/0471221279",
       "url": "https://onlinelibrary.wiley.com/doi/book/10.1002/0471221279",
       "publisher": "John Wiley & Sons",
       "source_type": "book",
-      "keywords": ["estimation", "tracking", "Kalman", "EKF", "data association", "CRLB"],
+      "keywords": [
+        "estimation",
+        "tracking",
+        "Kalman",
+        "EKF",
+        "data association",
+        "CRLB"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Standard reference for estimation/tracking (KF/EKF, filtering, CRLB, fusion). ISBN 978-0471416555; DOI 10.1002/0471221279.",
@@ -403,7 +608,9 @@
       "id": "marquardt1963",
       "type": "article",
       "title": "An Algorithm for Least-Squares Estimation of Nonlinear Parameters",
-      "authors": ["Marquardt, Donald W."],
+      "authors": [
+        "Marquardt, Donald W."
+      ],
       "year": 1963,
       "venue": "Journal of the Society for Industrial and Applied Mathematics",
       "volume": "11",
@@ -413,7 +620,12 @@
       "url": "https://epubs.siam.org/doi/10.1137/0111030",
       "publisher": "SIAM",
       "source_type": "journal",
-      "keywords": ["Levenberg-Marquardt", "nonlinear least squares", "optimization", "damping"],
+      "keywords": [
+        "Levenberg-Marquardt",
+        "nonlinear least squares",
+        "optimization",
+        "damping"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "The Levenberg-Marquardt algorithm; workhorse nonlinear solver for EMT pose. DOI 10.1137/0111030 verified.",
@@ -423,13 +635,21 @@
       "id": "kay1993",
       "type": "book",
       "title": "Fundamentals of Statistical Signal Processing, Volume I: Estimation Theory",
-      "authors": ["Kay, Steven M."],
+      "authors": [
+        "Kay, Steven M."
+      ],
       "year": 1993,
       "venue": "Prentice Hall",
       "url": "https://www.pearson.com/",
       "publisher": "Prentice Hall",
       "source_type": "book",
-      "keywords": ["MLE", "Cramer-Rao bound", "CRLB", "Bayesian estimation", "Fisher information"],
+      "keywords": [
+        "MLE",
+        "Cramer-Rao bound",
+        "CRLB",
+        "Bayesian estimation",
+        "Fisher information"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Standard reference for MLE, CRLB/Fisher information, and Bayesian estimation used in Ch. 23-24. ISBN 0133457117.",
@@ -439,14 +659,23 @@
       "id": "nocedal2006",
       "type": "book",
       "title": "Numerical Optimization, 2nd Edition",
-      "authors": ["Nocedal, Jorge", "Wright, Stephen J."],
+      "authors": [
+        "Nocedal, Jorge",
+        "Wright, Stephen J."
+      ],
       "year": 2006,
       "venue": "Springer (Springer Series in Operations Research and Financial Engineering)",
       "doi": "10.1007/978-0-387-40065-5",
       "url": "https://link.springer.com/book/10.1007/978-0-387-40065-5",
       "publisher": "Springer",
       "source_type": "book",
-      "keywords": ["Gauss-Newton", "trust region", "line search", "conditioning", "convergence"],
+      "keywords": [
+        "Gauss-Newton",
+        "trust region",
+        "line search",
+        "conditioning",
+        "convergence"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Standard numerical-optimization reference (Gauss-Newton, trust-region/LM, convergence, conditioning). ISBN 9780387303031.",
@@ -456,7 +685,10 @@
       "id": "poulin2002",
       "type": "article",
       "title": "Interference during the use of an electromagnetic tracking system under OR conditions",
-      "authors": ["Poulin, François", "Amiot, Louis-Philippe"],
+      "authors": [
+        "Poulin, François",
+        "Amiot, Louis-Philippe"
+      ],
       "year": 2002,
       "venue": "Journal of Biomechanics",
       "volume": "35",
@@ -466,7 +698,13 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/12020992/",
       "publisher": "Elsevier",
       "source_type": "journal",
-      "keywords": ["interference", "OR conditions", "ambient noise", "ferromagnetic", "EM susceptibility"],
+      "keywords": [
+        "interference",
+        "OR conditions",
+        "ambient noise",
+        "ferromagnetic",
+        "EM susceptibility"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Quantifies EMT interference under operating-room conditions: ambient EM noise error <0.15 mm RMS, but ferromagnetic/electrical devices up to 8.4 mm / 166 deg. DOI verified; PMID 12020992.",
@@ -476,13 +714,30 @@
       "id": "monteblanco2021",
       "type": "article",
       "title": "Constant TMR magnetic field sensor detectivity with bias voltage",
-      "authors": ["Monteblanco, E.", "Solignac, A.", "Chopin, C.", "Moulin, J.", "Belliot, P.", "Belin, N.", "Campiglio, P.", "Fermon, C.", "Pannetier-Lecoeur, M."],
+      "authors": [
+        "Monteblanco, E.",
+        "Solignac, A.",
+        "Chopin, C.",
+        "Moulin, J.",
+        "Belliot, P.",
+        "Belin, N.",
+        "Campiglio, P.",
+        "Fermon, C.",
+        "Pannetier-Lecoeur, M."
+      ],
       "year": 2021,
       "venue": "arXiv preprint (cf. published version in Sensors)",
       "url": "https://arxiv.org/abs/2103.04750",
       "publisher": "arXiv / CEA Saclay (SPEC), Université Paris-Saclay",
       "source_type": "journal",
-      "keywords": ["TMR", "bias voltage", "detectivity", "1/f noise", "Hooge", "magnetic tunnel junction"],
+      "keywords": [
+        "TMR",
+        "bias voltage",
+        "detectivity",
+        "1/f noise",
+        "Hooge",
+        "magnetic tunnel junction"
+      ],
       "relevance": 7,
       "confidence": "med",
       "notes": "Shows TMR detectivity stays roughly constant vs bias voltage because sensitivity and noise scale together — central to the 'bias-reference noise in biased sensors' error term. arXiv:2103.04750 (authors verified); a published Sensors version exists (to link).",
@@ -492,14 +747,24 @@
       "id": "cavaliere2023",
       "type": "article",
       "title": "Enhancing electromagnetic tracking accuracy in medical applications using pre-trained witness sensor distortion models",
-      "authors": ["Cavaliere, Marco", "Cantillon-Murphy, Pádraig"],
+      "authors": [
+        "Cavaliere, Marco",
+        "Cantillon-Murphy, Pádraig"
+      ],
       "year": 2023,
       "venue": "International Journal of Computer Assisted Radiology and Surgery",
       "doi": "10.1007/s11548-023-02994-z",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10769911/",
       "publisher": "Springer",
       "source_type": "journal",
-      "keywords": ["witness sensor", "distortion compensation", "pre-trained model", "C-arm", "ultrasound probe", "online"],
+      "keywords": [
+        "witness sensor",
+        "distortion compensation",
+        "pre-trained model",
+        "C-arm",
+        "ultrasound probe",
+        "online"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Witness-sensor distortion compensation: measures field variation at a witness position to identify/compensate a distorter without sensors on it; C-arm error reduced to 1.52 mm RMS. DOI verified.",
@@ -509,7 +774,10 @@
       "id": "kindratenko2005",
       "type": "article",
       "title": "Neural network-based calibration of electromagnetic tracking systems",
-      "authors": ["Kindratenko, Volodymyr V.", "Sherman, William R."],
+      "authors": [
+        "Kindratenko, Volodymyr V.",
+        "Sherman, William R."
+      ],
       "year": 2005,
       "venue": "Virtual Reality",
       "volume": "9",
@@ -519,7 +787,13 @@
       "url": "https://link.springer.com/article/10.1007/s10055-005-0005-3",
       "publisher": "Springer",
       "source_type": "journal",
-      "keywords": ["neural network", "machine learning", "calibration", "distortion correction", "position and orientation"],
+      "keywords": [
+        "neural network",
+        "machine learning",
+        "calibration",
+        "distortion correction",
+        "position and orientation"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Neural-network calibration compensating position and orientation error; compared to traditional methods. Vol 9(1):70-78, DOI verified.",
@@ -529,13 +803,22 @@
       "id": "polhemus_history",
       "type": "misc",
       "title": "Polhemus History — Over 50 Years of Experience",
-      "authors": ["Polhemus"],
+      "authors": [
+        "Polhemus"
+      ],
       "year": 2024,
       "venue": "Polhemus (vendor website)",
       "url": "https://polhemus.com/company/history/",
       "publisher": "Polhemus",
       "source_type": "vendor",
-      "keywords": ["Polhemus", "history", "AC tracking", "FASTRAK", "LIBERTY", "military aviation"],
+      "keywords": [
+        "Polhemus",
+        "history",
+        "AC tracking",
+        "FASTRAK",
+        "LIBERTY",
+        "military aviation"
+      ],
       "relevance": 6,
       "confidence": "med",
       "notes": "Vendor history: founded 1969 by Bill Polhemus, Colchester VT; AC EM tracking originating in military aviation head-tracking. Products FASTRAK/LIBERTY/PATRIOT/G4. Vendor-reported.",
@@ -545,13 +828,21 @@
       "id": "ndi_history",
       "type": "misc",
       "title": "Our History — Northern Digital Inc. (NDI)",
-      "authors": ["Northern Digital Inc. (NDI)"],
+      "authors": [
+        "Northern Digital Inc. (NDI)"
+      ],
       "year": 2024,
       "venue": "NDI (vendor website)",
       "url": "https://www.ndigital.com/about/history/",
       "publisher": "Northern Digital Inc.",
       "source_type": "vendor",
-      "keywords": ["NDI", "Aurora", "Polaris", "Waterloo", "history"],
+      "keywords": [
+        "NDI",
+        "Aurora",
+        "Polaris",
+        "Waterloo",
+        "history"
+      ],
       "relevance": 6,
       "confidence": "med",
       "notes": "Vendor history of NDI (Waterloo, Ontario): optical (Polaris) and EM (Aurora) navigation. Vendor-reported; corroborate dates with independent sources.",
@@ -561,13 +852,22 @@
       "id": "ascension_roper2012",
       "type": "misc",
       "title": "Ascension Technology of Milton acquired by Roper Industries",
-      "authors": ["Vermont Business Magazine"],
+      "authors": [
+        "Vermont Business Magazine"
+      ],
       "year": 2012,
       "venue": "Vermont Business Magazine",
       "url": "https://vermontbiz.com/news/2012/august/28/ascension-technology-milton-acquired-roper-industries",
       "publisher": "Vermont Business Magazine",
       "source_type": "vendor",
-      "keywords": ["Ascension", "Roper", "NDI", "acquisition", "pulsed-DC", "Flock of Birds"],
+      "keywords": [
+        "Ascension",
+        "Roper",
+        "NDI",
+        "acquisition",
+        "pulsed-DC",
+        "Flock of Birds"
+      ],
       "relevance": 5,
       "confidence": "med",
       "notes": "News report: Ascension (co-founded 1986 by Jack Scully & Ernie Blood; DC 'Flock of Birds') assets sold to Roper Industries (~US$19M, 2012); operated under NDI. Trade-press source.",
@@ -577,13 +877,21 @@
       "id": "globes_jnj_biosense",
       "type": "misc",
       "title": "Johnson & Johnson Buys Biosense for $400 Mln in Shares",
-      "authors": ["Globes"],
+      "authors": [
+        "Globes"
+      ],
       "year": 1997,
       "venue": "Globes (business news, Israel)",
       "url": "https://en.globes.co.il/en/article-362924",
       "publisher": "Globes",
       "source_type": "vendor",
-      "keywords": ["Biosense", "Ben-Haim", "Johnson & Johnson", "acquisition", "CARTO"],
+      "keywords": [
+        "Biosense",
+        "Ben-Haim",
+        "Johnson & Johnson",
+        "acquisition",
+        "CARTO"
+      ],
       "relevance": 5,
       "confidence": "med",
       "notes": "News: Biosense (founded 1993 by Shlomo Ben-Haim) acquired by J&J in 1997 (~$400M in shares); became Biosense Webster. Trade-press source; CARTO scientific basis is Gepstein 1997 [gepstein1997].",
@@ -593,13 +901,22 @@
       "id": "covidien_superdimension2012",
       "type": "misc",
       "title": "Covidien acquisition of superDimension (electromagnetic navigation bronchoscopy); Medtronic–Covidien close (2015)",
-      "authors": ["MassDevice / Medtronic"],
+      "authors": [
+        "MassDevice / Medtronic"
+      ],
       "year": 2012,
       "venue": "MassDevice (trade press) / Medtronic",
       "url": "https://www.medtronic.com/en-us/healthcare-professionals/products/lung-health-thoracic-surgery/diagnostic-screening-systems/superdimension-navigation-system.html",
       "publisher": "MassDevice / Medtronic",
       "source_type": "vendor",
-      "keywords": ["superDimension", "ENB", "Covidien", "Medtronic", "bronchoscopy", "lung"],
+      "keywords": [
+        "superDimension",
+        "ENB",
+        "Covidien",
+        "Medtronic",
+        "bronchoscopy",
+        "lung"
+      ],
       "relevance": 5,
       "confidence": "med",
       "notes": "superDimension ENB acquired by Covidien (~$300M, 2012); Medtronic closed Covidien acquisition Jan 2015. Trade-press/vendor sources; verify exact figures if cited precisely.",
@@ -609,7 +926,12 @@
       "id": "folch2019",
       "type": "article",
       "title": "Electromagnetic Navigation Bronchoscopy for Peripheral Pulmonary Lesions: One-Year Results of the Prospective, Multicenter NAVIGATE Study",
-      "authors": ["Folch, Erik E.", "Pritchett, Michael A.", "Nead, Matthew A.", "et al."],
+      "authors": [
+        "Folch, Erik E.",
+        "Pritchett, Michael A.",
+        "Nead, Matthew A.",
+        "et al."
+      ],
       "year": 2019,
       "venue": "Journal of Thoracic Oncology",
       "volume": "14",
@@ -619,7 +941,14 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/30476574/",
       "publisher": "Elsevier / IASLC",
       "source_type": "journal",
-      "keywords": ["ENB", "navigation bronchoscopy", "diagnostic yield", "lung lesion", "superDimension", "clinical outcome"],
+      "keywords": [
+        "ENB",
+        "navigation bronchoscopy",
+        "diagnostic yield",
+        "lung lesion",
+        "superDimension",
+        "clinical outcome"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "NAVIGATE one-year results: 12-month diagnostic yield ~73%; pneumothorax (grade >=2) 2.9%. PMID 30476574 verified; vol/issue/pages 14(3):445-458 to re-confirm against journal record. 'et al.' — full author list to expand.",
@@ -629,7 +958,10 @@
       "id": "budker2007",
       "type": "article",
       "title": "Optical magnetometry",
-      "authors": ["Budker, Dmitry", "Romalis, Michael"],
+      "authors": [
+        "Budker, Dmitry",
+        "Romalis, Michael"
+      ],
       "year": 2007,
       "venue": "Nature Physics",
       "volume": "3",
@@ -639,7 +971,13 @@
       "url": "https://www.nature.com/articles/nphys566",
       "publisher": "Nature Publishing Group",
       "source_type": "journal",
-      "keywords": ["optical magnetometry", "atomic", "SERF", "biomagnetic", "quantum sensing"],
+      "keywords": [
+        "optical magnetometry",
+        "atomic",
+        "SERF",
+        "biomagnetic",
+        "quantum sensing"
+      ],
       "relevance": 6,
       "confidence": "high",
       "notes": "Foundational review of optical/atomic magnetometry; SERF sensitivity >1e-15 T/rtHz. Frontier sensor context. DOI 10.1038/nphys566 verified.",
@@ -649,7 +987,15 @@
       "id": "barry2020",
       "type": "article",
       "title": "Sensitivity optimization for NV-diamond magnetometry",
-      "authors": ["Barry, John F.", "Schloss, Jennifer M.", "Bauch, Erik", "Turner, Matthew J.", "Hart, Connor A.", "Pham, Linh M.", "Walsworth, Ronald L."],
+      "authors": [
+        "Barry, John F.",
+        "Schloss, Jennifer M.",
+        "Bauch, Erik",
+        "Turner, Matthew J.",
+        "Hart, Connor A.",
+        "Pham, Linh M.",
+        "Walsworth, Ronald L."
+      ],
       "year": 2020,
       "venue": "Reviews of Modern Physics",
       "volume": "92",
@@ -659,7 +1005,13 @@
       "url": "https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.92.015004",
       "publisher": "American Physical Society",
       "source_type": "journal",
-      "keywords": ["NV diamond", "nitrogen-vacancy", "quantum sensing", "magnetometry", "sensitivity"],
+      "keywords": [
+        "NV diamond",
+        "nitrogen-vacancy",
+        "quantum sensing",
+        "magnetometry",
+        "sensitivity"
+      ],
       "relevance": 6,
       "confidence": "high",
       "notes": "Comprehensive review of NV-diamond magnetometry sensitivity limits and improvement strategies. RMP 92(1):015004, DOI verified.",
@@ -669,13 +1021,22 @@
       "id": "kuipers1975",
       "type": "patent",
       "title": "Object tracking and orientation determination means, system and process (US 3,868,565)",
-      "authors": ["Kuipers, Jack"],
+      "authors": [
+        "Kuipers, Jack"
+      ],
       "year": 1975,
       "venue": "US Patent 3,868,565 (issued Feb 25, 1975)",
       "url": "https://patents.google.com/patent/US3868565A/en",
       "publisher": "USPTO",
       "source_type": "patent",
-      "keywords": ["Kuipers", "SPASYN", "nutating field", "orthogonal coils", "AC/DC", "foundational patent"],
+      "keywords": [
+        "Kuipers",
+        "SPASYN",
+        "nutating field",
+        "orthogonal coils",
+        "AC/DC",
+        "foundational patent"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "Foundational magnetic position/orientation patent (Polhemus/Kuipers lineage). Uses a nutating field with DC + AC-modulated carrier into orthogonal coils. Cf. companion US 3,983,474 (1976). Resolves the Ch.1 SPASYN open question. Patent number verified via Google Patents/FPO.",
@@ -685,13 +1046,22 @@
       "id": "blood1990",
       "type": "patent",
       "title": "Device for quantitatively measuring the relative position and orientation of two bodies in the presence of metals utilizing direct current magnetic fields (US 4,945,305)",
-      "authors": ["Blood, Ernest B."],
+      "authors": [
+        "Blood, Ernest B."
+      ],
       "year": 1990,
       "venue": "US Patent 4,945,305 (assignee: Ascension Technology Corp.)",
       "url": "https://patents.google.com/patent/US4945305A/en",
       "publisher": "USPTO",
       "source_type": "patent",
-      "keywords": ["Blood", "Ascension", "pulsed-DC", "direct current", "metal immunity", "6-DOF"],
+      "keywords": [
+        "Blood",
+        "Ascension",
+        "pulsed-DC",
+        "direct current",
+        "metal immunity",
+        "6-DOF"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "Foundational pulsed/direct-current magnetic tracking patent (Ascension lineage); measures pose in presence of metals using DC fields. Cf. WO1996002008A1 (non-dipole fields). Patent number/inventor/assignee verified.",
@@ -701,13 +1071,22 @@
       "id": "benhaim1995",
       "type": "patent",
       "title": "System and method for generating three-dimensional location information of a medical probe (US 5,391,199)",
-      "authors": ["Ben-Haim, Shlomo"],
+      "authors": [
+        "Ben-Haim, Shlomo"
+      ],
       "year": 1995,
       "venue": "US Patent 5,391,199",
       "url": "https://patents.google.com/patent/US5391199A/en",
       "publisher": "USPTO",
       "source_type": "patent",
-      "keywords": ["Ben-Haim", "Biosense", "CARTO", "catheter", "sensor coil", "three radiator coils"],
+      "keywords": [
+        "Ben-Haim",
+        "Biosense",
+        "CARTO",
+        "catheter",
+        "sensor coil",
+        "three radiator coils"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Catheter localization: sensor coil signals from three external radiator coils used to compute location — basis of CARTO (with Acker et al. US 5,558,091 and the broader Biosense patent family). Patent number verified.",
@@ -717,7 +1096,15 @@
       "id": "jaeger2017",
       "type": "article",
       "title": "Anser EMT: the first open-source electromagnetic tracking platform for image-guided interventions",
-      "authors": ["Jaeger, Herman Alexander", "Franz, Alfred M.", "O'Donoghue, Kilian", "Seitel, Alexander", "Trauzettel, Fabian", "Maier-Hein, Lena", "Cantillon-Murphy, Pádraig"],
+      "authors": [
+        "Jaeger, Herman Alexander",
+        "Franz, Alfred M.",
+        "O'Donoghue, Kilian",
+        "Seitel, Alexander",
+        "Trauzettel, Fabian",
+        "Maier-Hein, Lena",
+        "Cantillon-Murphy, Pádraig"
+      ],
       "year": 2017,
       "venue": "International Journal of Computer Assisted Radiology and Surgery",
       "volume": "12",
@@ -727,7 +1114,15 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/28357627/",
       "publisher": "Springer",
       "source_type": "journal",
-      "keywords": ["open-source", "FDM", "frequency division", "lock-in", "field generator", "8 coils", "OpenIGTLink"],
+      "keywords": [
+        "open-source",
+        "FDM",
+        "frequency division",
+        "lock-in",
+        "field generator",
+        "8 coils",
+        "OpenIGTLink"
+      ],
       "relevance": 9,
       "confidence": "high",
       "notes": "Open-source FDM EMT: 8 field-generator coils at distinct frequencies, lock-in demodulation; reported 1.14 mm / 0.04 deg accuracy. Key reference for Ch.19 (FDM), Ch.20 (lock-in), Ch.31 (open-source ecosystem). DOI/PMID verified; vol 12(6):1059-1067 to re-confirm.",
@@ -737,7 +1132,17 @@
       "id": "widrow1975",
       "type": "article",
       "title": "Adaptive Noise Cancelling: Principles and Applications",
-      "authors": ["Widrow, Bernard", "Glover, John R.", "McCool, John M.", "Kaunitz, John", "Williams, Charles S.", "Hearn, Robert H.", "Zeidler, James R.", "Dong, Eugene", "Goodlin, Robert C."],
+      "authors": [
+        "Widrow, Bernard",
+        "Glover, John R.",
+        "McCool, John M.",
+        "Kaunitz, John",
+        "Williams, Charles S.",
+        "Hearn, Robert H.",
+        "Zeidler, James R.",
+        "Dong, Eugene",
+        "Goodlin, Robert C."
+      ],
       "year": 1975,
       "venue": "Proceedings of the IEEE",
       "volume": "63",
@@ -747,7 +1152,13 @@
       "url": "https://ieeexplore.ieee.org/document/1451965",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["adaptive filter", "LMS", "noise cancelling", "reference sensor", "interference"],
+      "keywords": [
+        "adaptive filter",
+        "LMS",
+        "noise cancelling",
+        "reference sensor",
+        "interference"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Foundational adaptive noise-cancelling paper (LMS, reference/witness cancellation). Basis for the adaptive-interference and witness-sensor methods of Ch.20/27. DOI 10.1109/PROC.1975.10036 verified.",
@@ -757,13 +1168,21 @@
       "id": "sola2017",
       "type": "article",
       "title": "Quaternion kinematics for the error-state Kalman filter",
-      "authors": ["Solà, Joan"],
+      "authors": [
+        "Solà, Joan"
+      ],
       "year": 2017,
       "venue": "arXiv preprint 1711.02508",
       "url": "https://arxiv.org/abs/1711.02508",
       "publisher": "arXiv",
       "source_type": "journal",
-      "keywords": ["error-state Kalman filter", "quaternion", "attitude", "Lie group", "IMU"],
+      "keywords": [
+        "error-state Kalman filter",
+        "quaternion",
+        "attitude",
+        "Lie group",
+        "IMU"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Definitive treatment of the error-state (multiplicative) Kalman filter for 3-D orientation — the correct way to estimate rotation without over-parameterization. arXiv:1711.02508 verified.",
@@ -773,7 +1192,12 @@
       "id": "arulampalam2002",
       "type": "article",
       "title": "A Tutorial on Particle Filters for Online Nonlinear/Non-Gaussian Bayesian Tracking",
-      "authors": ["Arulampalam, M. Sanjeev", "Maskell, Simon", "Gordon, Neil", "Clapp, Tim"],
+      "authors": [
+        "Arulampalam, M. Sanjeev",
+        "Maskell, Simon",
+        "Gordon, Neil",
+        "Clapp, Tim"
+      ],
       "year": 2002,
       "venue": "IEEE Transactions on Signal Processing",
       "volume": "50",
@@ -783,7 +1207,13 @@
       "url": "https://ieeexplore.ieee.org/document/978374",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["particle filter", "sequential Monte Carlo", "resampling", "non-Gaussian", "importance sampling"],
+      "keywords": [
+        "particle filter",
+        "sequential Monte Carlo",
+        "resampling",
+        "non-Gaussian",
+        "importance sampling"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Canonical particle-filter tutorial (SIS/SIR, degeneracy, resampling, effective sample size). DOI 10.1109/78.978374 verified.",
@@ -793,7 +1223,9 @@
       "id": "hogenauer1981",
       "type": "article",
       "title": "An Economical Class of Digital Filters for Decimation and Interpolation",
-      "authors": ["Hogenauer, Eugene B."],
+      "authors": [
+        "Hogenauer, Eugene B."
+      ],
       "year": 1981,
       "venue": "IEEE Transactions on Acoustics, Speech, and Signal Processing",
       "volume": "29",
@@ -803,7 +1235,13 @@
       "url": "https://ieeexplore.ieee.org/document/1163535",
       "publisher": "IEEE",
       "source_type": "journal",
-      "keywords": ["CIC filter", "decimation", "multiplier-free", "register growth", "FPGA"],
+      "keywords": [
+        "CIC filter",
+        "decimation",
+        "multiplier-free",
+        "register growth",
+        "FPGA"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "The cascaded integrator-comb (CIC) decimation filter — multiplier-free, the standard front-end decimator for Sigma-Delta ADC streams on FPGA (Ch.18/22). DOI 10.1109/TASSP.1981.1163535 verified.",
@@ -813,7 +1251,9 @@
       "id": "volder1959",
       "type": "article",
       "title": "The CORDIC Trigonometric Computing Technique",
-      "authors": ["Volder, Jack E."],
+      "authors": [
+        "Volder, Jack E."
+      ],
       "year": 1959,
       "venue": "IRE Transactions on Electronic Computers",
       "volume": "EC-8",
@@ -823,7 +1263,14 @@
       "url": "https://ieeexplore.ieee.org/document/5222693",
       "publisher": "IRE/IEEE",
       "source_type": "journal",
-      "keywords": ["CORDIC", "rectangular to polar", "shift-add", "magnitude", "phase", "FPGA"],
+      "keywords": [
+        "CORDIC",
+        "rectangular to polar",
+        "shift-add",
+        "magnitude",
+        "phase",
+        "FPGA"
+      ],
       "relevance": 6,
       "confidence": "high",
       "notes": "CORDIC: multiplier-free shift-add computation of magnitude/phase (rectangular->polar), used for the lock-in sqrt(X^2+Y^2)/atan2 on FPGA. DOI verified.",
@@ -833,7 +1280,9 @@
       "id": "huber1964",
       "type": "article",
       "title": "Robust Estimation of a Location Parameter",
-      "authors": ["Huber, Peter J."],
+      "authors": [
+        "Huber, Peter J."
+      ],
       "year": 1964,
       "venue": "The Annals of Mathematical Statistics",
       "volume": "35",
@@ -843,7 +1292,13 @@
       "url": "https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-35/issue-1/Robust-Estimation-of-a-Location-Parameter/10.1214/aoms/1177703732.full",
       "publisher": "Institute of Mathematical Statistics",
       "source_type": "journal",
-      "keywords": ["robust estimation", "M-estimator", "Huber loss", "outliers", "influence function"],
+      "keywords": [
+        "robust estimation",
+        "M-estimator",
+        "Huber loss",
+        "outliers",
+        "influence function"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Introduces the Huber M-estimator / robust loss — the basis for outlier-robust pose solving (IRLS) in Ch.23. DOI 10.1214/aoms/1177703732 verified (Project Euclid: vol 35(1):73-101).",
@@ -853,13 +1308,22 @@
       "id": "groves2013",
       "type": "book",
       "title": "Principles of GNSS, Inertial, and Multisensor Integrated Navigation Systems, 2nd Edition",
-      "authors": ["Groves, Paul D."],
+      "authors": [
+        "Groves, Paul D."
+      ],
       "year": 2013,
       "venue": "Artech House",
       "url": "https://us.artechhouse.com/Principles-of-GNSS-Inertial-and-Multisensor-Integrated-Navigation-Systems-Second-Edition-P1683.aspx",
       "publisher": "Artech House",
       "source_type": "book",
-      "keywords": ["GNSS", "dilution of precision", "DOP", "integrated navigation", "Kalman", "INS"],
+      "keywords": [
+        "GNSS",
+        "dilution of precision",
+        "DOP",
+        "integrated navigation",
+        "Kalman",
+        "INS"
+      ],
       "relevance": 6,
       "confidence": "high",
       "notes": "Standard reference for dilution of precision (DOP) and multisensor (GNSS+INS) integration; cross-domain analogue for EMT conditioning (Ch.24) and fusion (Ch.21). ISBN 978-1-60807-005-3.",
@@ -869,13 +1333,22 @@
       "id": "gum2008",
       "type": "standard",
       "title": "Evaluation of measurement data — Guide to the expression of uncertainty in measurement (GUM)",
-      "authors": ["Joint Committee for Guides in Metrology (JCGM/BIPM)"],
+      "authors": [
+        "Joint Committee for Guides in Metrology (JCGM/BIPM)"
+      ],
       "year": 2008,
       "venue": "JCGM 100:2008 (GUM 1995 with minor corrections)",
       "url": "https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf",
       "publisher": "BIPM / JCGM",
       "source_type": "standard",
-      "keywords": ["uncertainty", "Type A", "Type B", "combined standard uncertainty", "coverage factor", "law of propagation"],
+      "keywords": [
+        "uncertainty",
+        "Type A",
+        "Type B",
+        "combined standard uncertainty",
+        "coverage factor",
+        "law of propagation"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "The international metrology standard for uncertainty budgeting: Type A/B evaluation, law of propagation of uncertainty (eq 25.1), combined and expanded uncertainty (k coverage factor). Authoritative basis for the Ch.25 error budget. JCGM 100:2008.",
@@ -885,13 +1358,21 @@
       "id": "jackson1998",
       "type": "book",
       "title": "Classical Electrodynamics, 3rd Edition",
-      "authors": ["Jackson, John David"],
+      "authors": [
+        "Jackson, John David"
+      ],
       "year": 1998,
       "venue": "John Wiley & Sons",
       "url": "https://www.wiley.com/en-us/Classical+Electrodynamics,+3rd+Edition-p-9780471309321",
       "publisher": "Wiley",
       "source_type": "book",
-      "keywords": ["electrodynamics", "magnetic dipole", "multipole expansion", "near field", "quasistatic"],
+      "keywords": [
+        "electrodynamics",
+        "magnetic dipole",
+        "multipole expansion",
+        "near field",
+        "quasistatic"
+      ],
       "relevance": 8,
       "confidence": "high",
       "notes": "Standard graduate electrodynamics reference (dipole fields, multipole expansion, quasistatics, radiation). ISBN 978-0471309321.",
@@ -901,13 +1382,21 @@
       "id": "griffiths2013",
       "type": "book",
       "title": "Introduction to Electrodynamics, 4th Edition",
-      "authors": ["Griffiths, David J."],
+      "authors": [
+        "Griffiths, David J."
+      ],
       "year": 2013,
       "venue": "Pearson (now Cambridge University Press)",
       "url": "https://www.cambridge.org/highereducation/books/introduction-to-electrodynamics/3AB220820DBB628E5A43D52C4B011ED4",
       "publisher": "Pearson / Cambridge University Press",
       "source_type": "book",
-      "keywords": ["electrodynamics", "magnetostatics", "dipole", "Faraday", "pedagogical"],
+      "keywords": [
+        "electrodynamics",
+        "magnetostatics",
+        "dipole",
+        "Faraday",
+        "pedagogical"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Standard undergraduate electrodynamics reference; clear magnetostatics/dipole/Faraday treatment. ISBN 978-0321856562.",
@@ -917,7 +1406,12 @@
       "id": "gabriel1996",
       "type": "article",
       "title": "The dielectric properties of biological tissues (Parts I–III)",
-      "authors": ["Gabriel, Camelia", "Gabriel, Sami", "Lau, R. W.", "Corthout, E."],
+      "authors": [
+        "Gabriel, Camelia",
+        "Gabriel, Sami",
+        "Lau, R. W.",
+        "Corthout, E."
+      ],
       "year": 1996,
       "venue": "Physics in Medicine and Biology",
       "volume": "41",
@@ -927,7 +1421,14 @@
       "url": "https://iopscience.iop.org/article/10.1088/0031-9155/41/11/002",
       "publisher": "IOP Publishing",
       "source_type": "journal",
-      "keywords": ["tissue", "dielectric", "conductivity", "permittivity", "frequency", "Cole-Cole"],
+      "keywords": [
+        "tissue",
+        "dielectric",
+        "conductivity",
+        "permittivity",
+        "frequency",
+        "Cole-Cole"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Definitive measurements/models of tissue conductivity & permittivity (10 Hz-20 GHz). Backs the EMT tissue-transparency claim (low sigma, mu_r~=1 -> skin depth >> body at EMT frequencies). 3-part series; Part II DOI 10.1088/0031-9155/41/11/002, Part III .../003.",
@@ -937,13 +1438,22 @@
       "id": "grover1946",
       "type": "book",
       "title": "Inductance Calculations: Working Formulas and Tables",
-      "authors": ["Grover, Frederick W."],
+      "authors": [
+        "Grover, Frederick W."
+      ],
       "year": 1946,
       "venue": "Van Nostrand (Dover reprint 2004)",
       "url": "https://store.doverpublications.com/0486495779.html",
       "publisher": "Dover Publications",
       "source_type": "book",
-      "keywords": ["mutual inductance", "self-inductance", "coils", "formulas", "Neumann", "coaxial filaments"],
+      "keywords": [
+        "mutual inductance",
+        "self-inductance",
+        "coils",
+        "formulas",
+        "Neumann",
+        "coaxial filaments"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "The classic practical handbook of self/mutual-inductance formulas and tables for coils (coaxial circular filaments, single-layer solenoids, etc.) — design-from-first-principles reference for Ch.5/9/15. Dover reprint ISBN 978-0486495774.",
@@ -953,13 +1463,22 @@
       "id": "jin2014",
       "type": "book",
       "title": "The Finite Element Method in Electromagnetics, 3rd Edition",
-      "authors": ["Jin, Jian-Ming"],
+      "authors": [
+        "Jin, Jian-Ming"
+      ],
       "year": 2014,
       "venue": "Wiley–IEEE Press",
       "url": "https://www.wiley.com/en-us/The+Finite+Element+Method+in+Electromagnetics,+3rd+Edition-p-9781118571361",
       "publisher": "Wiley–IEEE Press",
       "source_type": "book",
-      "keywords": ["finite element method", "edge elements", "Nedelec", "eddy current", "open boundary", "computational EM"],
+      "keywords": [
+        "finite element method",
+        "edge elements",
+        "Nedelec",
+        "eddy current",
+        "open boundary",
+        "computational EM"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Standard computational-electromagnetics reference (vector/edge elements, magnetostatic & eddy-current formulations, open-boundary treatment) for Ch.7. ISBN 978-1118571361.",
@@ -969,14 +1488,25 @@
       "id": "crowley2023",
       "type": "article",
       "title": "A novel approach to wireless electromagnetic tracking using frequency modulation radio communication",
-      "authors": ["Crowley, Daniel", "Cavaliere, Marco", "Cantillon-Murphy, Pádraig"],
+      "authors": [
+        "Crowley, Daniel",
+        "Cavaliere, Marco",
+        "Cantillon-Murphy, Pádraig"
+      ],
       "year": 2023,
       "venue": "International Journal of Computer Assisted Radiology and Surgery",
       "doi": "10.1007/s11548-023-02981-4",
       "url": "https://pubmed.ncbi.nlm.nih.gov/37386335/",
       "publisher": "Springer",
       "source_type": "journal",
-      "keywords": ["wireless", "FM radio", "sensor link", "synchronization", "Anser", "untethered"],
+      "keywords": [
+        "wireless",
+        "FM radio",
+        "sensor link",
+        "synchronization",
+        "Anser",
+        "untethered"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Wireless EMT: FM-radio transmission of sensor data on the open-source Anser system; 1.61 mm / 0.04 deg vs 1.14 mm wired. Grounds the wireless-sensor / synchronization architecture (Ch.8 §8.6, Ch.10). DOI/PMID verified.",
@@ -986,13 +1516,22 @@
       "id": "schneider2000",
       "type": "patent",
       "title": "Measuring position and orientation using magnetic fields (US 6,073,043)",
-      "authors": ["Schneider, Mark R."],
+      "authors": [
+        "Schneider, Mark R."
+      ],
       "year": 2000,
       "venue": "US Patent 6,073,043 (issued Jun 6, 2000)",
       "url": "https://patents.google.com/patent/US6073043A/en",
       "publisher": "USPTO",
       "source_type": "patent",
-      "keywords": ["dual coil", "6-DOF", "two-coil sensor", "exact field coupling", "catheter", "orientation"],
+      "keywords": [
+        "dual coil",
+        "6-DOF",
+        "two-coil sensor",
+        "exact field coupling",
+        "catheter",
+        "orientation"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "Dual-coil 6-DOF magnetic sensor using exact (non-approximate) field coupling; basis for two-askew-coil catheter sensors (Ch.13 §13.3). Larger inter-axis angle gives better orientation accuracy. Patent number/inventor verified.",
@@ -1002,13 +1541,22 @@
       "id": "mr_capsule",
       "type": "article",
       "title": "A localization method using 3-axis magnetoresistive sensors for tracking of capsule endoscope",
-      "authors": ["(authors to confirm — PMID 17946518)"],
+      "authors": [
+        "(authors to confirm — PMID 17946518)"
+      ],
       "year": 2008,
       "venue": "(venue to confirm)",
       "url": "https://pubmed.ncbi.nlm.nih.gov/17946518/",
       "publisher": "IEEE/PubMed-indexed",
       "source_type": "journal",
-      "keywords": ["magnetoresistive", "sensor array", "capsule endoscope", "tracking", "magnetic marker", "localization"],
+      "keywords": [
+        "magnetoresistive",
+        "sensor array",
+        "capsule endoscope",
+        "tracking",
+        "magnetic marker",
+        "localization"
+      ],
       "relevance": 7,
       "confidence": "med",
       "notes": "Peer-reviewed demonstration of MAGNETORESISTIVE-sensor tracking (vs NDE/biomagnetic): 16 3-axis MR sensors localize a magnetic marker at ~3.3 mm position / ~3 deg orientation, marker 100 mm above the array. Resolves the Ch.14 open question (MR used in a real position-tracking system). PMID/title/metrics verified via index; authors/venue/year to re-confirm (search API was rate-limited).",
@@ -1018,13 +1566,24 @@
       "id": "schreier2017",
       "type": "book",
       "title": "Understanding Delta-Sigma Data Converters, 2nd Edition",
-      "authors": ["Pavan, Shanthi", "Schreier, Richard", "Temes, Gabor C."],
+      "authors": [
+        "Pavan, Shanthi",
+        "Schreier, Richard",
+        "Temes, Gabor C."
+      ],
       "year": 2017,
       "venue": "Wiley–IEEE Press",
       "url": "https://www.wiley.com/en-us/Understanding+Delta-Sigma+Data+Converters,+2nd+Edition-p-9781119258308",
       "publisher": "Wiley–IEEE Press",
       "source_type": "book",
-      "keywords": ["sigma-delta", "noise shaping", "NTF", "oversampling", "MASH", "decimation"],
+      "keywords": [
+        "sigma-delta",
+        "noise shaping",
+        "NTF",
+        "oversampling",
+        "MASH",
+        "decimation"
+      ],
       "relevance": 7,
       "confidence": "high",
       "notes": "The standard Sigma-Delta data-converter reference (noise-shaping NTF, order/OSR SNR, stability, MASH, decimation) for Ch.18. 2nd ed ISBN 9781119258278; 1st ed (2004) ISBN 9780471465850.",
@@ -1034,17 +1593,242 @@
       "id": "polhemus_tech",
       "type": "misc",
       "title": "Our Technology — AC Electromagnetic Tracking",
-      "authors": ["Polhemus"],
+      "authors": [
+        "Polhemus"
+      ],
       "year": 2024,
       "venue": "Polhemus (vendor website)",
       "url": "https://polhemus.com/technology",
       "publisher": "Polhemus",
       "source_type": "vendor",
-      "keywords": ["AC tracking", "6-DOF", "vendor"],
+      "keywords": [
+        "AC tracking",
+        "6-DOF",
+        "vendor"
+      ],
       "relevance": 5,
       "confidence": "med",
       "notes": "Vendor self-description of AC electromagnetic tracking; used only for vendor-attributed claims. Access year approximate; treat as living document.",
       "verified": true
+    },
+    {
+      "id": "jaeger2018",
+      "type": "article",
+      "title": "Distorter Characterisation Using Mutual Inductance in Electromagnetic Tracking",
+      "authors": [
+        "Jaeger, Herman Alexander",
+        "Cantillon-Murphy, Pádraig"
+      ],
+      "year": 2018,
+      "venue": "Sensors",
+      "volume": "18",
+      "issue": "9",
+      "pages": "3059",
+      "doi": "10.3390/s18093059",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6165436/",
+      "publisher": "MDPI",
+      "source_type": "journal",
+      "keywords": [
+        "transmitter-side sensing",
+        "mutual inductance",
+        "distorter characterisation",
+        "reflected coupling",
+        "static distortion",
+        "UCC/Tyndall"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "Transmitter-side distortion sensing: modifies the field-generator array to transmit AND receive, using a mutual-inductance model to estimate a static distorter's location, magnitude and material from the generator side alone - the transmitter-side dual of witness sensing. Same group as Anser (jaeger2017) and cavaliere2023. DOI/PMC (PMC6165436) verified.",
+      "verified": true
+    },
+    {
+      "id": "dumoulin2001",
+      "type": "patent",
+      "title": "Error compensation for device tracking systems employing electromagnetic fields (US 6,201,987)",
+      "authors": [
+        "Dumoulin, Charles L."
+      ],
+      "year": 2001,
+      "venue": "US Patent 6,201,987 (issued 2001)",
+      "url": "https://patents.google.com/patent/US6201987A/en",
+      "publisher": "USPTO",
+      "source_type": "patent",
+      "keywords": [
+        "eddy-current compensation",
+        "transmit-coil waveform pre-emphasis",
+        "exponential time-constant",
+        "generator-side",
+        "GE"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Generator-side eddy-current compensation: modifies the transmit-coil current waveform (ideal current + compensation current defined by exponential amplitude/time-constant terms) to pre-cancel eddy distortion in the tracking volume - a feed-forward 'intelligent generator' approach. Inventor Dumoulin (GE). USPTO record verified; exact issue date to re-confirm.",
+      "verified": true
+    },
+    {
+      "id": "iso5725",
+      "type": "standard",
+      "title": "ISO 5725-1: Accuracy (trueness and precision) of measurement methods and results — Part 1: General principles and definitions",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 1994,
+      "venue": "ISO 5725-1:1994",
+      "url": "https://www.iso.org/standard/11833.html",
+      "publisher": "ISO",
+      "source_type": "standard",
+      "keywords": [
+        "trueness",
+        "precision",
+        "accuracy",
+        "repeatability",
+        "reproducibility",
+        "metrology"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Defines the trueness (closeness to reference/systematic) vs precision (repeatability/reproducibility, random) decomposition of 'accuracy' used in Ch. 33 characterization metrics. Standard reference; clause numbers not cited.",
+      "verified": true
+    },
+    {
+      "id": "tokuda2009",
+      "type": "article",
+      "title": "OpenIGTLink: an open network protocol for image-guided therapy environment",
+      "authors": [
+        "Tokuda, Junichi",
+        "Fischer, Gregory S.",
+        "Papademetris, Xenophon",
+        "Yaniv, Ziv",
+        "Ibanez, Luis",
+        "Cheng, Patrick",
+        "Liu, Haiying",
+        "Blevins, Jack",
+        "Arata, Jumpei",
+        "Golby, Alexandra J.",
+        "Kapur, Tina",
+        "Pieper, Steve",
+        "Burdette, Everette C.",
+        "Fichtinger, Gabor",
+        "Tempany, Clare M.",
+        "Hata, Nobuhiko"
+      ],
+      "year": 2009,
+      "venue": "International Journal of Medical Robotics and Computer Assisted Surgery",
+      "volume": "5",
+      "issue": "4",
+      "pages": "423-434",
+      "doi": "10.1002/rcs.274",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2811069/",
+      "publisher": "Wiley",
+      "source_type": "journal",
+      "keywords": [
+        "OpenIGTLink",
+        "integration",
+        "network protocol",
+        "pose streaming",
+        "IGT",
+        "middleware"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "De-facto open network protocol for image-guided therapy: TRANSFORM/POSITION/STATUS messages streaming tracker pose to navigation (3D Slicer, PLUS, Anser). Core integration reference for Ch.35. DOI/PMID(19621334)/PMC verified."
+    },
+    {
+      "id": "lasso2014",
+      "type": "article",
+      "title": "PLUS: open-source toolkit for ultrasound-guided intervention systems",
+      "authors": [
+        "Lasso, Andras",
+        "Heffter, Tamas",
+        "Rankin, Adam",
+        "Pinter, Csaba",
+        "Ungi, Tamas",
+        "Fichtinger, Gabor"
+      ],
+      "year": 2014,
+      "venue": "IEEE Transactions on Biomedical Engineering",
+      "volume": "61",
+      "issue": "10",
+      "pages": "2527-2537",
+      "doi": "10.1109/TBME.2014.2322864",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4437531/",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "PLUS toolkit",
+        "tracking integration",
+        "calibration",
+        "OpenIGTLink",
+        "middleware"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Open-source toolkit unifying tracking + imaging device interfaces, calibration, and OpenIGTLink streaming - a common integration substrate. Ch.35. DOI/PMID(24833412)/PMC verified."
+    },
+    {
+      "id": "fedorov2012",
+      "type": "article",
+      "title": "3D Slicer as an image computing platform for the Quantitative Imaging Network",
+      "authors": [
+        "Fedorov, Andriy",
+        "Beichel, Reinhard",
+        "Kalpathy-Cramer, Jayashree",
+        "Finet, Julien",
+        "Fillion-Robin, Jean-Christophe",
+        "Pujol, Sonia",
+        "Bauer, Christian",
+        "Jennings, Dominique",
+        "Fennessy, Fiona",
+        "Sonka, Milan",
+        "Buatti, John",
+        "Aylward, Stephen",
+        "Miller, James V.",
+        "Pieper, Steve",
+        "Kikinis, Ron"
+      ],
+      "year": 2012,
+      "venue": "Magnetic Resonance Imaging",
+      "volume": "30",
+      "issue": "9",
+      "pages": "1323-1341",
+      "doi": "10.1016/j.mri.2012.05.001",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3466397/",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "3D Slicer",
+        "navigation platform",
+        "SlicerIGT",
+        "OpenIGTLink",
+        "image computing"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Open-source medical image-computing/navigation platform; with SlicerIGT + OpenIGTLink a common research integration endpoint for trackers. Ch.35. DOI/PMID(22770690) verified."
+    },
+    {
+      "id": "iec62304",
+      "type": "standard",
+      "title": "IEC 62304:2006/AMD1:2015 Medical device software — Software life cycle processes",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2015,
+      "venue": "IEC 62304:2006/AMD1:2015",
+      "url": "https://www.iso.org/standard/38421.html",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "IEC 62304",
+        "software lifecycle",
+        "safety classification A/B/C",
+        "SOUP",
+        "V&V",
+        "medical device software"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "The medical-device software life-cycle standard: planning/requirements/architecture/design/implementation/integration/verification/release, risk-based software safety classes A/B/C, SOUP handling (AMD1:2015 adds legacy-software + risk-based classification). Software peer of IEC 60601 for Ch.35/17/29. Clause numbers not cited."
     }
   ],
   "to_research": [
