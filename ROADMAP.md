@@ -152,6 +152,14 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
       un-calibratable floors; reference-field bench & methods; worked reference-field
       budget; FoM→system mapping; coil-vs-TMR on one bench)
 
+### Part XVII — Software, Integration & Deployment
+- [x] Ch. 35 Software architecture, integration & lifecycle — **DEEPENED** (software
+      stack; pose-engine threading/timestamping/state machine; integration & API
+      layer — OpenIGTLink/PLUS/3D Slicer/IGSTK/ROS, pose+covariance contract, frame
+      handoff; IEC 62304 lifecycle — safety classes A/B/C, SOUP, V&V, cybersecurity;
+      numerical determinism/reproducibility; open-source ecosystem). Cross-refs
+      Parts VII–VIII/Ch.22 for algorithms rather than repeating
+
 > **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
 > figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
