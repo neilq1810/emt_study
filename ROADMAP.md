@@ -178,7 +178,98 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
 > figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
 
-## Deferred simulation & interactive-tool ideas (noted, NOT yet implemented)
+## Gap-closure plan (Definitive-Reference Review)
+
+Derived from the hostile expert-board gap analysis in
+[`GAP-ANALYSIS.md`](GAP-ANALYSIS.md). The book's quantitative spine (Parts II–X)
+is strong; the gaps are **additive**. We work **tier by tier**. Each item lists a
+**proposed placement** (new Part letter, or "expand Ch. X"); final chapter numbers
+are assigned when each is created (as for Ch. 32–37). State: ⬜ todo · 🟡 in progress
+· 🟢 drafted/deepened · ✅ reviewed.
+
+### Tier 1 — BLOCKING (must close before any "definitive" claim)
+The single highest-leverage cluster is the **differential/registration/motion
+pillar** (T1.1–T1.4): clinical EMT is a *differential, registered, motion-gated*
+measurement and the book currently models only absolute generator-frame tracking.
+
+> Proposed **Part XIX — Differential Tracking, Registration & Motion** (T1.1–T1.5, T1.7)
+> and **Part XX — Dependability & Compliance** (T1.8–T1.10).
+
+- [ ] **T1.1** Patient Reference Sensor & Differential Tracking Architecture *(Part XIX)* — common-mode rejection math; reference placement; dropout handling. **[start here]**
+- [ ] **T1.2** Registration: Algorithms (paired-point, surface/ICP, deformable) *(Part XIX)*
+- [ ] **T1.3** Target-Registration-Error Theory (Fitzpatrick FLE/FRE/TRE; FRE⊥TRE; fiducial-config optimization) *(Part XIX)*
+- [ ] **T1.4** Patient-Motion, Respiratory & Cardiac Gating; Motion Models *(Part XIX)*
+- [ ] **T1.5** Distortion from Metal *Inside* the Patient — implants, catheters, pacemaker/ICD EMI *(Part XIX; ties Ch. 6/27)*
+- [ ] **T1.6** Wireless & Passive Tracking: Resonant LC Transponders (Calypso), backscatter, FM *(new chapter; ties Part IV/XIII)*
+- [ ] **T1.7** Coordinate-Frame Management & the System Transform Graph *(Part XIX; ties Ch. 35)*
+- [ ] **T1.8** Reliability Engineering (FMEA, FIT/MTBF, fault trees, single-fault, burn-in) *(Part XX)*
+- [ ] **T1.9** Risk Management (ISO 14971) Applied to EMT *(Part XX; ties Ch. 17/29/35)*
+- [ ] **T1.10** Human Factors & Usability Engineering (IEC 62366) *(Part XX)*
+
+### Tier 2 — needed for "definitive"
+- [ ] **T2.1** Planar/Under-Table Field Generator design & calibration *(expand Ch. 9)*
+- [ ] **T2.2** Multi-Tool / Simultaneous Multi-Catheter Tracking *(new)*
+- [ ] **T2.3** Full 6-DOF Fisher Information & Orientation CRLB *(expand Ch. 24 + 6-DOF sim)*
+- [ ] **T2.4** Nonlinear Observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(expand Ch. 24)*
+- [ ] **T2.5** Production Test & End-of-Line Manufacturing *(new; ties Ch. 15)*
+- [ ] **T2.6** Factory Calibration at Scale, Golden Units, Cal-Transfer & Traceability *(expand Ch. 26)*
+- [ ] **T2.7** Sterilization, Biocompatibility, Encapsulation & Single-Use Sensors *(new; ties Ch. 14/17)*
+- [ ] **T2.8** Catheter/Cable/Connector Reliability & Intermittency *(new; ties T1.8)*
+- [ ] **T2.9** Installation, Site Survey & Per-Room Environmental Characterization *(new; ties Ch. 27/33)*
+- [ ] **T2.10** Service, Field QA, Daily Verification & Drift Procedures *(new; ties Ch. 26.6)*
+- [ ] **T2.11** Post-Market Surveillance, Complaints, Vigilance & Recalls *(Part XX)*
+- [ ] **T2.12** Supply Chain, Component Obsolescence & Second-Sourcing *(new; ties Ch. 36)*
+- [ ] **T2.13** Cost, BOM, Unit Economics & Design-to-Cost *(new)*
+- [ ] **T2.14** Cybersecurity for Networked Trackers (IEC 81001-5-1) *(expand Ch. 35)*
+- [ ] **T2.15** V&V Master Plan; Design Controls (ISO 13485 / 21 CFR 820) *(Part XX)*
+- [ ] **T2.16** Regulatory Pathways in Depth (510(k)/De Novo/PMA; EU MDR/GSPR) *(Part XX; ties Ch. 29)*
+- [ ] **T2.17** Clinical Evaluation, Preclinical (phantom/cadaver/animal) & Study Design *(new; ties Ch. 29/33)*
+- [ ] **T2.18** Deep-Learning Localization & Calibration (end-to-end, PINN, differentiable fields) *(expand Ch. 27/30)*
+- [ ] **T2.19** Magnetic Actuation + Tracking (Stereotaxis, capsule robots) *(expand Ch. 30)*
+- [ ] **T2.20** EM–Optical–Robot–Imaging Multi-Modal Fusion in Depth *(expand Ch. 21)*
+- [ ] **T2.21** Field-Generator Thermal & Power-Electronics Co-Design *(expand Ch. 9/37)*
+- [ ] **T2.22** Tracking-Volume Extension & Multi-Generator Handoff *(new)*
+- [ ] **T2.23** Cross-Modality Time Sync & Clock Domains in Clinical Integration *(expand Ch. 10/35)*
+- [ ] **T2.24** Uncertainty Communication & Navigation-Confidence Display *(new; ties Ch. 24/T1.10)*
+- [ ] **T2.25** EMT in MRI / Hybrid OR / Image-Guided Radiotherapy *(new)*
+- [ ] **T2.26** Pediatric, Bariatric & Deep-Volume Tracking Constraints *(new; ties Ch. 29)*
+- [ ] **T2.27** Standards Landscape & a Proposed Dynamic/Distortion Benchmark *(expand Ch. 33; ties Ch. 30)*
+
+### Tier 3 — completeness
+- [ ] **T3.1** Inverse-Problem Global-Solution Theory (uniqueness, basins, multi-start) *(expand Ch. 23)*
+- [ ] **T3.2** Stochastic/Spatial (GP) Models of Distortion Fields *(expand Ch. 6/27)*
+- [ ] **T3.3** Sensor Microfabrication, MEMS coils, PCB/thin-film, assembly tolerances *(expand Ch. 14)*
+- [ ] **T3.4** AFE Self-Test, Built-In-Test & In-Situ Health Monitoring *(expand Ch. 16/35)*
+- [ ] **T3.5** Data Logging, Black-Box Recording & Forensic Reconstruction *(new; ties Ch. 35)*
+- [ ] **T3.6** IP Strategy & Freedom-to-Operate *(expand Ch. 2)*
+- [ ] **T3.7** Competitive Teardowns & Reverse-Engineering *(expand Ch. 28)*
+- [ ] **T3.8** Procedure-Specific Requirements Catalog (EP/ENB/ENT/IR/spine/robotics) *(expand Ch. 29)*
+- [ ] **T3.9** Training, Credentialing & Learning-Curve Effects *(new)*
+- [ ] **T3.10** Sensor & System Aging, Lifetime & Multi-Year Drift *(expand Ch. 15/26)*
+- [ ] **T3.11** Environmental & Mechanical Qualification (shock/vibration/thermal/home-use) *(new)*
+- [ ] **T3.12** Magnetic Field Safety & Exposure Limits (ICNIRP/IEEE C95.1) *(new; ties Ch. 17)*
+
+### Cross-cutting workstreams (not chapters — run alongside the tiers)
+- [ ] **X1 — Credibility/verification pass.** Retire every self-flagged
+  `(conf: med)`, "to-confirm," and "illustrative" item: verify or remove. Priority:
+  mr_capsule authorship; corporate dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1
+  prefactor; the Ch. 31/33/34/37 illustrative budgets (back with sim or measurement).
+- [ ] **X2 — Mathematics-depth upgrades (Section E)** woven into the owning chapters
+  (6-DOF FIM, nonlinear observability, TRE theory, manifold solve, GP distortion).
+- [ ] **X3 — Simulation/figure backing.** Implement the deferred sims (below) +
+  a 6-DOF CRLB sim; raise figure coverage (Phase 4) beyond the current 8.
+- [ ] **X4 — Consolidation & cross-reference pass (Phase 7).** Integrate Parts
+  XV–XX into the narrative; audit every `Ch. X §Y` and `[@key]`; convert in-chapter
+  "open questions" from a to-do list into resolved text or a single tracked appendix.
+
+### Recommended working sequence
+1. **T1.1 → T1.3 → T1.4** (the differential/registration/motion pillar — the verdict-breaking gap), then **T1.5, T1.7**.
+2. **T1.8 → T1.9 → T1.10** (dependability/compliance) + **T1.6** (wireless transponders).
+3. **X1 credibility pass** (cheap, high-trust-yield) once Tier 1 lands.
+4. Tier 2 by cluster (math T2.3–T2.4; clinical T2.16–T2.17, T2.24–T2.26; industry T2.5–T2.13).
+5. **X4 consolidation/cross-ref**, then Tier 3, then Phases 4–9.
+
+
 
 Captured from working sessions so they are not lost; none of these are built yet.
 
