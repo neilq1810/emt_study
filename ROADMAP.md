@@ -152,6 +152,27 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
 > figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
 
+## Deferred simulation & interactive-tool ideas (noted, NOT yet implemented)
+
+Captured from working sessions so they are not lost; none of these are built yet.
+
+1. **Characterization rig — accuracy map & explorer (Ch. 33).** Phase-5 sim of an
+   accuracy-vs-position map over the working volume; Phase-6 "characterization
+   explorer" tool with a rig-floor calculator (GT ⊕ registration ⊕ thermal vs the
+   DUT spec, the 5–10× rule), tying to the CRLB / working-volume tools.
+2. **Pulsed-DC settling (Ch. 27 §27.6).** Phase-5 sim of the step-vs-AC eddy
+   amplitude for a sphere to pin the eq. 27.1 O(1) prefactor; a "pulsed-DC settling"
+   dashboard slider (wait t_s → suppression S = e^(t_s/τ_e) vs update rate).
+3. **Transmitter-side sensing (Ch. 27 §27.7).** Phase-5 sim of the reflected-
+   impedance signature (eq. 27.2) vs distorter size/distance/material; a toggle in
+   the distortion dashboard to show the transmitter-side observable alongside the
+   receiver-side error.
+4. **Error-budget grounding (Ch. 31 / error-budget dashboard).** Tolerance
+   Monte-Carlo + a measured/simulated distortion-residual map to replace the
+   illustrative deterministic & environmental columns with sim-backed defaults.
+5. **Witness-sensor compensation (Ch. 27).** Interactive demo + Phase-5 sim of
+   residual vs. witness count/placement (pre-existing Ch. 27 open item).
+
 ## Research quality control
 
 **Citation keys.** In-text citations use `[@key]` where `key` matches an `id`
