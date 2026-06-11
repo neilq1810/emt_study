@@ -143,10 +143,14 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
       live dashboards beneath the prose; manuscript documents each)
 
 ### Part XVI — Performance Characterization
-- [x] Ch. 33 Performance characterization & benchmarking — **DEEPENED** (metrics/
-      figures of merit, trueness-vs-precision, cross-volume/cross-pair comparison &
-      eq-8.1 normalization, ground-truth hierarchy, worked rig error budget, rig
-      build considerations, reporting honesty)
+- [x] Ch. 33 Performance characterization & benchmarking (system/pair) — **DEEPENED**
+      (metrics/figures of merit, trueness-vs-precision, cross-volume/cross-pair
+      comparison & eq-8.1 normalization, ground-truth hierarchy, worked rig error
+      budget, rig build considerations, reporting honesty)
+- [x] Ch. 34 Sensor & component characterization — **DEEPENED** (per-class parameter
+      lists coil vs biased; the vendor-data gap; **hysteresis & Barkhausen** as
+      un-calibratable floors; reference-field bench & methods; worked reference-field
+      budget; FoM→system mapping; coil-vs-TMR on one bench)
 
 > **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
