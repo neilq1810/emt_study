@@ -159,6 +159,11 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
       handoff; IEC 62304 lifecycle — safety classes A/B/C, SOUP, V&V, cybersecurity;
       numerical determinism/reproducibility; open-source ecosystem). Cross-refs
       Parts VII–VIII/Ch.22 for algorithms rather than repeating
+- [x] Ch. 36 Compute platform & processor selection — **DEEPENED** (selection
+      drivers; silicon taxonomy FPGA/SoC/SoM/MCU/DSP/GPU/host; **Cortex-M vs R vs A**
+      + AMP; worked stage→silicon mapping & compute budget; RTOS pairing; form-factor/
+      power/thermal vs Ch.17 patient-heating; build-vs-buy/lifecycle). Cross-refs
+      Ch.22 for implementation techniques
 
 > **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
