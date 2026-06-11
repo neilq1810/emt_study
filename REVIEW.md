@@ -115,6 +115,11 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 |---:|-------|-------|-------|
 | 32 | Interactive system-design lab | 🟢 DEEPENED → review | New companion to Ch. 31: four integrated **dashboards embedded live** on the web edition (system-design/link-budget+trilemma, error-budget by class×location, clinical accuracy chain, distortion+compensation). Manuscript documents each so the prose is complete; dedicated Astro route renders the .md + embeds the islands |
 
+### Part XVI — Performance Characterization (new)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 33 | Performance characterization & benchmarking | 🟢 DEEPENED → review | New chapter [user-requested]: characterization vs calibration vs budgeting; **figures of merit** (trueness/precision/resolution per ISO 5725, accuracy maps, dynamic, distortion robustness, drift); why single-number FoMs mislead + **eq-8.1 normalization** to compare designs not sizes; Hummel/Franz/Yaniv protocols; **ground-truth hierarchy** table (phantom/stage/CMM/robot/optical, 5–10× rule); **worked rig error budget** (0.16 mm floor; can't characterize 0.2 mm system → 28%); rig-build considerations (non-magnetic+non-conductive, registration dominates, thermal, sampling, dynamic, pitfalls); reporting honesty contract. +iso5725 cite |
+
 (All chapters now DEEPENED → awaiting user review/verification.)
 
 ## Flagged for upcoming chapter passes

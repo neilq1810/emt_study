@@ -1664,6 +1664,31 @@
       "confidence": "high",
       "notes": "Generator-side eddy-current compensation: modifies the transmit-coil current waveform (ideal current + compensation current defined by exponential amplitude/time-constant terms) to pre-cancel eddy distortion in the tracking volume - a feed-forward 'intelligent generator' approach. Inventor Dumoulin (GE). USPTO record verified; exact issue date to re-confirm.",
       "verified": true
+    },
+    {
+      "id": "iso5725",
+      "type": "standard",
+      "title": "ISO 5725-1: Accuracy (trueness and precision) of measurement methods and results — Part 1: General principles and definitions",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 1994,
+      "venue": "ISO 5725-1:1994",
+      "url": "https://www.iso.org/standard/11833.html",
+      "publisher": "ISO",
+      "source_type": "standard",
+      "keywords": [
+        "trueness",
+        "precision",
+        "accuracy",
+        "repeatability",
+        "reproducibility",
+        "metrology"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Defines the trueness (closeness to reference/systematic) vs precision (repeatability/reproducibility, random) decomposition of 'accuracy' used in Ch. 33 characterization metrics. Standard reference; clause numbers not cited.",
+      "verified": true
     }
   ],
   "to_research": [

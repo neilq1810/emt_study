@@ -142,6 +142,12 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
 - [x] Ch. 32 Interactive system-design lab — **DEEPENED** (web edition embeds four
       live dashboards beneath the prose; manuscript documents each)
 
+### Part XVI — Performance Characterization
+- [x] Ch. 33 Performance characterization & benchmarking — **DEEPENED** (metrics/
+      figures of merit, trueness-vs-precision, cross-volume/cross-pair comparison &
+      eq-8.1 normalization, ground-truth hierarchy, worked rig error budget, rig
+      build considerations, reporting honesty)
+
 > **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
 > figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
