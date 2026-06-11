@@ -83,7 +83,7 @@ Anser/Grover reused). All build clean.
 | Ch | Title | State | Notes |
 |---:|-------|-------|-------|
 | 26 | Sensor/generator/system calibration | 🟢 DEEPENED → review | +sampling density (h⁻³ cost/h² residual), **spherical-harmonic compact field model (Ch.7 tie)**, bias-variance/overfitting (Phase-6 tool), worked recalibration interval (~1.5mm/5°C) (1015→1350 w) |
-| 27 | Distortion compensation | 🟢 DEEPENED → review | +witness-sensor induced-dipole physics & placement (eq 6.4), **unification with Ch.20 adaptive cancellation (Widrow)**, NIS χ² distortion-alarm threshold, compensation reduces ~5-10× not to zero (1091→1446 w) |
+| 27 | Distortion compensation | 🟢 DEEPENED → review | +witness-sensor induced-dipole physics & placement (eq 6.4), **unification with Ch.20 adaptive cancellation (Widrow)**, NIS χ² distortion-alarm threshold, compensation reduces ~5-10× not to zero (1091→1446 w). **+§27.6 pulsed-DC source-level rejection, quantified** (suppression S=e^(t_s/τ_e), eq 27.1; worked table 20/150/1100× vs rate; Amdahl asymmetry — 0 dB on ferromagnetic; stacks-with-compensation table; budget-transfer cost) [user-requested] |
 
 **✅ Part X (Ch. 26–27) fully deepened.** Build clean.
 

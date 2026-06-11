@@ -14,7 +14,9 @@ problem is **distortion from objects that move** — an advancing steel instrume
 a repositioned ultrasound probe, a swinging fluoroscopy C-arm. This chapter
 covers the compensation toolbox, from static maps through **witness-sensor** and
 **fusion-based** methods to **machine learning**, and is honest about what each
-can and cannot do.
+can and cannot do. It also quantifies the one **architectural** lever that rejects
+conductive distortion *at the source* rather than correcting it after — pulsed-DC
+excitation (§27.6) — and shows how it stacks with the rest.
 
 ---
 
@@ -137,7 +139,97 @@ ML is a powerful *complement* to physics-based models and witness/fusion methods
 not a replacement — and in a medical device it must be wrapped in detection,
 uncertainty, and validation, never trusted blindly.
 
-## 27.6 The limits of compensation
+## 27.6 Architectural rejection at the source: pulsed-DC, quantified
+
+Every method above *corrects* distortion after it has entered the measurement.
+There is a complementary move that *rejects* it at the source before it is ever
+sampled: **pulsed-DC excitation** (Ch. 6 §6.4). It belongs in this chapter because,
+for the *conductive* mechanism, it is the single most powerful distortion lever
+available — and unlike the post-hoc methods, its improvement is **exponential and
+designable**.
+
+**The mechanism, as a suppression factor.** A pulsed-DC axis energizes with a
+current *step* and holds it. The step induces a transient eddy current in any
+nearby conductor that then decays with the slowest diffusion mode (Ch. 6 eq. 6.3),
+$\tau_e=\mu_0\sigma a^2/\pi^2$. If the system **waits** a settling time $t_s$ after
+the step and samples only then, the residual eddy distortion relative to its
+initial (step-instant) magnitude — which is comparable to the full steady-state
+eddy distortion an *AC* system of similar drive would suffer — is suppressed by
+
+$$
+S \;=\; \frac{\text{conductive distortion, AC}}{\text{conductive distortion, pulsed-DC at }t_s}\;\approx\; e^{\,t_s/\tau_e}.
+\tag{27.1}
+$$
+
+The exponent $t_s/\tau_e$ is a pure design choice; the $O(1)$ prefactor relating
+the step transient's initial amplitude to the AC steady-state amplitude is
+geometry/frequency-dependent and is folded into the residual calibration below.
+Equation (27.1) is the quantitative content of the qualitative claim that
+"pulsed-DC is immune to conductive distortion" — it is not immune, it is
+*exponentially suppressed*, and you choose the suppression by choosing how long
+to wait.
+
+**Worked numbers (the dominant 5 cm copper distorter of Ch. 6, $\tau_e=18$ ms).**
+Take a representative **1.5 %** raw AC eddy-distortion fraction (the order of the
+raw distortion in the Ch. 25 §25.7 worked budget) and read off the pulsed-DC
+residual and its rate cost:
+
+| Wait $t_s$ | Suppression $S=e^{t_s/\tau_e}$ | 1.5 % AC eddy → residual | Update rate $\sim 1/t_s$ |
+|---|---:|---:|---:|
+| $3\tau_e$ = 54 ms | ~20× | 0.075 % | ~18 Hz |
+| $5\tau_e$ = 90 ms | ~150× | 0.010 % | ~11 Hz |
+| $7\tau_e$ = 126 ms | ~1100× | 0.0014 % | ~8 Hz |
+
+A same-conductor **AC** system at 10 kHz pays the full 1.5 % but updates at
+hundreds of Hz with no settling wait. So pulsed-DC **trades ~10× update rate for
+~150× conductive-distortion suppression** — an *exponential* rejection bought with
+a *linear* rate cost. That trade is extraordinarily favorable whenever conductive
+clutter dominates and the target is slow (the rate ceiling is set by the largest,
+most conductive object, Ch. 6 eq. 6.3, since $\tau_e\propto a^2\sigma$).
+
+**The asymmetry — Amdahl's law for distortion.** Pulsed-DC does **nothing** for
+ferromagnetic distortion: the induced *permeable* dipole (Ch. 6 eq. 6.2) has no
+$\omega$-dependence and no transient to decay, so its suppression is **0 dB** at
+any $t_s$. The bottom line is therefore set by whatever pulsed-DC cannot touch.
+If an environmental budget is, say, **0.5 % conductive ⊕ 0.5 % ferromagnetic**
+(RSS 0.71 %), then $5\tau_e$ pulsed-DC crushes the conductive term to ~0.003 % but
+leaves the 0.5 % ferromagnetic untouched — total **0.50 %**, an overall
+improvement of only **1.4×** despite the **150×** on the conductive part. Pulsed-DC
+pays off *only in proportion to the conductive share* of the budget; quote its
+benefit against the *total* environmental term, never against the conductive part
+alone.
+
+**How it stacks with the compensation toolbox.** Pulsed-DC and the §27.2–27.5
+methods are complementary along every axis:
+
+| | Pulsed-DC rejection | Post-hoc compensation (§27.2–27.5) |
+|---|---|---|
+| Acts | at the source, before sampling | after, on the measurement |
+| Mechanism covered | conductive only | conductive **and** ferromagnetic |
+| Improvement | exponential in $t_s/\tau_e$ (100–1000×) | ~5–10× (§27.7) |
+| Cost | update rate (settling) + a DC-capable sensor | model/witness noise, latency, data |
+| Sensor | fluxgate/MR magnetometer (Ch. 14.3) | any, incl. AC pickup coil |
+
+The strong design **layers them**: pulsed-DC to exponentially crush the conductive
+term, then witness/fusion/ML (§27.3–27.5) on the *ferromagnetic* residual, with
+detect-and-flag (§27.4) underneath. Moreover the residual eddy bias sampled at
+$t_s$ is **deterministic and repeatable** (a fixed conductor gives a fixed
+$e^{-t_s/\tau_e}$ offset), so it is itself **calibratable** by the static map of
+§27.2 — pulsed-DC and field-mapping compound.
+
+**The cost is a budget transfer, not a free lunch.** Pulsed-DC moves error *out*
+of the environmental column but *into* two others: the settling wait re-enters the
+**latency/rate** budget (Ch. 12), and the DC-capable sensor it requires
+(fluxgate/MR, no $\omega$-gain, Ch. 14.3) carries 1/f/bias-reference noise that
+re-enters the **stochastic** budget (Ch. 25 §25.2). The honest comparison is
+therefore at the level of the *whole* error-and-rate budget (Ch. 31 §31.6), not
+the distortion term in isolation: pulsed-DC wins decisively in a conductive-clutter
+environment with a slow target, and loses to a high-$\omega$ AC coil where
+ferromagnetics dominate or high update rate is essential. (conf: high — eq. (27.1)
+follows directly from the eq. 6.3 decay; absolute prefactor and the 1.5 % figure
+are illustrative/geometry-dependent.)
+
+## 27.7 The limits of compensation
 
 No method fully escapes physics:
 
@@ -156,9 +248,11 @@ No method fully escapes physics:
   budgeted like any other term.
 
 > **Engineering takeaway.** The distortion hierarchy is: **keep distorters out**
-> (protocol) → **map static distortion** (Ch. 26) → **observe it** (witness
-> sensors) → **detect and down-weight it** (fusion/gating) → **model it** (physics
-> + ML, with validation and uncertainty). Real systems layer several of these.
+> (protocol) → **reject at the source** (pulsed-DC, exponentially, for the
+> *conductive* part, §27.6) → **map static distortion** (Ch. 26) → **observe it**
+> (witness sensors) → **detect and down-weight it** (fusion/gating) → **model it**
+> (physics + ML, with validation and uncertainty). Real systems layer several of
+> these — pulsed-DC and post-hoc compensation are complementary, not competing.
 > The one thing never to do is silently trust a distorted measurement.
 
 ---
