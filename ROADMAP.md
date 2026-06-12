@@ -197,7 +197,7 @@ measurement and the book currently models only absolute generator-frame tracking
 
 - [x] **T1.1** Patient Reference Sensor & Differential Tracking Architecture *(Part XIX, Ch. 38)* — 🟢 DEEPENED: differential transform eq. 38.1; common-mode rejection proof eq. 38.2; differential covariance eq. 38.3 (reference adds noise; gradiometer distortion cancellation); reference placement; global silent failure modes; amended clinical accuracy chain. +borgert2006 cite. **[done]**
 - [ ] **T1.2** Registration: Algorithms (paired-point, surface/ICP, deformable) *(Part XIX)*
-- [ ] **T1.3** Target-Registration-Error Theory (Fitzpatrick FLE/FRE/TRE; FRE⊥TRE; fiducial-config optimization) *(Part XIX)*
+- [x] **T1.3** Target-Registration-Error Theory (Fitzpatrick FLE/FRE/TRE; FRE⊥TRE; fiducial-config optimization) *(Part XIX, Ch. 39)* — 🟢 DEEPENED: FLE/FRE/TRE distinction; TRE formula eq. 39.1; ⟨FRE²⟩=FLE²(1−2/N); the FRE⊥TRE result; anisotropic/spatially-varying EMT FLE; superficial-fiducial/deep-target geometry; worked ENB TRE 2.3 mm vs FRE 1.06 mm. +fitzpatrick1998/2009. **[done]**
 - [ ] **T1.4** Patient-Motion, Respiratory & Cardiac Gating; Motion Models *(Part XIX)*
 - [ ] **T1.5** Distortion from Metal *Inside* the Patient — implants, catheters, pacemaker/ICD EMI *(Part XIX; ties Ch. 6/27)*
 - [ ] **T1.6** Wireless & Passive Tracking: Resonant LC Transponders (Calypso), backscatter, FM *(new chapter; ties Part IV/XIII)*
