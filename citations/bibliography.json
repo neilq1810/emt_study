@@ -2141,6 +2141,55 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "In-vivo study of low-frequency-field EMI with pacemakers/ICDs: fields can be mis-sensed as cardiac activity (inhibition/inappropriate therapy), depending on field strength and (uni- vs bipolar) sensing configuration. The relevant immunity question for an EMT generator near the chest (Ch. 42 active-implant EMI). DOI/PMID(23125355) verified."
+    },
+    {
+      "id": "iec60812",
+      "type": "standard",
+      "title": "IEC 60812:2018 Failure modes and effects analysis (FMEA and FMECA)",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2018,
+      "venue": "IEC 60812:2018 (Ed. 3.0)",
+      "url": "https://webstore.iec.ch/publication/26359",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "FMEA",
+        "FMECA",
+        "failure mode",
+        "severity-occurrence-detection",
+        "RPN",
+        "criticality",
+        "dependability"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Standard method for FMEA/FMECA: plan, perform, document failure modes/effects, severity x occurrence x detection (RPN) and criticality. Ch. 44 reliability. Ed.3 (2018) replaces 2006; title/edition verified."
+    },
+    {
+      "id": "iec61508",
+      "type": "standard",
+      "title": "IEC 61508 Functional safety of electrical/electronic/programmable electronic safety-related systems",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2010,
+      "venue": "IEC 61508:2010 (Ed. 2.0, 7 parts)",
+      "url": "https://webstore.iec.ch/publication/5515",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "functional safety",
+        "SIL",
+        "diagnostic coverage",
+        "safe-failure fraction",
+        "fault tolerance",
+        "E/E/PE"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Functional-safety framework: risk-based safety lifecycle, SIL 1-4, diagnostic coverage (DC) and safe-failure fraction (SFF) - the basis for the detection-coverage reliability metric central to Ch. 44 (silent partial failures). Ed.2 (2010); title/edition verified."
     }
   ],
   "to_research": [
