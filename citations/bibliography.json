@@ -2190,6 +2190,32 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "Functional-safety framework: risk-based safety lifecycle, SIL 1-4, diagnostic coverage (DC) and safe-failure fraction (SFF) - the basis for the detection-coverage reliability metric central to Ch. 44 (silent partial failures). Ed.2 (2010); title/edition verified."
+    },
+    {
+      "id": "iso14971",
+      "type": "standard",
+      "title": "ISO 14971:2019 Medical devices — Application of risk management to medical devices",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2019,
+      "venue": "ISO 14971:2019 (Ed. 3)",
+      "url": "https://www.iso.org/standard/72704.html",
+      "publisher": "ISO",
+      "source_type": "standard",
+      "keywords": [
+        "risk management",
+        "hazard",
+        "hazardous situation",
+        "harm",
+        "risk control",
+        "residual risk",
+        "benefit-risk",
+        "risk management file"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "The medical-device risk-management standard: risk = probability x severity of HARM (to patient/user); plan->hazard ID->estimation->evaluation->control(hierarchy: inherently-safe design > protective measures > information for safety)->residual/benefit-risk->production & post-production feedback. The integrating spine for Ch. 45 (consumes FMEA/FTA Ch.44, error budget Ch.25, essential performance Ch.17). Ed.3 (2019) replaces 2007; title/edition standard/verified."
     }
   ],
   "to_research": [
