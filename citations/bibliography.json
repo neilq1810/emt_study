@@ -2216,6 +2216,58 @@
       "relevance": 9,
       "confidence": "high",
       "notes": "The medical-device risk-management standard: risk = probability x severity of HARM (to patient/user); plan->hazard ID->estimation->evaluation->control(hierarchy: inherently-safe design > protective measures > information for safety)->residual/benefit-risk->production & post-production feedback. The integrating spine for Ch. 45 (consumes FMEA/FTA Ch.44, error budget Ch.25, essential performance Ch.17). Ed.3 (2019) replaces 2007; title/edition standard/verified."
+    },
+    {
+      "id": "iec62366",
+      "type": "standard",
+      "title": "IEC 62366-1:2015 Medical devices — Part 1: Application of usability engineering to medical devices",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2015,
+      "venue": "IEC 62366-1:2015 (+AMD1:2020)",
+      "url": "https://www.iso.org/standard/63179.html",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "usability engineering",
+        "use error",
+        "use specification",
+        "critical task",
+        "formative/summative evaluation",
+        "user interface"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "Usability-engineering process: use specification -> UI characteristics related to safety -> known/foreseeable use errors & hazard-related use scenarios -> formative then summative (validation with representative users) evaluation; critical tasks (use error -> harm) must be validated. Feeds the ISO 14971 risk file (Ch.45). Primary reference for Ch. 46. AMD1:2020; title/edition verified."
+    },
+    {
+      "id": "parasuraman1997",
+      "type": "article",
+      "title": "Humans and Automation: Use, Misuse, Disuse, Abuse",
+      "authors": [
+        "Parasuraman, Raja",
+        "Riley, Victor"
+      ],
+      "year": 1997,
+      "venue": "Human Factors",
+      "volume": "39",
+      "issue": "2",
+      "pages": "230-253",
+      "doi": "10.1518/001872097778543886",
+      "url": "https://journals.sagepub.com/doi/10.1518/001872097778543886",
+      "publisher": "SAGE / HFES",
+      "source_type": "journal",
+      "keywords": [
+        "automation bias",
+        "trust in automation",
+        "misuse/over-reliance",
+        "disuse/under-reliance",
+        "trust calibration"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Foundational human-automation paper: misuse (over-reliance/automation bias), disuse (under-reliance), and trust calibration. The basis for the over-trust/under-trust analysis in Ch. 46 (the displayed-FRE false-confidence trap, uncertainty display). DOI verified."
     }
   ],
   "to_research": [
