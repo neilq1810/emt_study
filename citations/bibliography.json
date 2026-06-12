@@ -2268,6 +2268,81 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "Foundational human-automation paper: misuse (over-reliance/automation bias), disuse (under-reliance), and trust calibration. The basis for the over-trust/under-trust analysis in Ch. 46 (the displayed-FRE false-confidence trap, uncertainty display). DOI verified."
+    },
+    {
+      "id": "balter2005",
+      "type": "article",
+      "title": "Accuracy of a wireless localization system for radiotherapy",
+      "authors": [
+        "Balter, James M.",
+        "Wright, J. Nelson",
+        "Newell, Laurence J.",
+        "Friemel, Barry",
+        "Dimmer, Steven",
+        "Cheng, Yvette",
+        "Wong, John",
+        "Vertatschitsch, Edward",
+        "Mate, Timothy P."
+      ],
+      "year": 2005,
+      "venue": "International Journal of Radiation Oncology, Biology, Physics",
+      "volume": "61",
+      "issue": "3",
+      "pages": "933-937",
+      "doi": "10.1016/j.ijrobp.2004.11.009",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15708277/",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "Calypso",
+        "wireless transponder",
+        "resonant AC",
+        "radiotherapy localization",
+        "accuracy",
+        "beacon"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Foundational Calypso accuracy paper: wireless AC resonant transponder ('Beacon') localization for radiotherapy; sub-mm/~mm localization accuracy. Primary reference for the passive-transponder modality (Ch. 47). DOI/PMID(15708277) verified."
+    },
+    {
+      "id": "willoughby2006",
+      "type": "article",
+      "title": "Target localization and real-time tracking using the Calypso 4D localization system in patients with localized prostate cancer",
+      "authors": [
+        "Willoughby, Twyla R.",
+        "Kupelian, Patrick A.",
+        "Pouliot, Jean",
+        "Shinohara, Katsuto",
+        "Aubin, Michele",
+        "Roach, Mack",
+        "Skrumeda, Lloyd L.",
+        "Balter, James M.",
+        "Litzenberg, Dale W.",
+        "Hadley, Scott W.",
+        "Wei, John T.",
+        "Sandler, Howard M."
+      ],
+      "year": 2006,
+      "venue": "International Journal of Radiation Oncology, Biology, Physics",
+      "volume": "65",
+      "issue": "2",
+      "pages": "528-534",
+      "doi": "10.1016/j.ijrobp.2006.01.050",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16690435/",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "Calypso",
+        "real-time tracking",
+        "implanted transponders",
+        "prostate motion",
+        "10 Hz",
+        "radiotherapy"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "Clinical real-time tracking with three implanted Calypso transponders at 10 Hz; localization within ~2 mm vs radiographic. Clinical evidence for the passive-transponder modality (Ch. 47). PMID(16690435) verified; vol 65(2):528-534."
     }
   ],
   "to_research": [
