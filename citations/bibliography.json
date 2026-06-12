@@ -1829,6 +1829,393 @@
       "relevance": 8,
       "confidence": "high",
       "notes": "The medical-device software life-cycle standard: planning/requirements/architecture/design/implementation/integration/verification/release, risk-based software safety classes A/B/C, SOUP handling (AMD1:2015 adds legacy-software + risk-based classification). Software peer of IEC 60601 for Ch.35/17/29. Clause numbers not cited."
+    },
+    {
+      "id": "borgert2006",
+      "type": "article",
+      "title": "Respiratory motion compensation with tracked internal and external sensors during CT-guided procedures",
+      "authors": [
+        "Borgert, Jörn",
+        "Krüger, Sascha",
+        "Timinger, Holger",
+        "Krücker, Jochen",
+        "Glossop, Neil",
+        "Durrani, Aradhana",
+        "Viswanathan, Anand",
+        "Wood, Bradford J."
+      ],
+      "year": 2006,
+      "venue": "Computer Aided Surgery",
+      "volume": "11",
+      "issue": "3",
+      "pages": "119-125",
+      "doi": "10.3109/10929080600740871",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16829505/",
+      "publisher": "Taylor & Francis",
+      "source_type": "journal",
+      "keywords": [
+        "patient reference sensor",
+        "respiratory motion compensation",
+        "external/internal sensor",
+        "motion model",
+        "differential tracking",
+        "CT-guided"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Sternum (external) + needle (internal) EM sensors; affine respiratory motion model; correlation up to 94% in steady respiration; internal-sensor residual motion reduced ~4x by compensation. Primary reference for the patient-reference/differential-tracking and motion chapters (T1.1/T1.4). DOI/PMID(16829505) verified; first author Borgert (Philips)."
+    },
+    {
+      "id": "fitzpatrick1998",
+      "type": "article",
+      "title": "Predicting error in rigid-body point-based registration",
+      "authors": [
+        "Fitzpatrick, J. Michael",
+        "West, Jay B.",
+        "Maurer, Calvin R., Jr."
+      ],
+      "year": 1998,
+      "venue": "IEEE Transactions on Medical Imaging",
+      "volume": "17",
+      "issue": "5",
+      "pages": "694-702",
+      "doi": "10.1109/42.736021",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9874293/",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "TRE",
+        "FRE",
+        "FLE",
+        "point-based registration",
+        "fiducial configuration",
+        "target registration error"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Foundational TRE theory: <TRE^2(r)> ~ (FLE^2/N)[1 + (1/3)sum_k d_k^2/f_k^2] (target distance from each principal axis k over fiducial RMS spread f_k); <FRE^2>~FLE^2(1-2/N). Primary reference for Ch. 39. DOI/PMID(9874293) verified."
+    },
+    {
+      "id": "fitzpatrick2009",
+      "type": "conference",
+      "title": "Fiducial registration error and target registration error are uncorrelated",
+      "authors": [
+        "Fitzpatrick, J. Michael"
+      ],
+      "year": 2009,
+      "venue": "Proc. SPIE 7261, Medical Imaging 2009: Visualization, Image-Guided Procedures, and Modeling",
+      "pages": "726102",
+      "doi": "10.1117/12.813601",
+      "url": "https://www.spiedigitallibrary.org/conference-proceedings-of-spie/7261/726102/",
+      "publisher": "SPIE",
+      "source_type": "conference",
+      "keywords": [
+        "FRE",
+        "TRE",
+        "uncorrelated",
+        "registration quality",
+        "goodness of fit"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Proves to first order that FRE (goodness of fiducial fit) is statistically independent of TRE: a small displayed FRE gives NO information about registration accuracy at the target. The key clinical mis-use to correct. Ch. 39. DOI verified."
+    },
+    {
+      "id": "arun1987",
+      "type": "article",
+      "title": "Least-Squares Fitting of Two 3-D Point Sets",
+      "authors": [
+        "Arun, K. Somani",
+        "Huang, Thomas S.",
+        "Blostein, Steven D."
+      ],
+      "year": 1987,
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "volume": "PAMI-9",
+      "issue": "5",
+      "pages": "698-700",
+      "doi": "10.1109/TPAMI.1987.4767965",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21869429/",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "paired-point registration",
+        "SVD",
+        "Procrustes",
+        "rigid transform",
+        "cross-covariance"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "SVD closed-form least-squares rigid registration from a 3x3 cross-covariance of demeaned point sets. Primary algorithm reference (Ch. 40). DOI verified."
+    },
+    {
+      "id": "horn1987",
+      "type": "article",
+      "title": "Closed-form solution of absolute orientation using unit quaternions",
+      "authors": [
+        "Horn, Berthold K. P."
+      ],
+      "year": 1987,
+      "venue": "Journal of the Optical Society of America A",
+      "volume": "4",
+      "issue": "4",
+      "pages": "629-642",
+      "doi": "10.1364/JOSAA.4.000629",
+      "url": "https://opg.optica.org/josaa/abstract.cfm?uri=josaa-4-4-629",
+      "publisher": "Optica",
+      "source_type": "journal",
+      "keywords": [
+        "absolute orientation",
+        "unit quaternion",
+        "closed-form",
+        "rotation",
+        "scale"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Quaternion closed-form for rotation/translation/scale via the eigenvector of a 4x4 matrix from the cross-covariance; numerically robust, no reflection ambiguity. Ch. 40. DOI verified."
+    },
+    {
+      "id": "umeyama1991",
+      "type": "article",
+      "title": "Least-Squares Estimation of Transformation Parameters Between Two Point Patterns",
+      "authors": [
+        "Umeyama, Shinji"
+      ],
+      "year": 1991,
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "volume": "13",
+      "issue": "4",
+      "pages": "376-380",
+      "doi": "10.1109/34.88573",
+      "url": "https://ui.adsabs.harvard.edu/abs/1991ITPAM..13..376U/abstract",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "Procrustes",
+        "reflection fix",
+        "SVD",
+        "similarity transform",
+        "Kabsch-Umeyama"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Fixes the SVD solution to always yield a proper rotation (det correction diag(1,1,det(VU^T))) and adds scale; the standard robust paired-point solution. Ch. 40. DOI verified."
+    },
+    {
+      "id": "beslmckay1992",
+      "type": "article",
+      "title": "A Method for Registration of 3-D Shapes",
+      "authors": [
+        "Besl, Paul J.",
+        "McKay, Neil D."
+      ],
+      "year": 1992,
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "volume": "14",
+      "issue": "2",
+      "pages": "239-256",
+      "doi": "10.1109/34.121791",
+      "url": "https://ieeexplore.ieee.org/document/121791",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "ICP",
+        "iterative closest point",
+        "surface registration",
+        "point cloud",
+        "no correspondence"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "The Iterative Closest Point algorithm: alternate closest-point correspondence and paired-point rigid solve; monotone convergence to a local minimum; needs initialization. Ch. 40 (surface registration). DOI verified."
+    },
+    {
+      "id": "mcclelland2013",
+      "type": "article",
+      "title": "Respiratory motion models: a review",
+      "authors": [
+        "McClelland, Jamie R.",
+        "Hawkes, David J.",
+        "Schaeffter, Tobias",
+        "King, Andrew P."
+      ],
+      "year": 2013,
+      "venue": "Medical Image Analysis",
+      "volume": "17",
+      "issue": "1",
+      "pages": "19-42",
+      "doi": "10.1016/j.media.2012.09.005",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23123330/",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "respiratory motion model",
+        "surrogate",
+        "correspondence model",
+        "hysteresis",
+        "4D imaging",
+        "motion compensation"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Definitive review of respiratory motion models: surrogate signals, correspondence (surrogate->internal-motion) models, hysteresis, inter-cycle variability, fitting/validation. Primary reference for Ch. 41 motion modeling. DOI/PMID(23123330) verified."
+    },
+    {
+      "id": "keall2006",
+      "type": "article",
+      "title": "The management of respiratory motion in radiation oncology report of AAPM Task Group 76",
+      "authors": [
+        "Keall, Paul J.",
+        "Mageras, Gig S.",
+        "Balter, James M.",
+        "Emery, Richard S.",
+        "Forster, Kenneth M.",
+        "Jiang, Steve B.",
+        "Kapatoes, Jeffrey M.",
+        "Low, Daniel A.",
+        "Murphy, Martin J.",
+        "Murray, Brian R.",
+        "Ramsey, Chester R.",
+        "Van Herk, Marcel B.",
+        "Vedam, S. Sastry",
+        "Wong, John W.",
+        "Yorke, Ellen"
+      ],
+      "year": 2006,
+      "venue": "Medical Physics",
+      "volume": "33",
+      "issue": "10",
+      "pages": "3874-3900",
+      "doi": "10.1118/1.2349696",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17089851/",
+      "publisher": "AAPM/Wiley",
+      "source_type": "journal",
+      "keywords": [
+        "respiratory gating",
+        "motion management",
+        "duty cycle",
+        "end-expiration",
+        "4D-CT",
+        "breath-hold",
+        "AAPM TG76"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "Authoritative task-group report on respiratory-motion management: gating (phase/amplitude), breath-hold, end-expiration reproducibility, duty cycle, 4D-CT, residual-motion budgeting. Primary reference for Ch. 41 gating. DOI/PMID(17089851) verified."
+    },
+    {
+      "id": "tiikkaja2013",
+      "type": "article",
+      "title": "Electromagnetic interference with cardiac pacemakers and implantable cardioverter-defibrillators from low-frequency electromagnetic fields in vivo",
+      "authors": [
+        "Tiikkaja, Maria",
+        "Aro, Aapo L.",
+        "Alanko, Tommi",
+        "Lindholm, Harri",
+        "Sistonen, Heli",
+        "Hartikainen, Juha E. K.",
+        "Toivonen, Lauri",
+        "Juutilainen, Jukka",
+        "Hietanen, Maila"
+      ],
+      "year": 2013,
+      "venue": "EP Europace",
+      "volume": "15",
+      "issue": "3",
+      "pages": "388-394",
+      "doi": "10.1093/europace/eus345",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23125355/",
+      "publisher": "Oxford University Press",
+      "source_type": "journal",
+      "keywords": [
+        "EMI",
+        "pacemaker",
+        "ICD",
+        "CIED",
+        "low-frequency field",
+        "oversensing",
+        "in vivo"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "In-vivo study of low-frequency-field EMI with pacemakers/ICDs: fields can be mis-sensed as cardiac activity (inhibition/inappropriate therapy), depending on field strength and (uni- vs bipolar) sensing configuration. The relevant immunity question for an EMT generator near the chest (Ch. 42 active-implant EMI). DOI/PMID(23125355) verified."
+    },
+    {
+      "id": "iec60812",
+      "type": "standard",
+      "title": "IEC 60812:2018 Failure modes and effects analysis (FMEA and FMECA)",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2018,
+      "venue": "IEC 60812:2018 (Ed. 3.0)",
+      "url": "https://webstore.iec.ch/publication/26359",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "FMEA",
+        "FMECA",
+        "failure mode",
+        "severity-occurrence-detection",
+        "RPN",
+        "criticality",
+        "dependability"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Standard method for FMEA/FMECA: plan, perform, document failure modes/effects, severity x occurrence x detection (RPN) and criticality. Ch. 44 reliability. Ed.3 (2018) replaces 2006; title/edition verified."
+    },
+    {
+      "id": "iec61508",
+      "type": "standard",
+      "title": "IEC 61508 Functional safety of electrical/electronic/programmable electronic safety-related systems",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2010,
+      "venue": "IEC 61508:2010 (Ed. 2.0, 7 parts)",
+      "url": "https://webstore.iec.ch/publication/5515",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "functional safety",
+        "SIL",
+        "diagnostic coverage",
+        "safe-failure fraction",
+        "fault tolerance",
+        "E/E/PE"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Functional-safety framework: risk-based safety lifecycle, SIL 1-4, diagnostic coverage (DC) and safe-failure fraction (SFF) - the basis for the detection-coverage reliability metric central to Ch. 44 (silent partial failures). Ed.2 (2010); title/edition verified."
+    },
+    {
+      "id": "iso14971",
+      "type": "standard",
+      "title": "ISO 14971:2019 Medical devices — Application of risk management to medical devices",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2019,
+      "venue": "ISO 14971:2019 (Ed. 3)",
+      "url": "https://www.iso.org/standard/72704.html",
+      "publisher": "ISO",
+      "source_type": "standard",
+      "keywords": [
+        "risk management",
+        "hazard",
+        "hazardous situation",
+        "harm",
+        "risk control",
+        "residual risk",
+        "benefit-risk",
+        "risk management file"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "The medical-device risk-management standard: risk = probability x severity of HARM (to patient/user); plan->hazard ID->estimation->evaluation->control(hierarchy: inherently-safe design > protective measures > information for safety)->residual/benefit-risk->production & post-production feedback. The integrating spine for Ch. 45 (consumes FMEA/FTA Ch.44, error budget Ch.25, essential performance Ch.17). Ed.3 (2019) replaces 2007; title/edition standard/verified."
     }
   ],
   "to_research": [
