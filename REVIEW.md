@@ -132,6 +132,11 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 |---:|-------|-------|-------|
 | 37 | Power architecture & design | 🟢 DEEPENED → review | New chapter [user-requested]: EMT-specific power (not generic). **System power tree** (domain+noise partition; keep drive/digital switching out of AFE rails & field band). **Generator drive** (the decisive case): inductive/resonant high-Q load; **spectral purity = field error** (δI/I→δB/B; harmonics→FDM crosstalk; phase noise→lock-in smear); ratiometric rescue & its limit (current-sense bounds it); class-AB vs class-D spur trade; stability/ringing into reactive load; bounded transient (pulsed-DC settling); current-mode drive; I²R thermal. **Low-noise AFE rails** (worked PSRR/LDO: 80 dB→13 µV/√Hz vs 1.3 nV coil floor; partitioned returns; spur-frequency placement). **Remote biased-sensor bias/reference tree** (reference-stability=measurement-stability, ~1e-4; Type-CF isolation/leakage; ratiometric+chopper; Kelvin sense; tip self-heating vs Ch.17). Cross-refs Ch.9/16/17/25; reuses horowitz_hill/iec60601_1 |
 
+### Part XIX — Differential Tracking, Registration & Motion (new; Tier-1 gap-closure)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 38 | Patient reference sensor & differential tracking | 🟢 DEEPENED → review | **Tier-1 blocking gap (C1) closed.** Clinical EMT is differential not absolute: tool reported relative to a patient-mounted reference. **Differential transform** eq.38.1 (generator frame cancels); **common-mode rejection proof** eq.38.2 (rigid patient/table motion + common generator drift cancel exactly; limits: field-nonuniformity & non-rigid residual); **differential covariance** eq.38.3 (reference ADDS noise, worked 0.5⊕0.5→0.71mm, but rejects cm motion; **gradiometer** distortion cancellation when tool-ref close vs L_D); reference placement 4-way trade (rigidity/correlation/clean-field/workflow; skin-motion artifact); **global silent failure modes** (slip/dropout/reference-in-distortion → redundancy + flag-and-hold); amended Ch.29 clinical accuracy chain. +borgert2006 (sternal+needle sensors, 94% corr, 4× residual reduction) |
+
 (All chapters now DEEPENED → awaiting user review/verification.)
 
 ## Flagged for upcoming chapter passes

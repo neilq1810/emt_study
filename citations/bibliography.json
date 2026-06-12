@@ -1829,6 +1829,41 @@
       "relevance": 8,
       "confidence": "high",
       "notes": "The medical-device software life-cycle standard: planning/requirements/architecture/design/implementation/integration/verification/release, risk-based software safety classes A/B/C, SOUP handling (AMD1:2015 adds legacy-software + risk-based classification). Software peer of IEC 60601 for Ch.35/17/29. Clause numbers not cited."
+    },
+    {
+      "id": "borgert2006",
+      "type": "article",
+      "title": "Respiratory motion compensation with tracked internal and external sensors during CT-guided procedures",
+      "authors": [
+        "Borgert, Jörn",
+        "Krüger, Sascha",
+        "Timinger, Holger",
+        "Krücker, Jochen",
+        "Glossop, Neil",
+        "Durrani, Aradhana",
+        "Viswanathan, Anand",
+        "Wood, Bradford J."
+      ],
+      "year": 2006,
+      "venue": "Computer Aided Surgery",
+      "volume": "11",
+      "issue": "3",
+      "pages": "119-125",
+      "doi": "10.3109/10929080600740871",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16829505/",
+      "publisher": "Taylor & Francis",
+      "source_type": "journal",
+      "keywords": [
+        "patient reference sensor",
+        "respiratory motion compensation",
+        "external/internal sensor",
+        "motion model",
+        "differential tracking",
+        "CT-guided"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Sternum (external) + needle (internal) EM sensors; affine respiratory motion model; correlation up to 94% in steady respiration; internal-sensor residual motion reduced ~4x by compensation. Primary reference for the patient-reference/differential-tracking and motion chapters (T1.1/T1.4). DOI/PMID(16829505) verified; first author Borgert (Philips)."
     }
   ],
   "to_research": [

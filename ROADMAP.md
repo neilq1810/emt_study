@@ -195,7 +195,7 @@ measurement and the book currently models only absolute generator-frame tracking
 > Proposed **Part XIX — Differential Tracking, Registration & Motion** (T1.1–T1.5, T1.7)
 > and **Part XX — Dependability & Compliance** (T1.8–T1.10).
 
-- [ ] **T1.1** Patient Reference Sensor & Differential Tracking Architecture *(Part XIX)* — common-mode rejection math; reference placement; dropout handling. **[start here]**
+- [x] **T1.1** Patient Reference Sensor & Differential Tracking Architecture *(Part XIX, Ch. 38)* — 🟢 DEEPENED: differential transform eq. 38.1; common-mode rejection proof eq. 38.2; differential covariance eq. 38.3 (reference adds noise; gradiometer distortion cancellation); reference placement; global silent failure modes; amended clinical accuracy chain. +borgert2006 cite. **[done]**
 - [ ] **T1.2** Registration: Algorithms (paired-point, surface/ICP, deformable) *(Part XIX)*
 - [ ] **T1.3** Target-Registration-Error Theory (Fitzpatrick FLE/FRE/TRE; FRE⊥TRE; fiducial-config optimization) *(Part XIX)*
 - [ ] **T1.4** Patient-Motion, Respiratory & Cardiac Gating; Motion Models *(Part XIX)*
