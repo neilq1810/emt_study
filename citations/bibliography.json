@@ -1919,6 +1919,117 @@
       "relevance": 9,
       "confidence": "high",
       "notes": "Proves to first order that FRE (goodness of fiducial fit) is statistically independent of TRE: a small displayed FRE gives NO information about registration accuracy at the target. The key clinical mis-use to correct. Ch. 39. DOI verified."
+    },
+    {
+      "id": "arun1987",
+      "type": "article",
+      "title": "Least-Squares Fitting of Two 3-D Point Sets",
+      "authors": [
+        "Arun, K. Somani",
+        "Huang, Thomas S.",
+        "Blostein, Steven D."
+      ],
+      "year": 1987,
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "volume": "PAMI-9",
+      "issue": "5",
+      "pages": "698-700",
+      "doi": "10.1109/TPAMI.1987.4767965",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21869429/",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "paired-point registration",
+        "SVD",
+        "Procrustes",
+        "rigid transform",
+        "cross-covariance"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "SVD closed-form least-squares rigid registration from a 3x3 cross-covariance of demeaned point sets. Primary algorithm reference (Ch. 40). DOI verified."
+    },
+    {
+      "id": "horn1987",
+      "type": "article",
+      "title": "Closed-form solution of absolute orientation using unit quaternions",
+      "authors": [
+        "Horn, Berthold K. P."
+      ],
+      "year": 1987,
+      "venue": "Journal of the Optical Society of America A",
+      "volume": "4",
+      "issue": "4",
+      "pages": "629-642",
+      "doi": "10.1364/JOSAA.4.000629",
+      "url": "https://opg.optica.org/josaa/abstract.cfm?uri=josaa-4-4-629",
+      "publisher": "Optica",
+      "source_type": "journal",
+      "keywords": [
+        "absolute orientation",
+        "unit quaternion",
+        "closed-form",
+        "rotation",
+        "scale"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Quaternion closed-form for rotation/translation/scale via the eigenvector of a 4x4 matrix from the cross-covariance; numerically robust, no reflection ambiguity. Ch. 40. DOI verified."
+    },
+    {
+      "id": "umeyama1991",
+      "type": "article",
+      "title": "Least-Squares Estimation of Transformation Parameters Between Two Point Patterns",
+      "authors": [
+        "Umeyama, Shinji"
+      ],
+      "year": 1991,
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "volume": "13",
+      "issue": "4",
+      "pages": "376-380",
+      "doi": "10.1109/34.88573",
+      "url": "https://ui.adsabs.harvard.edu/abs/1991ITPAM..13..376U/abstract",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "Procrustes",
+        "reflection fix",
+        "SVD",
+        "similarity transform",
+        "Kabsch-Umeyama"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Fixes the SVD solution to always yield a proper rotation (det correction diag(1,1,det(VU^T))) and adds scale; the standard robust paired-point solution. Ch. 40. DOI verified."
+    },
+    {
+      "id": "beslmckay1992",
+      "type": "article",
+      "title": "A Method for Registration of 3-D Shapes",
+      "authors": [
+        "Besl, Paul J.",
+        "McKay, Neil D."
+      ],
+      "year": 1992,
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+      "volume": "14",
+      "issue": "2",
+      "pages": "239-256",
+      "doi": "10.1109/34.121791",
+      "url": "https://ieeexplore.ieee.org/document/121791",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "ICP",
+        "iterative closest point",
+        "surface registration",
+        "point cloud",
+        "no correspondence"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "The Iterative Closest Point algorithm: alternate closest-point correspondence and paired-point rigid solve; monotone convergence to a local minimum; needs initialization. Ch. 40 (surface registration). DOI verified."
     }
   ],
   "to_research": [
