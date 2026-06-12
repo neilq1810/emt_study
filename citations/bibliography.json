@@ -2104,6 +2104,43 @@
       "relevance": 8,
       "confidence": "high",
       "notes": "Authoritative task-group report on respiratory-motion management: gating (phase/amplitude), breath-hold, end-expiration reproducibility, duty cycle, 4D-CT, residual-motion budgeting. Primary reference for Ch. 41 gating. DOI/PMID(17089851) verified."
+    },
+    {
+      "id": "tiikkaja2013",
+      "type": "article",
+      "title": "Electromagnetic interference with cardiac pacemakers and implantable cardioverter-defibrillators from low-frequency electromagnetic fields in vivo",
+      "authors": [
+        "Tiikkaja, Maria",
+        "Aro, Aapo L.",
+        "Alanko, Tommi",
+        "Lindholm, Harri",
+        "Sistonen, Heli",
+        "Hartikainen, Juha E. K.",
+        "Toivonen, Lauri",
+        "Juutilainen, Jukka",
+        "Hietanen, Maila"
+      ],
+      "year": 2013,
+      "venue": "EP Europace",
+      "volume": "15",
+      "issue": "3",
+      "pages": "388-394",
+      "doi": "10.1093/europace/eus345",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23125355/",
+      "publisher": "Oxford University Press",
+      "source_type": "journal",
+      "keywords": [
+        "EMI",
+        "pacemaker",
+        "ICD",
+        "CIED",
+        "low-frequency field",
+        "oversensing",
+        "in vivo"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "In-vivo study of low-frequency-field EMI with pacemakers/ICDs: fields can be mis-sensed as cardiac activity (inhibition/inappropriate therapy), depending on field strength and (uni- vs bipolar) sensing configuration. The relevant immunity question for an EMT generator near the chest (Ch. 42 active-implant EMI). DOI/PMID(23125355) verified."
     }
   ],
   "to_research": [
