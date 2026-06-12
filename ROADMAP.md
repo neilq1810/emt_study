@@ -255,10 +255,16 @@ measurement and the book currently models only absolute generator-frame tracking
 - [ ] **T3.12** Magnetic Field Safety & Exposure Limits (ICNIRP/IEEE C95.1) *(new; ties Ch. 17)*
 
 ### Cross-cutting workstreams (not chapters — run alongside the tiers)
-- [ ] **X1 — Credibility/verification pass.** Retire every self-flagged
-  `(conf: med)`, "to-confirm," and "illustrative" item: verify or remove. Priority:
-  mr_capsule authorship; corporate dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1
-  prefactor; the Ch. 31/33/34/37 illustrative budgets (back with sim or measurement).
+- 🟡 **X1 — Credibility/verification pass.** *In progress.* Built a runnable
+  verifier (`scripts/verify_manuscript.py`): checks citation integrity, figure/data
+  reference existence, chapter cross-ref range, placeholder scan, and a curated
+  **sim↔prose number contract** — currently **PASS** (83/83 citations resolve, 0
+  broken, 0 dangling refs, 0 placeholders, 7/7 sim numbers in sync). Re-confirmed
+  via web: **mr_capsule** (Wang/Meng/Hu, *EMBS'06* pp. 2522–2525, PMID 17946518 —
+  **year corrected 2008→2006**) and **birkfellner1998** (Med Phys 25(11):2242–2248,
+  DOI 10.1118/1.598425, PMID 9829253; 9-author list corrected). Remaining: corporate
+  dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1 prefactor; the Ch. 31/33/34/37
+  illustrative budgets (back with sim or measurement); §33.5 metrology vendor specs.
 - [ ] **X2 — Mathematics-depth upgrades (Section E)** woven into the owning chapters
   (6-DOF FIM, nonlinear observability, TRE theory, manifold solve, GP distortion).
 - [ ] **X3 — Simulation/figure backing.** Implement the deferred sims (below) +

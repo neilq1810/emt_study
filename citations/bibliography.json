@@ -135,6 +135,10 @@
         "Birkfellner, Wolfgang",
         "Watzinger, Franz",
         "Wanschitz, Felix",
+        "Enislidis, Georg",
+        "Kollmann, Christian",
+        "Rafolt, Dietmar",
+        "Nowotny, Robert",
         "Ewers, Rolf",
         "Bergmann, Helmar"
       ],
@@ -156,8 +160,9 @@
       ],
       "relevance": 8,
       "confidence": "high",
-      "notes": "Early systematic characterization of field distortion in magnetic digitizers. DOI/pages to re-confirm against Wiley record; citation widely reported as Med Phys 25(11):2242-2248.",
-      "verified": true
+      "notes": "Early systematic characterization of field distortion in magnetic digitizers (Polhemus Isotrak II, Ascension Bird); 3.2-6.4 mm OR-condition errors. VERIFIED: Med Phys 25(11):2242-2248 (1998), DOI 10.1118/1.598425, PMID 9829253; full 9-author list confirmed (web, 2026-06).",
+      "verified": true,
+      "pmid": "9829253"
     },
     {
       "id": "kindratenko2000",
@@ -1539,14 +1544,16 @@
     },
     {
       "id": "mr_capsule",
-      "type": "article",
+      "type": "paper-conference",
       "title": "A localization method using 3-axis magnetoresistive sensors for tracking of capsule endoscope",
       "authors": [
-        "(authors to confirm — PMID 17946518)"
+        "Wang, Xiaona",
+        "Meng, Max Q.-H.",
+        "Hu, Chao"
       ],
-      "year": 2008,
-      "venue": "(venue to confirm)",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/17946518/",
+      "year": 2006,
+      "venue": "Proceedings of the 28th Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBS)",
+      "url": "https://ieeexplore.ieee.org/document/4462308/",
       "publisher": "IEEE/PubMed-indexed",
       "source_type": "journal",
       "keywords": [
@@ -1558,9 +1565,11 @@
         "localization"
       ],
       "relevance": 7,
-      "confidence": "med",
-      "notes": "Peer-reviewed demonstration of MAGNETORESISTIVE-sensor tracking (vs NDE/biomagnetic): 16 3-axis MR sensors localize a magnetic marker at ~3.3 mm position / ~3 deg orientation, marker 100 mm above the array. Resolves the Ch.14 open question (MR used in a real position-tracking system). PMID/title/metrics verified via index; authors/venue/year to re-confirm (search API was rate-limited).",
-      "verified": true
+      "confidence": "high",
+      "notes": "Peer-reviewed demonstration of MAGNETORESISTIVE-sensor tracking: 16 3-axis MR sensors localize a magnetic marker at ~3.3 mm position / ~3 deg orientation, marker 100 mm above the array (Levenberg-Marquardt on a dipole model). Resolves the Ch.14 open question (MR in a real position-tracking system). VERIFIED: EMBS'06 (New York), pp. 2522-2525, PMID 17946518, IEEE Xplore 4462308 (web, 2026-06). NB: year corrected 2008->2006.",
+      "verified": true,
+      "pages": "2522-2525",
+      "pmid": "17946518"
     },
     {
       "id": "schreier2017",

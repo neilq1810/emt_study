@@ -246,8 +246,9 @@ derivation; absolute coefficients are geometry-dependent and best taken from FEA
   with the eddy-decay time constant (eq. 6.3) and the distortion-vs-distance
   scaling (eq. 6.4) [@jackson1998]. Remaining: full Bessel-function $\alpha(\omega)$
   and a validating Phase-5 eddy-current sim against (6.4).
-- Re-confirm Birkfellner (1998) DOI/pages against the Wiley *Medical Physics*
-  record (currently 25(11):2242–2248, DOI 10.1118/1.598425 — **to verify**).
+- ✅ **Resolved:** Birkfellner (1998) verified against the Wiley *Medical
+  Physics* record — 25(11):2242–2248, DOI 10.1118/1.598425, PMID 9829253
+  (full 9-author list corrected in the bibliography).
 - ✅ **Partially resolved (Phase 5):** skin-depth vs frequency for Cu/Al/SS
   computed (`figures/ch06_skin_depth.png`, `data/skin_depth.json`) and a
   pulsed-DC settling illustration added (`ch06_pulsed_dc_settling.png`).
