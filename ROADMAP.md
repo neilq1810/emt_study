@@ -209,8 +209,8 @@ measurement and the book currently models only absolute generator-frame tracking
 ### Tier 2 — needed for "definitive" (consolidated 27→~18; clustered, sequenced A→F)
 
 **Cluster A — Mathematical rigor** *(do first; retires the estimation-reviewer objection)*
-- [ ] **T2.3** Full 6-DOF Fisher Information & Orientation CRLB *(expand Ch. 24 + 6-DOF sim)*
-- [ ] **T2.4** Nonlinear observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(expand Ch. 24)*
+- [x] **T2.3** Full 6-DOF Fisher Information & Orientation CRLB *(Ch. 24 §24.6 + sim10)* — 🟢 DONE: 6×6 FIM blocked; Schur-complement marginalized position CRLB eq. 24.4; **coupling penalty a pose-invariant ≈2.95×** (var ≈8.7×; reported position CRLB IS the honest marginalized value); **orientation CRLB ∝ z³** (0.01–0.15°). +sim10/crlb_6dof.json
+- [x] **T2.4** Nonlinear observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(Ch. 24 §24.7)* — 🟢 DONE: Hermann–Krener rank condition / Lie derivatives; local-vs-global; **hemisphere/parity ambiguity** (r̂→−r̂ invariance → global un-identifiability) + resolutions (asymmetric generator/half-space prior/continuity/fusion). +hermann1977
 
 **Cluster B — Clinical & safety completers**
 - [ ] **T2.24** Uncertainty communication & navigation-confidence display *(new; ties Ch. 24/T1.10)*

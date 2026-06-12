@@ -2343,6 +2343,34 @@
       "relevance": 8,
       "confidence": "high",
       "notes": "Clinical real-time tracking with three implanted Calypso transponders at 10 Hz; localization within ~2 mm vs radiographic. Clinical evidence for the passive-transponder modality (Ch. 47). PMID(16690435) verified; vol 65(2):528-534."
+    },
+    {
+      "id": "hermann1977",
+      "type": "article",
+      "title": "Nonlinear controllability and observability",
+      "authors": [
+        "Hermann, Robert",
+        "Krener, Arthur J."
+      ],
+      "year": 1977,
+      "venue": "IEEE Transactions on Automatic Control",
+      "volume": "22",
+      "issue": "5",
+      "pages": "728-740",
+      "doi": "10.1109/TAC.1977.1101601",
+      "url": "https://ieeexplore.ieee.org/document/1101601",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "nonlinear observability",
+        "observability rank condition",
+        "Lie derivatives",
+        "local weak observability",
+        "controllability"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Foundational nonlinear observability: the observability rank condition via Lie derivatives of the output; local weak observability. Distinguishes local (linear, J-rank) from global observability in Ch. 24.7. DOI verified; IEEE TAC 22(5):728-740."
     }
   ],
   "to_research": [
