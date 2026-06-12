@@ -200,40 +200,45 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T1.3** Target-Registration-Error Theory (Fitzpatrick FLE/FRE/TRE; FRE⊥TRE; fiducial-config optimization) *(Part XIX, Ch. 39)* — 🟢 DEEPENED: FLE/FRE/TRE distinction; TRE formula eq. 39.1; ⟨FRE²⟩=FLE²(1−2/N); the FRE⊥TRE result; anisotropic/spatially-varying EMT FLE; superficial-fiducial/deep-target geometry; worked ENB TRE 2.3 mm vs FRE 1.06 mm. +fitzpatrick1998/2009. **[done]**
 - [x] **T1.4** Patient-Motion, Respiratory & Cardiac Gating; Motion Models *(Part XIX, Ch. 41)* — 🟢 DEEPENED: target-relative (not bulk) motion the reference can't reach; respiratory vs cardiac; 3 strategies (gate / surrogate-correspondence model / 4D); hysteresis + drift failure modes; ECG-gating in EP; prediction under latency; worked budget 20 mm → 2–5 mm (σ_motion was the missing dominant term). +borgert2006/mcclelland2013/keall2006. **[done]**
 - [x] **T1.5** Distortion from Metal *Inside* the Patient — implants, catheters, pacemaker/ICD EMI *(Part XIX, Ch. 42; ties Ch. 6/27)* — 🟢 DEEPENED: doctrine breakdown (eq. 42.1 ~(a/d_s)³ at d_s→0); taxonomy (passive implants / instrument self-metal / other tools / active devices); static-vs-moving + registered-static-distortion; **catheter-braid self-distortion** (order-unity → engineer not compensate); **active implants bidirectional** (ICD can ~20% distortion + EMT→CIED EMI per IEC 60601-1-2); CT metal-artifact irony (hurts FLE too); detect-bound-flag-primary hierarchy; spine-screw self-defeating case. +tiikkaja2013. **[done]**
-- [ ] **T1.6** Wireless & Passive Tracking: Resonant LC Transponders (Calypso), backscatter, FM *(new chapter; ties Part IV/XIII)*
+- [x] **T1.6** Wireless & Passive Tracking: Resonant LC Transponders (Calypso), backscatter, FM *(Part XXI, Ch. 47)* — 🟢 DEEPENED: passive LC transponder principle (excite→ring-down→re-radiate, dipole inverse from external array via reciprocity); resonant freq/time-selective clutter rejection (ring-down τ~Q/πf₀ vs eddy settling); Calypso (3 beacons, 10 Hz, ~1–2 mm, radiotherapy); active-vs-passive-vs-backscatter; physics-already-here (Ch.5/6/19/23/27.7); reliability win (no wire/connector, Ch.44) vs 1/d⁶ signal cost & position-only. +balter2005/willoughby2006. **[done — TIER 1 COMPLETE]**
 - [x] **T1.7** Coordinate-Frame Management & the System Transform Graph *(Part XIX, Ch. 43; ties Ch. 35)* — 🟢 DEEPENED: the frame zoo (G/T/tip/R/I/Rob/D); transform graph + path composition eq. 43.1 (tip→T→G→R→I); per-edge source/rate/uncertainty table; convention traps (Hamilton/JPL, LPS/RAS, active/passive, time); single-owned-source + tf pattern; SE(3) uncertainty propagation = the clinical accuracy chain (lever-arm amplification, weakest-edge dominance), worked 2.3 mm path; silent-global frame failure modes (flag-never-fabricate). Reuses sola2017/groves2013. **[done — Part XIX complete]**
 - [x] **T1.8** Reliability Engineering (FMEA, FIT/MTBF, fault trees, single-fault, burn-in) *(Part XX, Ch. 44)* — 🟢 DEEPENED: EMT failure landscape (connectors/cables #1, fine coil, generator); bathtub/FIT/MTBF; FMEA/FMECA (IEC 60812) + FTA + single-fault (IEC 60601-1); **the silent-partial-failure reframing → detection coverage** eq. 44.1 λ(1−DC) (IEC 61508 DC/SFF; detect-and-flag = the reliability strategy); life-testing/burn-in; availability/maintainability via self-health. +iec60812/iec61508. **[done]**
 - [x] **T1.9** Risk Management (ISO 14971) Applied to EMT *(Part XX, Ch. 45; ties Ch. 17/29/35/44)* — 🟢 DEEPENED: harm-based risk (hazard→hazardous-situation→harm sequences); EMT hazard table (undetected pose error = master hazard); control hierarchy (inherently-safe > protective > labeling-last, "can't warn your way out"); **detection coverage = highest-leverage control** (breaks the silent harm-sequence link); benefit-risk + the radiation dividend; the RMF as integrating spine; worked ENB >3mm hazard. +iso14971. **[done]**
-- [ ] **T1.10** Human Factors & Usability Engineering (IEC 62366) *(Part XX)*
+- [x] **T1.10** Human Factors & Usability Engineering (IEC 62366) *(Part XX, Ch. 46)* — 🟢 DEEPENED: human-in-the-loop (correct pose can still harm via use error); EMT use-error table (automation bias, mode confusion, accepted mis-registration, missed dropout, alarm fatigue, setup, workaround); **trust calibration** (Parasuraman misuse/disuse; over-trust→wrong-site, under-trust→fluoro/radiation); **display uncertainty not false precision** (error ellipsoid/TRE; detect-and-flag works only if the human perceives it); IEC 62366 process + summative validation; use error = design defect. +iec62366/parasuraman1997. **[done — Part XX complete]**
 
-### Tier 2 — needed for "definitive"
-- [ ] **T2.1** Planar/Under-Table Field Generator design & calibration *(expand Ch. 9)*
-- [ ] **T2.2** Multi-Tool / Simultaneous Multi-Catheter Tracking *(new)*
-- [ ] **T2.3** Full 6-DOF Fisher Information & Orientation CRLB *(expand Ch. 24 + 6-DOF sim)*
-- [ ] **T2.4** Nonlinear Observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(expand Ch. 24)*
-- [ ] **T2.5** Production Test & End-of-Line Manufacturing *(new; ties Ch. 15)*
-- [ ] **T2.6** Factory Calibration at Scale, Golden Units, Cal-Transfer & Traceability *(expand Ch. 26)*
-- [ ] **T2.7** Sterilization, Biocompatibility, Encapsulation & Single-Use Sensors *(new; ties Ch. 14/17)*
-- [ ] **T2.8** Catheter/Cable/Connector Reliability & Intermittency *(new; ties T1.8)*
-- [ ] **T2.9** Installation, Site Survey & Per-Room Environmental Characterization *(new; ties Ch. 27/33)*
-- [ ] **T2.10** Service, Field QA, Daily Verification & Drift Procedures *(new; ties Ch. 26.6)*
-- [ ] **T2.11** Post-Market Surveillance, Complaints, Vigilance & Recalls *(Part XX)*
-- [ ] **T2.12** Supply Chain, Component Obsolescence & Second-Sourcing *(new; ties Ch. 36)*
-- [ ] **T2.13** Cost, BOM, Unit Economics & Design-to-Cost *(new)*
-- [ ] **T2.14** Cybersecurity for Networked Trackers (IEC 81001-5-1) *(expand Ch. 35)*
-- [ ] **T2.15** V&V Master Plan; Design Controls (ISO 13485 / 21 CFR 820) *(Part XX)*
-- [ ] **T2.16** Regulatory Pathways in Depth (510(k)/De Novo/PMA; EU MDR/GSPR) *(Part XX; ties Ch. 29)*
-- [ ] **T2.17** Clinical Evaluation, Preclinical (phantom/cadaver/animal) & Study Design *(new; ties Ch. 29/33)*
-- [ ] **T2.18** Deep-Learning Localization & Calibration (end-to-end, PINN, differentiable fields) *(expand Ch. 27/30)*
-- [ ] **T2.19** Magnetic Actuation + Tracking (Stereotaxis, capsule robots) *(expand Ch. 30)*
-- [ ] **T2.20** EM–Optical–Robot–Imaging Multi-Modal Fusion in Depth *(expand Ch. 21)*
-- [ ] **T2.21** Field-Generator Thermal & Power-Electronics Co-Design *(expand Ch. 9/37)*
-- [ ] **T2.22** Tracking-Volume Extension & Multi-Generator Handoff *(new)*
-- [ ] **T2.23** Cross-Modality Time Sync & Clock Domains in Clinical Integration *(expand Ch. 10/35)*
-- [ ] **T2.24** Uncertainty Communication & Navigation-Confidence Display *(new; ties Ch. 24/T1.10)*
-- [ ] **T2.25** EMT in MRI / Hybrid OR / Image-Guided Radiotherapy *(new)*
-- [ ] **T2.26** Pediatric, Bariatric & Deep-Volume Tracking Constraints *(new; ties Ch. 29)*
-- [ ] **T2.27** Standards Landscape & a Proposed Dynamic/Distortion Benchmark *(expand Ch. 33; ties Ch. 30)*
+### Tier 2 — needed for "definitive" (consolidated 27→~18; clustered, sequenced A→F)
+
+**Cluster A — Mathematical rigor** *(do first; retires the estimation-reviewer objection)*
+- [x] **T2.3** Full 6-DOF Fisher Information & Orientation CRLB *(Ch. 24 §24.6 + sim10)* — 🟢 DONE: 6×6 FIM blocked; Schur-complement marginalized position CRLB eq. 24.4; **coupling penalty a pose-invariant ≈2.95×** (var ≈8.7×; reported position CRLB IS the honest marginalized value); **orientation CRLB ∝ z³** (0.01–0.15°). +sim10/crlb_6dof.json
+- [x] **T2.4** Nonlinear observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(Ch. 24 §24.7)* — 🟢 DONE: Hermann–Krener rank condition / Lie derivatives; local-vs-global; **hemisphere/parity ambiguity** (r̂→−r̂ invariance → global un-identifiability) + resolutions (asymmetric generator/half-space prior/continuity/fusion). +hermann1977
+
+**Cluster B — Clinical & safety completers**
+- [ ] **T2.24** Uncertainty communication & navigation-confidence display *(new; ties Ch. 24/T1.10)*
+- [ ] **T2.16+T2.15** Regulatory pathways & quality systems (510(k)/De Novo/PMA; EU MDR/GSPR; V&V; ISO 13485 / 21 CFR 820) *(merged; Part XX; ties Ch. 29)*
+- [ ] **T2.17** Clinical evaluation, preclinical (phantom/cadaver/animal) & study design *(new; ties Ch. 29/33)*
+- [ ] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(new)*
+- [ ] **T2.25** EMT in MRI / hybrid OR / image-guided radiotherapy *(new)*
+- [ ] **T2.26** Pediatric, bariatric & deep-volume constraints *(new; ties Ch. 29)*
+
+**Cluster C — Industry/operations (consolidated 9→3)**
+- [ ] **T2.C1** Manufacturing & Production (production test/end-of-line + factory cal at scale/golden-units/cal-transfer + cost/BOM/design-to-cost) *(was T2.5+T2.6+T2.13)*
+- [ ] **T2.C2** Mechanical & Sensor Durability (sterilization/biocompat/encapsulation/single-use + connector/cable reliability & intermittency — the #1 field failure) *(was T2.7+T2.8)*
+- [ ] **T2.C3** Deployment & Lifecycle Operations (install/site-survey/per-room characterization + service/field-QA/drift + post-market surveillance/vigilance/recalls + supply-chain/obsolescence) *(was T2.9+T2.10+T2.11+T2.12)*
+
+**Cluster D — Compliance expansions**
+- [ ] **T2.14** Cybersecurity for networked trackers (IEC 81001-5-1) *(expand Ch. 35)*
+- [ ] **T2.27** Standards landscape & a proposed dynamic/distortion benchmark *(expand Ch. 33; ties Ch. 30)*
+
+**Cluster E — Engineering-depth expansions** *(cheap; fold into parents)*
+- [ ] **T2.1** Planar/under-table field generator design & calibration *(expand Ch. 9)*
+- [ ] **T2.21** Field-generator thermal & power-electronics co-design *(expand Ch. 9/37)*
+- [ ] **T2.23** Cross-modality time sync & clock domains *(expand Ch. 10/35)*
+- [ ] **T2.20** EM–optical–robot–imaging multi-modal fusion in depth *(expand Ch. 21)*
+- [ ] **T2.22** Tracking-volume extension & multi-generator handoff *(new)*
+
+**Cluster F — Frontier**
+- [ ] **T2.18** Deep-learning localization & calibration (end-to-end, PINN, differentiable fields) *(expand Ch. 27/30)*
+- [ ] **T2.19** Magnetic actuation + tracking (Stereotaxis, capsule robots) *(expand Ch. 30)*
 
 ### Tier 3 — completeness
 - [ ] **T3.1** Inverse-Problem Global-Solution Theory (uniqueness, basins, multi-start) *(expand Ch. 23)*
@@ -250,10 +255,16 @@ measurement and the book currently models only absolute generator-frame tracking
 - [ ] **T3.12** Magnetic Field Safety & Exposure Limits (ICNIRP/IEEE C95.1) *(new; ties Ch. 17)*
 
 ### Cross-cutting workstreams (not chapters — run alongside the tiers)
-- [ ] **X1 — Credibility/verification pass.** Retire every self-flagged
-  `(conf: med)`, "to-confirm," and "illustrative" item: verify or remove. Priority:
-  mr_capsule authorship; corporate dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1
-  prefactor; the Ch. 31/33/34/37 illustrative budgets (back with sim or measurement).
+- 🟡 **X1 — Credibility/verification pass.** *In progress.* Built a runnable
+  verifier (`scripts/verify_manuscript.py`): checks citation integrity, figure/data
+  reference existence, chapter cross-ref range, placeholder scan, and a curated
+  **sim↔prose number contract** — currently **PASS** (83/83 citations resolve, 0
+  broken, 0 dangling refs, 0 placeholders, 7/7 sim numbers in sync). Re-confirmed
+  via web: **mr_capsule** (Wang/Meng/Hu, *EMBS'06* pp. 2522–2525, PMID 17946518 —
+  **year corrected 2008→2006**) and **birkfellner1998** (Med Phys 25(11):2242–2248,
+  DOI 10.1118/1.598425, PMID 9829253; 9-author list corrected). Remaining: corporate
+  dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1 prefactor; the Ch. 31/33/34/37
+  illustrative budgets (back with sim or measurement); §33.5 metrology vendor specs.
 - [ ] **X2 — Mathematics-depth upgrades (Section E)** woven into the owning chapters
   (6-DOF FIM, nonlinear observability, TRE theory, manifold solve, GP distortion).
 - [ ] **X3 — Simulation/figure backing.** Implement the deferred sims (below) +

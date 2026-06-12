@@ -1,0 +1,32 @@
+{
+  "sigma_B_T": 1e-09,
+  "poses": {
+    "near_axis_0.2m": {
+      "pos_sigma_marg_mm": 0.017,
+      "pos_sigma_naive_mm": 0.0058,
+      "coupling_penalty": 2.952,
+      "ori_sigma_deg": 0.0097
+    },
+    "mid_axis_0.3m": {
+      "pos_sigma_marg_mm": 0.0861,
+      "pos_sigma_naive_mm": 0.0292,
+      "coupling_penalty": 2.952,
+      "ori_sigma_deg": 0.0328
+    },
+    "far_axis_0.5m": {
+      "pos_sigma_marg_mm": 0.6643,
+      "pos_sigma_naive_mm": 0.225,
+      "coupling_penalty": 2.952,
+      "ori_sigma_deg": 0.1519
+    },
+    "offaxis_tilted_0.3m": {
+      "pos_sigma_marg_mm": 0.1345,
+      "pos_sigma_naive_mm": 0.0456,
+      "coupling_penalty": 2.952,
+      "ori_sigma_deg": 0.046
+    }
+  },
+  "coupling_penalty_invariant": 2.952,
+  "orientation_power_law_exponent": 3.0,
+  "note": "Marginalized position CRLB (position block of the full 6x6 F^-1) vs naive (inverse of the F_pp block alone, ignoring orientation). The ratio is the coupling penalty from estimating unknown orientation (Schur complement) and is a pose-INVARIANT constant ~2.952 (variance ~8.7x) for the co-located triad/triad geometry: the honest 6-DOF position CRLB is ~3x worse than an orientation-known bound. Orientation CRLB scales as z^3.0 (one power less than position's z^4, because orientation reads the field itself while position reads its gradient)."
+}

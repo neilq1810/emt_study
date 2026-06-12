@@ -228,8 +228,8 @@ excitation architecture chosen back in Ch. 8.
 - ✅ **Resolved:** §14.3.4 now gives the Hooge 1/f law (bias² and 1/A scaling,
   explaining the constant-detectivity-with-bias result [@monteblanco2021]); and
   §14.3.6 cites a peer-reviewed **MR-sensor tracking demonstration** (capsule
-  endoscope, 3.3 mm) [@mr_capsule]. Remaining: re-confirm the [@mr_capsule]
-  authors/venue (search API was rate-limited), and add a small table of specific
+  endoscope, 3.3 mm) [@mr_capsule] — verified (Wang, Meng & Hu, *EMBS'06*,
+  pp. 2522–2525, PMID 17946518). Remaining: add a small table of specific
   TMR-bridge devices (value @ 1 Hz, die area).
 - Verify the elongated-coil 10–20× and 115 mm tip-offset figures against primary
   sources (currently conf: med from design literature).

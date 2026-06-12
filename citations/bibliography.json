@@ -135,6 +135,10 @@
         "Birkfellner, Wolfgang",
         "Watzinger, Franz",
         "Wanschitz, Felix",
+        "Enislidis, Georg",
+        "Kollmann, Christian",
+        "Rafolt, Dietmar",
+        "Nowotny, Robert",
         "Ewers, Rolf",
         "Bergmann, Helmar"
       ],
@@ -156,8 +160,9 @@
       ],
       "relevance": 8,
       "confidence": "high",
-      "notes": "Early systematic characterization of field distortion in magnetic digitizers. DOI/pages to re-confirm against Wiley record; citation widely reported as Med Phys 25(11):2242-2248.",
-      "verified": true
+      "notes": "Early systematic characterization of field distortion in magnetic digitizers (Polhemus Isotrak II, Ascension Bird); 3.2-6.4 mm OR-condition errors. VERIFIED: Med Phys 25(11):2242-2248 (1998), DOI 10.1118/1.598425, PMID 9829253; full 9-author list confirmed (web, 2026-06).",
+      "verified": true,
+      "pmid": "9829253"
     },
     {
       "id": "kindratenko2000",
@@ -1539,14 +1544,16 @@
     },
     {
       "id": "mr_capsule",
-      "type": "article",
+      "type": "paper-conference",
       "title": "A localization method using 3-axis magnetoresistive sensors for tracking of capsule endoscope",
       "authors": [
-        "(authors to confirm — PMID 17946518)"
+        "Wang, Xiaona",
+        "Meng, Max Q.-H.",
+        "Hu, Chao"
       ],
-      "year": 2008,
-      "venue": "(venue to confirm)",
-      "url": "https://pubmed.ncbi.nlm.nih.gov/17946518/",
+      "year": 2006,
+      "venue": "Proceedings of the 28th Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBS)",
+      "url": "https://ieeexplore.ieee.org/document/4462308/",
       "publisher": "IEEE/PubMed-indexed",
       "source_type": "journal",
       "keywords": [
@@ -1558,9 +1565,11 @@
         "localization"
       ],
       "relevance": 7,
-      "confidence": "med",
-      "notes": "Peer-reviewed demonstration of MAGNETORESISTIVE-sensor tracking (vs NDE/biomagnetic): 16 3-axis MR sensors localize a magnetic marker at ~3.3 mm position / ~3 deg orientation, marker 100 mm above the array. Resolves the Ch.14 open question (MR used in a real position-tracking system). PMID/title/metrics verified via index; authors/venue/year to re-confirm (search API was rate-limited).",
-      "verified": true
+      "confidence": "high",
+      "notes": "Peer-reviewed demonstration of MAGNETORESISTIVE-sensor tracking: 16 3-axis MR sensors localize a magnetic marker at ~3.3 mm position / ~3 deg orientation, marker 100 mm above the array (Levenberg-Marquardt on a dipole model). Resolves the Ch.14 open question (MR in a real position-tracking system). VERIFIED: EMBS'06 (New York), pp. 2522-2525, PMID 17946518, IEEE Xplore 4462308 (web, 2026-06). NB: year corrected 2008->2006.",
+      "verified": true,
+      "pages": "2522-2525",
+      "pmid": "17946518"
     },
     {
       "id": "schreier2017",
@@ -2216,6 +2225,161 @@
       "relevance": 9,
       "confidence": "high",
       "notes": "The medical-device risk-management standard: risk = probability x severity of HARM (to patient/user); plan->hazard ID->estimation->evaluation->control(hierarchy: inherently-safe design > protective measures > information for safety)->residual/benefit-risk->production & post-production feedback. The integrating spine for Ch. 45 (consumes FMEA/FTA Ch.44, error budget Ch.25, essential performance Ch.17). Ed.3 (2019) replaces 2007; title/edition standard/verified."
+    },
+    {
+      "id": "iec62366",
+      "type": "standard",
+      "title": "IEC 62366-1:2015 Medical devices — Part 1: Application of usability engineering to medical devices",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2015,
+      "venue": "IEC 62366-1:2015 (+AMD1:2020)",
+      "url": "https://www.iso.org/standard/63179.html",
+      "publisher": "IEC",
+      "source_type": "standard",
+      "keywords": [
+        "usability engineering",
+        "use error",
+        "use specification",
+        "critical task",
+        "formative/summative evaluation",
+        "user interface"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "Usability-engineering process: use specification -> UI characteristics related to safety -> known/foreseeable use errors & hazard-related use scenarios -> formative then summative (validation with representative users) evaluation; critical tasks (use error -> harm) must be validated. Feeds the ISO 14971 risk file (Ch.45). Primary reference for Ch. 46. AMD1:2020; title/edition verified."
+    },
+    {
+      "id": "parasuraman1997",
+      "type": "article",
+      "title": "Humans and Automation: Use, Misuse, Disuse, Abuse",
+      "authors": [
+        "Parasuraman, Raja",
+        "Riley, Victor"
+      ],
+      "year": 1997,
+      "venue": "Human Factors",
+      "volume": "39",
+      "issue": "2",
+      "pages": "230-253",
+      "doi": "10.1518/001872097778543886",
+      "url": "https://journals.sagepub.com/doi/10.1518/001872097778543886",
+      "publisher": "SAGE / HFES",
+      "source_type": "journal",
+      "keywords": [
+        "automation bias",
+        "trust in automation",
+        "misuse/over-reliance",
+        "disuse/under-reliance",
+        "trust calibration"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Foundational human-automation paper: misuse (over-reliance/automation bias), disuse (under-reliance), and trust calibration. The basis for the over-trust/under-trust analysis in Ch. 46 (the displayed-FRE false-confidence trap, uncertainty display). DOI verified."
+    },
+    {
+      "id": "balter2005",
+      "type": "article",
+      "title": "Accuracy of a wireless localization system for radiotherapy",
+      "authors": [
+        "Balter, James M.",
+        "Wright, J. Nelson",
+        "Newell, Laurence J.",
+        "Friemel, Barry",
+        "Dimmer, Steven",
+        "Cheng, Yvette",
+        "Wong, John",
+        "Vertatschitsch, Edward",
+        "Mate, Timothy P."
+      ],
+      "year": 2005,
+      "venue": "International Journal of Radiation Oncology, Biology, Physics",
+      "volume": "61",
+      "issue": "3",
+      "pages": "933-937",
+      "doi": "10.1016/j.ijrobp.2004.11.009",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15708277/",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "Calypso",
+        "wireless transponder",
+        "resonant AC",
+        "radiotherapy localization",
+        "accuracy",
+        "beacon"
+      ],
+      "relevance": 9,
+      "confidence": "high",
+      "notes": "Foundational Calypso accuracy paper: wireless AC resonant transponder ('Beacon') localization for radiotherapy; sub-mm/~mm localization accuracy. Primary reference for the passive-transponder modality (Ch. 47). DOI/PMID(15708277) verified."
+    },
+    {
+      "id": "willoughby2006",
+      "type": "article",
+      "title": "Target localization and real-time tracking using the Calypso 4D localization system in patients with localized prostate cancer",
+      "authors": [
+        "Willoughby, Twyla R.",
+        "Kupelian, Patrick A.",
+        "Pouliot, Jean",
+        "Shinohara, Katsuto",
+        "Aubin, Michele",
+        "Roach, Mack",
+        "Skrumeda, Lloyd L.",
+        "Balter, James M.",
+        "Litzenberg, Dale W.",
+        "Hadley, Scott W.",
+        "Wei, John T.",
+        "Sandler, Howard M."
+      ],
+      "year": 2006,
+      "venue": "International Journal of Radiation Oncology, Biology, Physics",
+      "volume": "65",
+      "issue": "2",
+      "pages": "528-534",
+      "doi": "10.1016/j.ijrobp.2006.01.050",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16690435/",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "Calypso",
+        "real-time tracking",
+        "implanted transponders",
+        "prostate motion",
+        "10 Hz",
+        "radiotherapy"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "Clinical real-time tracking with three implanted Calypso transponders at 10 Hz; localization within ~2 mm vs radiographic. Clinical evidence for the passive-transponder modality (Ch. 47). PMID(16690435) verified; vol 65(2):528-534."
+    },
+    {
+      "id": "hermann1977",
+      "type": "article",
+      "title": "Nonlinear controllability and observability",
+      "authors": [
+        "Hermann, Robert",
+        "Krener, Arthur J."
+      ],
+      "year": 1977,
+      "venue": "IEEE Transactions on Automatic Control",
+      "volume": "22",
+      "issue": "5",
+      "pages": "728-740",
+      "doi": "10.1109/TAC.1977.1101601",
+      "url": "https://ieeexplore.ieee.org/document/1101601",
+      "publisher": "IEEE",
+      "source_type": "journal",
+      "keywords": [
+        "nonlinear observability",
+        "observability rank condition",
+        "Lie derivatives",
+        "local weak observability",
+        "controllability"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Foundational nonlinear observability: the observability rank condition via Lie derivatives of the output; local weak observability. Distinguishes local (linear, J-rank) from global observability in Ch. 24.7. DOI verified; IEEE TAC 22(5):728-740."
     }
   ],
   "to_research": [

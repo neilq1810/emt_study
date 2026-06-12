@@ -398,6 +398,59 @@ def sim_dual_coil_obs() -> None:
     print("[sim9] dual-coil roll observability:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 10 — full 6-DOF Fisher information: orientation CRLB + position-orientation
+#          coupling penalty (marginalized vs naive position CRLB) (Ch. 24)
+# ---------------------------------------------------------------------------
+def sim_6dof_crlb() -> None:
+    from emtrack.crlb import fisher_information
+
+    sigma_B = 1e-9
+    poses = {
+        "near_axis_0.2m": np.array([0.0, 0.0, 0.2, 0.0, 0.0, 0.0]),
+        "mid_axis_0.3m": np.array([0.0, 0.0, 0.3, 0.0, 0.0, 0.0]),
+        "far_axis_0.5m": np.array([0.0, 0.0, 0.5, 0.0, 0.0, 0.0]),
+        "offaxis_tilted_0.3m": np.array([0.15, 0.0, 0.3, 0.3, 0.2, 0.1]),
+    }
+    rows = {}
+    for name, x in poses.items():
+        F = fisher_information(x, sigma_B)
+        cov = np.linalg.inv(F)
+        pos_marg = float(np.sqrt(np.trace(cov[:3, :3])) * 1e3)  # mm, orientation marginalized out
+        ori_sig = float(np.degrees(np.sqrt(np.trace(cov[3:6, 3:6]))))  # deg
+        pos_naive = float(np.sqrt(np.trace(np.linalg.inv(F[:3, :3]))) * 1e3)  # mm, ignores coupling
+        rows[name] = {
+            "pos_sigma_marg_mm": round(pos_marg, 4),
+            "pos_sigma_naive_mm": round(pos_naive, 4),
+            "coupling_penalty": round(pos_marg / pos_naive, 3),
+            "ori_sigma_deg": round(ori_sig, 4),
+        }
+    # orientation power-law exponent on axis
+    z_axis = np.linspace(0.1, 0.6, 30)
+    ori_axis = np.array(
+        [np.degrees(np.sqrt(np.trace(np.linalg.inv(fisher_information(
+            np.array([0, 0, z, 0, 0, 0.0]), sigma_B))[3:6, 3:6]))) for z in z_axis]
+    )
+    ori_p = float(np.polyfit(np.log(z_axis), np.log(ori_axis), 1)[0])
+    penalty = round(rows["mid_axis_0.3m"]["coupling_penalty"], 3)
+    res = {
+        "sigma_B_T": sigma_B,
+        "poses": rows,
+        "coupling_penalty_invariant": penalty,
+        "orientation_power_law_exponent": round(ori_p, 2),
+        "note": "Marginalized position CRLB (position block of the full 6x6 F^-1) vs naive "
+        "(inverse of the F_pp block alone, ignoring orientation). The ratio is the coupling "
+        "penalty from estimating unknown orientation (Schur complement) and is a pose-INVARIANT "
+        f"constant ~{penalty} (variance ~{round(penalty**2,1)}x) for the co-located triad/triad "
+        "geometry: the honest 6-DOF position CRLB is ~3x worse than an orientation-known bound. "
+        f"Orientation CRLB scales as z^{round(ori_p,1)} (one power less than position's z^4, "
+        "because orientation reads the field itself while position reads its gradient).",
+    }
+    (DATA / "crlb_6dof.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["crlb_6dof"] = res
+    print("[sim10] 6-DOF CRLB:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -471,6 +524,7 @@ def main() -> None:
     sim_eddy_skin_depth()
     sim_closed_form_init()
     sim_dual_coil_obs()
+    sim_6dof_crlb()
     write_results_md()
 
 
