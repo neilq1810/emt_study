@@ -123,6 +123,8 @@ registration **TRE** at the target (Ch. 39), and any **distortion/quality flag**
 (Ch. 27 NIS). The design problem is to map them to a display whose apparent confidence
 tracks the *actual* reliability (§46.3).
 
+The resulting display is sketched in `figures/ch46_error_ellipsoid.png`.
+
 **1 — Render the position ellipsoid honestly.** Take the position block
 $\mathbf P_{pp}$ (the $3\times3$ part of $\mathbf P$); its eigenvectors are the
 error-ellipsoid axes and its eigenvalues $\lambda_i$ the squared semi-axes. A

@@ -181,5 +181,52 @@
     "roc_auc_worst_dir": 1.0,
     "worst_direction": "+x",
     "note": "A single-sensor residual (redundant 9>6 measurement, Ch.27) detects only the part of distortion INCONSISTENT with the dipole model; distortion that mimics a 6-DOF pose shift inflates error but not the residual. The detection margin (eta_danger - eta_flag) is therefore GEOMETRY-DEPENDENT and can be NEGATIVE (flag fires AFTER the error is dangerous). Conclusion: a single residual flag is necessary but NOT sufficient -> independent redundancy (witness sensor Ch.27.3, 2nd generator Ch.9.8, fusion Ch.21.9) is required, and flag latency/false-alarm MUST be measured per the proposed Ch.33 \u00a733.9 benchmark, not assumed."
+  },
+  "twin_identification": {
+    "gain_tolerance_pct": 5.0,
+    "n_cal_poses": 12,
+    "raw_pos_rms_mm": 14.946,
+    "cal_pos_rms_mm": 0.113,
+    "improvement_factor": 132.3,
+    "product_param_rel_err": 0.0001,
+    "golden_poses_needed_2pct": 1,
+    "note": "Calibration as twin identification: with ~5% per-axis transmit/sensor gain errors (Ch.15 tolerance), the NOMINAL-model solver is biased; fitting the gain parameters to a golden-fixture set of KNOWN poses recovers the (scale-free) product matrix and the identified-twin solver drops pose RMS to the noise floor. The pose-relevant products are identifiable from few known poses (Ch.24 observability applied to the calibration parameters). Demonstrates the METHOD (not vendor values)."
+  },
+  "forward_twin_noise": {
+    "pos_sigma_flat_mm": 0.0764,
+    "pos_sigma_structured_mm": 0.0673,
+    "ratio_structured_over_flat": 0.881,
+    "ellipsoid_cond_flat": 30.0,
+    "ellipsoid_cond_structured": 36.78,
+    "equal_total_noise_power": true,
+    "note": "Flat R=sigma^2 I vs a structured R (per-channel variance spread + within-transmit-axis correlation, Ch.11 \u00a711.6) with the SAME trace. The position CRLB and error-ellipsoid anisotropy still change -> the forward twin's noise model is a MATRIX composed from the chain (Ch.16/18/25) and measured, not the scalar sigma_B=1nT placeholder the book's CRLB assumes (gap 2). The twin makes sigma_B an explicit, measurable, structured model output."
+  },
+  "witness_divergence": {
+    "tau_mm": 2.0,
+    "approach": "+x (pose-mimicking, sim-12 worst case)",
+    "tracked_residual_margin_pct": -0.227,
+    "witness_divergence_margin_pct": 0.07,
+    "tracked_flags_first": false,
+    "witness_flags_first": true,
+    "note": "A witness sensor at a KNOWN pose cannot absorb distortion into a pose refit, so its twin-prediction divergence exposes the pose-mimicking distortion the tracked residual hides. The tracked-residual margin is ~0/negative (sim 12) while the witness margin is positive -> the witness flags BEFORE the error is dangerous. Independent redundancy (Ch.27 \u00a727.3) closes the reconciled-twin / detect-and-flag blind spot."
+  },
+  "system_twin_budget": {
+    "terms_mm": {
+      "tracker (CRLB)": 0.0861,
+      "registration TRE": 1.0,
+      "motion (gated resid.)": 1.5,
+      "time-sync (v.dt)": 0.5
+    },
+    "variance_fraction_pct": {
+      "tracker (CRLB)": 0.21,
+      "registration TRE": 28.51,
+      "motion (gated resid.)": 64.15,
+      "time-sync (v.dt)": 7.13
+    },
+    "tracker_fraction_pct": 0.211,
+    "reg_plus_motion_fraction_pct": 92.7,
+    "sigma_target_mm": 1.873,
+    "T95_target_mm": 5.24,
+    "note": "End-to-end TARGET uncertainty = quadrature of tracker CRLB (computed) + registration TRE + gated-motion residual + time-sync skew (representative clinical inputs, Ch.39/41/10). The tracker is ~0.2% of target-error variance while registration+motion are ~90% -> a sub-mm tracker does NOT make a sub-mm system; the system twin says optimize registration/motion/sync (gap 5, the 'built the tracker not the system' failure). Dominance structure is robust; absolute mm are illustrative."
   }
 }

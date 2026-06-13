@@ -639,6 +639,309 @@ def sim_distortion_flag_roc() -> None:
     print("[sim12] distortion flag ROC:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 13 — twin identification = calibration (Ch. 55, the digital-twin Part)
+# ---------------------------------------------------------------------------
+def sim_twin_identification() -> None:
+    """Calibration reframed as fitting the twin's parameters to known-pose data.
+
+    The real unit has per-axis transmit/sensor GAIN errors (manufacturing tolerance,
+    Ch. 15) the nominal model ignores. Solving with the nominal ('uncalibrated') model
+    gives biased poses; identifying the gains from a golden-fixture set of KNOWN poses
+    and solving with the identified twin drives the error back to the noise floor.
+    """
+    from scipy.optimize import least_squares
+    from emtrack.coupling import coupling_tensor, _rotvec_to_R
+
+    rng = np.random.default_rng(55)
+    sigma_B = 1e-9
+    g_true = 1.0 + 0.05 * rng.standard_normal(3)   # transmit per-axis gains (~5% tol)
+    s_true = 1.0 + 0.05 * rng.standard_normal(3)   # sensor per-axis gains
+
+    def coupling_gained(x, g, s):
+        r = x[:3]; R = _rotvec_to_R(x[3:6])
+        M = R.T @ coupling_tensor(r)               # ideal coupling [j, i]
+        return (s[:, None] * M * g[None, :]).reshape(-1)
+
+    def rand_pose():
+        return np.array([rng.uniform(-0.15, 0.15), rng.uniform(-0.15, 0.15),
+                         rng.uniform(0.18, 0.34), *rng.uniform(-0.4, 0.4, 3)])
+
+    # --- calibration: golden fixture of KNOWN poses, measured with the true gains ---
+    n_cal = 12
+    cal_poses = [rand_pose() for _ in range(n_cal)]
+    Z_cal = [coupling_gained(x, g_true, s_true) + rng.normal(0, sigma_B, 9) for x in cal_poses]
+
+    # identify gains (fix g0=1 to remove the g<->s scale degeneracy; 5 free params)
+    def cal_resid(p):
+        g = np.array([1.0, p[0], p[1]]); s = p[2:5]
+        return np.concatenate([coupling_gained(x, g, s) - z for x, z in zip(cal_poses, Z_cal)])
+    sol = least_squares(cal_resid, np.ones(5), method="lm", max_nfev=4000).x
+    g_hat = np.array([1.0, sol[0], sol[1]]); s_hat = sol[2:5]
+    # the pose-relevant quantity is the product matrix P[j,i]=s_j g_i (scale-free)
+    P_true = np.outer(s_true, g_true); P_hat = np.outer(s_hat, g_hat)
+    prod_rel_err = float(np.linalg.norm(P_hat / P_hat[0, 0] - P_true / P_true[0, 0])
+                         / np.linalg.norm(P_true / P_true[0, 0]))
+
+    # --- evaluate on NEW test poses: nominal-model solve vs identified-twin solve ---
+    test = [rand_pose() for _ in range(200)]
+    raw, cal = [], []
+    for xt in test:
+        z = coupling_gained(xt, g_true, s_true) + rng.normal(0, sigma_B, 9)
+        seed = xt + np.r_[rng.normal(0, 2e-3, 3), rng.normal(0, 0.02, 3)]
+        xh_raw = solve_pose(z, seed, sigma=sigma_B)                       # nominal model (g=s=1)
+        r_cal = lambda x: (coupling_gained(x, g_hat, s_hat) - z) / sigma_B
+        xh_cal = least_squares(r_cal, seed, method="lm", max_nfev=2000).x  # identified twin
+        raw.append(np.linalg.norm(xh_raw[:3] - xt[:3]) * 1e3)
+        cal.append(np.linalg.norm(xh_cal[:3] - xt[:3]) * 1e3)
+    raw_rms = float(np.sqrt(np.mean(np.square(raw))))
+    cal_rms = float(np.sqrt(np.mean(np.square(cal))))
+
+    # how many golden poses are needed? (re-identify with 1..n_cal poses)
+    need = None
+    for k in range(1, n_cal + 1):
+        def rk(p, k=k):
+            g = np.array([1.0, p[0], p[1]]); s = p[2:5]
+            return np.concatenate([coupling_gained(x, g, s) - z
+                                   for x, z in zip(cal_poses[:k], Z_cal[:k])])
+        sk = least_squares(rk, np.ones(5), method="lm", max_nfev=4000).x
+        Pk = np.outer(sk[2:5], np.array([1.0, sk[0], sk[1]]))
+        if np.linalg.norm(Pk / Pk[0, 0] - P_true / P_true[0, 0]) / \
+           np.linalg.norm(P_true / P_true[0, 0]) < 0.02 and need is None:
+            need = k
+
+    fig, ax = plt.subplots(figsize=(6.2, 4.2))
+    ax.hist(raw, bins=30, alpha=0.6, color="#b91c1c", label=f"uncalibrated (RMS {raw_rms:.2f} mm)")
+    ax.hist(cal, bins=30, alpha=0.7, color="#166534", label=f"identified twin (RMS {cal_rms:.3f} mm)")
+    ax.set_xlabel("position error [mm]"); ax.set_ylabel("count")
+    ax.set_title("Calibration = twin identification: pose error before/after")
+    ax.legend(); ax.grid(True, alpha=0.3)
+    fig.tight_layout(); fig.savefig(FIG / "ch55_twin_identification.png", dpi=150); plt.close(fig)
+
+    res = {
+        "gain_tolerance_pct": 5.0, "n_cal_poses": n_cal,
+        "raw_pos_rms_mm": round(raw_rms, 3), "cal_pos_rms_mm": round(cal_rms, 4),
+        "improvement_factor": round(raw_rms / cal_rms, 1),
+        "product_param_rel_err": round(prod_rel_err, 4),
+        "golden_poses_needed_2pct": need,
+        "note": "Calibration as twin identification: with ~5% per-axis transmit/sensor gain "
+        "errors (Ch.15 tolerance), the NOMINAL-model solver is biased; fitting the gain "
+        "parameters to a golden-fixture set of KNOWN poses recovers the (scale-free) product "
+        "matrix and the identified-twin solver drops pose RMS to the noise floor. The "
+        "pose-relevant products are identifiable from few known poses (Ch.24 observability "
+        "applied to the calibration parameters). Demonstrates the METHOD (not vendor values).",
+    }
+    (DATA / "twin_identification.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["twin_identification"] = res
+    print("[sim13] twin identification:", res)
+
+
+# ---------------------------------------------------------------------------
+# Sim 14 — forward-twin noise model: covariance STRUCTURE shifts the CRLB
+#          even at fixed total noise power (Ch. 54, gap 2 / Ch. 11 §11.6, Ch. 25)
+# ---------------------------------------------------------------------------
+def sim_forward_twin_noise() -> None:
+    """The forward twin's third output is the measurement covariance R, not a scalar
+    sigma_B. R is composed from the chain (sensor self-noise + AFE + ADC + generator +
+    ambient, Ch.16/18/25) and carries calibration-induced correlations (Ch.11 §11.6).
+    Holding TOTAL noise power fixed (equal trace), the CRLB still changes with R's
+    structure -> the noise model is a matrix to measure, not a constant to assume.
+    """
+    from emtrack.crlb import jacobian
+
+    sigma = 1e-9
+    x0 = np.array([0.08, 0.0, 0.28, 0.2, 0.1, -0.15])
+    J = jacobian(x0)  # 9x6
+
+    def pos_sigma(R):
+        cov = np.linalg.inv(J.T @ np.linalg.inv(R) @ J)
+        return float(np.sqrt(np.trace(cov[:3, :3])) * 1e3), cov[:3, :3]
+
+    # flat baseline R0 = sigma^2 I
+    R0 = sigma**2 * np.eye(9)
+    s0, c0 = pos_sigma(R0)
+
+    # structured R: per-channel relative variances (AFE/axis spread) + within-transmit-axis
+    # correlation (calibration-induced, Ch.11 §11.6); normalized to the SAME trace as R0.
+    d = np.array([0.5, 0.5, 2.5, 0.8, 0.8, 2.2, 0.6, 0.6, 2.6])  # weaker signal axes noisier
+    C = np.eye(9)
+    rho = 0.35
+    for g in ([0, 3, 6], [1, 4, 7], [2, 5, 8]):  # channels sharing a transmit axis
+        for a in g:
+            for b in g:
+                if a != b:
+                    C[a, b] = rho
+    Rs = np.diag(np.sqrt(d)) @ C @ np.diag(np.sqrt(d)) * sigma**2
+    Rs *= np.trace(R0) / np.trace(Rs)  # equal total noise power
+    s1, c1 = pos_sigma(Rs)
+
+    res = {
+        "pos_sigma_flat_mm": round(s0, 4),
+        "pos_sigma_structured_mm": round(s1, 4),
+        "ratio_structured_over_flat": round(s1 / s0, 3),
+        "ellipsoid_cond_flat": round(float(np.linalg.cond(c0)), 2),
+        "ellipsoid_cond_structured": round(float(np.linalg.cond(c1)), 2),
+        "equal_total_noise_power": True,
+        "note": "Flat R=sigma^2 I vs a structured R (per-channel variance spread + "
+        "within-transmit-axis correlation, Ch.11 §11.6) with the SAME trace. The position "
+        "CRLB and error-ellipsoid anisotropy still change -> the forward twin's noise model "
+        "is a MATRIX composed from the chain (Ch.16/18/25) and measured, not the scalar "
+        "sigma_B=1nT placeholder the book's CRLB assumes (gap 2). The twin makes sigma_B an "
+        "explicit, measurable, structured model output.",
+    }
+    (DATA / "forward_twin_noise.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["forward_twin_noise"] = res
+    print("[sim14] forward-twin noise:", res)
+
+
+# ---------------------------------------------------------------------------
+# Sim 15 — witness divergence resolves the single-residual blind spot
+#          (Ch. 56 environment twin; closes the sim-12/§33.9 gap)
+# ---------------------------------------------------------------------------
+def sim_witness_divergence() -> None:
+    """Sim 12 showed a single tracked-sensor residual misses pose-mimicking distortion
+    (negative detection margin). A WITNESS sensor at a KNOWN pose cannot absorb the
+    distortion into a pose refit, so its twin-prediction divergence exposes it. Here the
+    witness flags BEFORE the tracked pose error is dangerous where the tracked residual
+    does not -> independent redundancy closes the reconciled-twin blind spot.
+    """
+    from emtrack.coupling import _rotvec_to_R
+
+    rng = np.random.default_rng(56)
+    x0 = np.array([0.10, 0.0, 0.30, 0.20, 0.10, -0.15])     # tracked sensor (refit)
+    x_w = np.array([0.10, 0.025, 0.30, 0.0, 0.0, 0.0])     # witness at a KNOWN pose (samples same distortion)
+    z0_t, z0_w = forward_model(x0), forward_model(x_w)
+    sigma_meas = 1e-3 * float(np.linalg.norm(z0_t))
+    tau_mm = 2.0
+    a_sphere = 0.02
+    alpha = 2 * np.pi * a_sphere**3 / MU0
+
+    def coupled(x, p_d):
+        r = x[:3]; R = _rotvec_to_R(x[3:6]); M = np.zeros((3, 3))
+        for i in range(3):
+            e = np.zeros(3); e[i] = 1.0
+            Bd = dipole_field(e, r); Bg = dipole_field(e, p_d)
+            Bsec = dipole_field(-alpha * Bg, r - p_d)
+            M[:, i] = R.T @ (Bd + Bsec)
+        return M.reshape(-1)
+
+    # 1%-false-alarm thresholds from clean trials
+    ct, cw = [], []
+    for _ in range(500):
+        zt = z0_t + rng.normal(0, sigma_meas, 9)
+        ct.append(np.linalg.norm(zt - forward_model(solve_pose(zt, x0, sigma=sigma_meas))) / sigma_meas)
+        zw = z0_w + rng.normal(0, sigma_meas, 9)
+        cw.append(np.linalg.norm(zw - z0_w) / sigma_meas)          # witness: predict at KNOWN pose
+    T_t, T_w = float(np.quantile(ct, 0.99)), float(np.quantile(cw, 0.99))
+
+    sensor = x0[:3]
+    dists = np.linspace(0.20, 0.035, 28)                            # distorter approaches along +x
+    eta_l, err_l, tres_l, wdiv_l = [], [], [], []
+    for d in dists:
+        p_d = sensor + np.array([d, 0.0, 0.0])
+        zt_c = coupled(x0, p_d); zw_c = coupled(x_w, p_d)
+        eta_l.append(np.linalg.norm(zt_c - z0_t) / np.linalg.norm(z0_t))
+        e_, tr_, wd_ = [], [], []
+        for _ in range(30):
+            zt = zt_c + rng.normal(0, sigma_meas, 9)
+            xh = solve_pose(zt, x0, sigma=sigma_meas)
+            e_.append(np.linalg.norm(xh[:3] - x0[:3]) * 1e3)
+            tr_.append(np.linalg.norm(zt - forward_model(xh)) / sigma_meas)   # tracked residual (absorbs)
+            zw = zw_c + rng.normal(0, sigma_meas, 9)
+            wd_.append(np.linalg.norm(zw - z0_w) / sigma_meas)                 # witness divergence (no absorb)
+        err_l.append(np.mean(e_)); tres_l.append(np.mean(tr_)); wdiv_l.append(np.mean(wd_))
+    eta = np.array(eta_l); err = np.array(err_l); tres = np.array(tres_l); wdiv = np.array(wdiv_l)
+
+    def cross(stat, thr):
+        o = np.argsort(stat); return float(np.interp(thr, stat[o], eta[o]))
+    eta_danger = cross(err, tau_mm)
+    m_track = eta_danger - cross(tres, T_t)
+    m_wit = eta_danger - cross(wdiv, T_w)
+
+    fig, ax = plt.subplots(figsize=(6.4, 4.3))
+    ax.plot(eta * 100, tres / T_t, "s-", ms=3, color="#b91c1c", label="tracked residual / thr")
+    ax.plot(eta * 100, wdiv / T_w, "o-", ms=3, color="#166534", label="witness divergence / thr")
+    ax.axhline(1.0, ls=":", color="#334155", label="flag threshold")
+    eta_dpct = eta_danger * 100
+    ax.axvline(eta_dpct, ls="--", color="#b45309", label=f"error=τ at η={eta_dpct:.2f}%")
+    ax.set_xlabel("distortion fraction η [%]"); ax.set_ylabel("flag statistic / threshold")
+    ax.set_title("Witness divergence vs tracked residual (pose-mimicking distorter)")
+    ax.legend(fontsize=8); ax.grid(True, alpha=0.3)
+    fig.tight_layout(); fig.savefig(FIG / "ch56_witness_divergence.png", dpi=150); plt.close(fig)
+
+    res = {
+        "tau_mm": tau_mm, "approach": "+x (pose-mimicking, sim-12 worst case)",
+        "tracked_residual_margin_pct": round(m_track * 100, 3),
+        "witness_divergence_margin_pct": round(m_wit * 100, 3),
+        "tracked_flags_first": bool(m_track > 0), "witness_flags_first": bool(m_wit > 0),
+        "note": "A witness sensor at a KNOWN pose cannot absorb distortion into a pose refit, "
+        "so its twin-prediction divergence exposes the pose-mimicking distortion the tracked "
+        "residual hides. The tracked-residual margin is ~0/negative (sim 12) while the witness "
+        "margin is positive -> the witness flags BEFORE the error is dangerous. Independent "
+        "redundancy (Ch.27 §27.3) closes the reconciled-twin / detect-and-flag blind spot.",
+    }
+    (DATA / "witness_divergence.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["witness_divergence"] = res
+    print("[sim15] witness divergence:", res)
+
+
+# ---------------------------------------------------------------------------
+# Sim 16 — end-to-end target-uncertainty budget: the system twin shows the
+#          tracker is NOT the dominant term (Ch. 57; gap 5 / §46.6 / §10.6)
+# ---------------------------------------------------------------------------
+def sim_system_twin_budget() -> None:
+    """The system twin propagates tracker + registration + motion + time-sync to the
+    TARGET uncertainty the clinician sees. The tracker term (computed CRLB) is a tiny
+    fraction; registration and motion dominate -> optimize the system, not the tracker
+    (the 'built the tracker, not the system' failure, quantified). The clinical terms
+    are REPRESENTATIVE inputs (Ch.39/41/10), labelled illustrative; the dominance
+    structure is the robust result, not the exact mm.
+    """
+    sigma_B = 1e-9
+    sig_track = float(crlb_position_sigma(np.array([0.0, 0.0, 0.30, 0.2, 0.1, -0.15]), sigma_B) * 1e3)
+    tre = 1.0          # registration TRE [mm] (Ch.39, representative)
+    motion = 1.5       # residual respiratory motion after gating [mm] (Ch.41, representative)
+    v_mms, dt_ms = 100.0, 5.0
+    sync = v_mms * 1e-3 * dt_ms  # time-sync skew v*dt [mm] (§10.6)
+
+    terms = {"tracker (CRLB)": sig_track, "registration TRE": tre,
+             "motion (gated resid.)": motion, "time-sync (v.dt)": sync}
+    var = {k: v**2 for k, v in terms.items()}
+    tot = sum(var.values())
+    frac = {k: v / tot for k, v in var.items()}
+    sigma_target = float(np.sqrt(tot)); t95 = 2.8 * sigma_target
+
+    fig, ax = plt.subplots(figsize=(6.6, 4.0))
+    labels = list(terms); fr = [frac[k] * 100 for k in labels]
+    colors = ["#166534", "#b45309", "#b91c1c", "#6d28d9"]
+    ax.barh(labels, fr, color=colors)
+    for i, f in enumerate(fr):
+        ax.text(f + 0.7, i, f"{f:.1f}%  ({terms[labels[i]]:.3g} mm)", va="center", fontsize=8)
+    ax.set_xlabel("share of TARGET-error variance [%]")
+    ax.set_title(f"System-twin error budget: target $\\sigma$={sigma_target:.2f} mm, "
+                 f"$T_{{95}}$={t95:.1f} mm")
+    ax.set_xlim(0, max(fr) * 1.4)
+    fig.tight_layout(); fig.savefig(FIG / "ch57_system_budget.png", dpi=150); plt.close(fig)
+
+    res = {
+        "terms_mm": {k: round(v, 4) for k, v in terms.items()},
+        "variance_fraction_pct": {k: round(v * 100, 2) for k, v in frac.items()},
+        "tracker_fraction_pct": round(frac["tracker (CRLB)"] * 100, 3),
+        "reg_plus_motion_fraction_pct": round(
+            (frac["registration TRE"] + frac["motion (gated resid.)"]) * 100, 1),
+        "sigma_target_mm": round(sigma_target, 3), "T95_target_mm": round(t95, 2),
+        "note": "End-to-end TARGET uncertainty = quadrature of tracker CRLB (computed) + "
+        "registration TRE + gated-motion residual + time-sync skew (representative clinical "
+        "inputs, Ch.39/41/10). The tracker is ~0.2% of target-error variance while "
+        "registration+motion are ~90% -> a sub-mm tracker does NOT make a sub-mm system; the "
+        "system twin says optimize registration/motion/sync (gap 5, the 'built the tracker not "
+        "the system' failure). Dominance structure is robust; absolute mm are illustrative.",
+    }
+    (DATA / "system_twin_budget.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["system_twin_budget"] = res
+    print("[sim16] system-twin budget:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -705,10 +1008,44 @@ def write_results_md() -> None:
         "  redundancy (witness/2nd-generator/fusion) is required, and flag latency/false-alarm",
         "  must be MEASURED (the §33.9 benchmark), not assumed.",
         "",
+        "## Sim 13 — Twin identification = calibration (Ch. 55, digital-twin Part)",
+        f"- ~5% per-axis gain errors give an UNCALIBRATED pose RMS of "
+        f"{d['twin_identification']['raw_pos_rms_mm']} mm; identifying the gains from "  # type: ignore[index]
+        f"{d['twin_identification']['n_cal_poses']} known golden-fixture poses drops it to "  # type: ignore[index]
+        f"{d['twin_identification']['cal_pos_rms_mm']} mm "
+        f"({d['twin_identification']['improvement_factor']}× better).",  # type: ignore[index]
+        f"- the pose-relevant (scale-free) calibration products are identifiable from "
+        f"{d['twin_identification']['golden_poses_needed_2pct']} known pose(s) "  # type: ignore[index]
+        "(Ch. 24 observability applied to the calibration parameters). Demonstrates the",
+        "  method (not vendor values) — the calibration-cliff failure mode, closed.",
+        "",
+        "## Sim 14 — Forward-twin noise model: structure matters (Ch. 54, gap 2)",
+        f"- at EQUAL total noise power, a structured measurement covariance vs flat "
+        f"sigma^2 I shifts the position CRLB "
+        f"{d['forward_twin_noise']['pos_sigma_flat_mm']}->{d['forward_twin_noise']['pos_sigma_structured_mm']} mm "
+        f"(x{d['forward_twin_noise']['ratio_structured_over_flat']}) and the ellipsoid "
+        f"anisotropy {d['forward_twin_noise']['ellipsoid_cond_flat']}->{d['forward_twin_noise']['ellipsoid_cond_structured']}.",
+        "  The noise model is a MATRIX composed from the chain (Ch.16/18/25/11), not the",
+        "  scalar sigma_B=1nT placeholder the CRLB assumes - the twin makes it explicit/measurable.",
+        "",
+        "## Sim 15 — Witness divergence resolves the blind spot (Ch. 56 environment twin)",
+        f"- for a pose-mimicking distorter, the tracked-sensor residual margin is "
+        f"{d['witness_divergence']['tracked_residual_margin_pct']}% (flags AFTER danger) while a "  # type: ignore[index]
+        f"WITNESS sensor at a known pose gives {d['witness_divergence']['witness_divergence_margin_pct']}% "  # type: ignore[index]
+        "(flags FIRST) — independent redundancy closes the reconciled-twin / detect-and-flag blind spot.",
+        "",
+        "## Sim 16 — System-twin target-uncertainty budget (Ch. 57, gap 5)",
+        f"- end-to-end target sigma {d['system_twin_budget']['sigma_target_mm']} mm "  # type: ignore[index]
+        f"(T95 {d['system_twin_budget']['T95_target_mm']} mm): the TRACKER is only "
+        f"{d['system_twin_budget']['tracker_fraction_pct']}% of target-error variance while "  # type: ignore[index]
+        f"registration+motion are {d['system_twin_budget']['reg_plus_motion_fraction_pct']}%",  # type: ignore[index]
+        "  -> a sub-mm tracker is NOT a sub-mm system; optimize registration/motion/sync.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
         "- `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC",
+        "- `figures/ch55_twin_identification.png` — pose error before/after twin identification",
         "- `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)",
         "- `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a",
         "- `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB",
@@ -733,6 +1070,10 @@ def main() -> None:
     sim_6dof_crlb()
     sim_deep_volume()
     sim_distortion_flag_roc()
+    sim_twin_identification()
+    sim_forward_twin_noise()
+    sim_witness_divergence()
+    sim_system_twin_budget()
     write_results_md()
 
 

@@ -152,7 +152,8 @@ actually measures:
 
 Real 6-DOF systems use a transmitter *triad* (three mutually orthogonal coils,
 moments along $\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{z}}$) and a sensor
-*triad*. Each (transmit axis $i$, sense axis $j$) pair has a mutual inductance
+*triad* (coupling geometry: `figures/ch05_coupling_geometry.png`). Each (transmit
+axis $i$, sense axis $j$) pair has a mutual inductance
 $M_{ij}$, assembled into a matrix
 
 $$

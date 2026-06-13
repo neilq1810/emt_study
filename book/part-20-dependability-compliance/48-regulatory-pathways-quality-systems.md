@@ -125,7 +125,7 @@ process. That is the **Quality Management System**:
   *harmonizing* the two so one QMS serves both jurisdictions.
 
 The heart of both — and the part an EMT engineer lives in — is **design controls**
-(21 CFR 820.30 / ISO 13485 §7.3):
+(21 CFR 820.30 / ISO 13485 §7.3), the V&V V-model of `figures/ch48_design_controls.png`:
 
 ```
  User needs ─▶ Design INPUTS ─▶ Design OUTPUTS ─▶ Design TRANSFER ─▶ production

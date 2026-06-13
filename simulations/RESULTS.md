@@ -56,10 +56,28 @@ and the CRLB is a usable design predictor (Ch. 24).
   redundancy (witness/2nd-generator/fusion) is required, and flag latency/false-alarm
   must be MEASURED (the §33.9 benchmark), not assumed.
 
+## Sim 13 — Twin identification = calibration (Ch. 55, digital-twin Part)
+- ~5% per-axis gain errors give an UNCALIBRATED pose RMS of 14.946 mm; identifying the gains from 12 known golden-fixture poses drops it to 0.113 mm (132.3× better).
+- the pose-relevant (scale-free) calibration products are identifiable from 1 known pose(s) (Ch. 24 observability applied to the calibration parameters). Demonstrates the
+  method (not vendor values) — the calibration-cliff failure mode, closed.
+
+## Sim 14 — Forward-twin noise model: structure matters (Ch. 54, gap 2)
+- at EQUAL total noise power, a structured measurement covariance vs flat sigma^2 I shifts the position CRLB 0.0764->0.0673 mm (x0.881) and the ellipsoid anisotropy 30.0->36.78.
+  The noise model is a MATRIX composed from the chain (Ch.16/18/25/11), not the
+  scalar sigma_B=1nT placeholder the CRLB assumes - the twin makes it explicit/measurable.
+
+## Sim 15 — Witness divergence resolves the blind spot (Ch. 56 environment twin)
+- for a pose-mimicking distorter, the tracked-sensor residual margin is -0.227% (flags AFTER danger) while a WITNESS sensor at a known pose gives 0.07% (flags FIRST) — independent redundancy closes the reconciled-twin / detect-and-flag blind spot.
+
+## Sim 16 — System-twin target-uncertainty budget (Ch. 57, gap 5)
+- end-to-end target sigma 1.873 mm (T95 5.24 mm): the TRACKER is only 0.211% of target-error variance while registration+motion are 92.7%
+  -> a sub-mm tracker is NOT a sub-mm system; optimize registration/motion/sync.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever
 - `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC
+- `figures/ch55_twin_identification.png` — pose error before/after twin identification
 - `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)
 - `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a
 - `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB
