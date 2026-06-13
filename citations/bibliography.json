@@ -2665,6 +2665,80 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "US adverse-event/complaint reporting (MDR); the US analogue of EU MDR vigilance. Backbone of post-market surveillance and the complaint->CAPA->recall loop (Ch. 52)."
+    },
+    {
+      "id": "iec81001_5_1",
+      "type": "standard",
+      "title": "IEC 81001-5-1:2021 Health software and health IT systems safety, effectiveness and security — Part 5-1: Security — Activities in the product life cycle",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2021,
+      "venue": "IEC",
+      "publisher": "International Electrotechnical Commission",
+      "url": "https://www.iso.org/standard/76097.html",
+      "source_type": "standard",
+      "keywords": [
+        "cybersecurity",
+        "secure product development",
+        "health software",
+        "SBOM",
+        "threat modeling",
+        "IEC 62443-4-1",
+        "post-market vulnerability"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Secure-lifecycle standard for health software (adapts IEC 62443-4-1): secure development, threat modeling, SBOM, post-market vulnerability management across the product life cycle. The security counterpart to IEC 62304 (Ch. 35)."
+    },
+    {
+      "id": "fda_cyber2023",
+      "type": "report",
+      "title": "Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions — Guidance for Industry and FDA Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2023,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cybersecurity-medical-devices-quality-system-considerations-and-content-premarket-submissions",
+      "source_type": "guidance",
+      "keywords": [
+        "cybersecurity",
+        "cyber device",
+        "section 524B",
+        "SBOM",
+        "secure product development framework",
+        "premarket submission",
+        "threat model"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "FDA premarket cybersecurity guidance (Sept 2023). Legal basis: FD&C Act section 524B (added Dec 2022) makes cybersecurity mandatory for 'cyber devices' in 510(k)/De Novo/PMA. Requires SPDF, threat model, SBOM, vulnerability management."
+    },
+    {
+      "id": "astm_f2554",
+      "type": "standard",
+      "title": "ASTM F2554-22 Standard Practice for Measurement of Positional Accuracy of Computer-Assisted Surgical Systems",
+      "authors": [
+        "ASTM International"
+      ],
+      "year": 2022,
+      "venue": "ASTM International",
+      "publisher": "ASTM International",
+      "url": "https://store.astm.org/f2554-22.html",
+      "source_type": "standard",
+      "keywords": [
+        "positional accuracy",
+        "surgical navigation",
+        "computer-assisted surgery",
+        "accuracy measurement",
+        "tracking subsystem",
+        "standardized reporting"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "ASTM practice for measuring/reporting static positional accuracy of surgical navigation/robotic positioning systems (tracking subsystem); enables within- and between-manufacturer comparison. A real positional-accuracy standard beyond the Hummel protocol; still largely STATIC (the T2.27 dynamic/distortion gap). Editions -10/-18/-22."
     }
   ],
   "to_research": [

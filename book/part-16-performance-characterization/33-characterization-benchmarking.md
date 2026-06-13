@@ -104,6 +104,12 @@ which tail (RMS vs. 95th vs. max). Two defensible responses:
   position/orientation error **and** the influence of metallic objects. Its value
   is *comparability* — the same fixture and procedure across labs and systems
   (Ch. 28), traceable to the plate's machining tolerance.
+- **ASTM F2554** [@astm_f2554] is the formal *standard practice* for measuring and
+  reporting the **positional accuracy of computer-assisted surgical systems** (the
+  tracking subsystem) — defining how to locate known points and report accuracy/
+  repeatability so users can compare **within and between** manufacturers. It is the
+  closest thing to a recognized navigation-accuracy standard, and like Hummel it is
+  essentially **static**.
 - **The assessment/validation literature** — Franz et al.'s review [@franz2014] and
   Yaniv et al.'s clinical-environment study [@yaniv2009] — codifies *reporting with
   conditions* and the lab-vs-in-situ gap.
@@ -213,19 +219,60 @@ marketing, not measurement. And this is precisely how you **validate the capston
 (Ch. 31 §31.6): the measured accuracy map must reproduce the predicted error budget
 (Ch. 25) to within the §33.6 rig floor, or the budget is wrong or incomplete.
 
+## 33.9 The standards landscape and a proposed dynamic/distortion benchmark
+
+Pulling §33.4 together, the **recognized basis for comparing EMT performance is thin and
+static**: the **Hummel** protocol [@hummel2005] (de-facto, static accuracy + a metal-object
+influence test), **ASTM F2554** [@astm_f2554] (a formal static positional-accuracy
+practice for navigation systems), and the metrology underpinnings **ISO 5725 / GUM**
+[@iso5725; @gum2008]; the IEC 60601 family governs *safety/EMC*, not accuracy. None of
+these characterizes the regime where EMT actually fails clinically — a **moving** sensor
+near a **moving** conductor (the C-arm, Ch. 29 §29.9; the breathing patient, Ch. 41) — and
+none standardizes the distorter tightly enough for cross-lab dynamic comparison. The
+result is the recurring problem of Part XVI: vendor accuracy numbers are static, optimistic,
+and not comparable in the dynamic-distortion conditions that matter (Ch. 30).
+
+**A proposed dynamic-and-distortion benchmark.** The gap is fillable with a reproducible
+protocol that extends Hummel/F2554 from static poses to *motion under distortion*:
+
+| Element | Specification (proposed) |
+|---|---|
+| **Sensor motion** | a programmable stage drives the sensor along a **standardized trajectory** (a defined 3-D Lissajous *and* a clinically representative respiratory waveform, Ch. 41) at **specified speeds**, so dynamic path error and lag are measured, not just static residuals |
+| **Distorter** | a **specified** conductor (material/size/shape — e.g. a defined stainless and a defined aluminium plate, plus a "reference C-arm surrogate") at **standardized distances**, tested **both static and moving** on a second stage to excite dynamic eddy-current distortion (Ch. 6) |
+| **Ground truth** | an **independent** dynamic reference (encoded stage and/or optical tracker) with its **own stated dynamic uncertainty** — the hardest element (Ch. 33 §33.5, Ch. 41) and the one that sets the benchmark's floor |
+| **Metrics** | dynamic/path RMS vs speed; **latency / phase lag** (Ch. 12); distortion-induced error vs distorter distance **and velocity**; and — decisively — **detect-and-flag performance**: does the quality flag assert *before* error exceeds tolerance, with what **latency and false-alarm rate** (an ROC-style curve)? |
+| **Reporting** | the §33.8 honesty contract, extended: trajectory, speeds, full distorter spec, GT method **and its dynamic uncertainty** |
+
+The decisive addition is the last metric. The entire safety argument of this book rests on
+**detect-and-flag firing before the error becomes dangerous** (Ch. 27/44/45, and the V&V
+line in Ch. 48 §48.5). Yet no current protocol *tests that claim* — it is asserted, not
+measured. A standardized dynamic-distortion benchmark with an explicit
+**flag-latency / false-alarm characterization** would convert the load-bearing safety
+control from a design intention into a **measured, comparable, auditable** property — which
+is exactly what a "definitive" benchmark for clinical EMT should do, and a concrete
+candidate to take to the standardization community (Ch. 30). (conf: med — the landscape and
+gap are well-supported; the specific benchmark is a *proposal* to be piloted and refined,
+e.g. as a Phase-5 dynamic-error/flag-ROC simulation before a physical rig.)
+
 > **Engineering takeaway.** Characterization is the empirical twin of the error
 > budget. A figure of merit without its conditions, its distribution, and its
 > traceable ground-truth floor is not a measurement — it is a claim. Build the rig
 > so its own error sits 5–10× below what you report, keep it non-magnetic and
 > thermally controlled, separate trueness from precision and static from dynamic,
-> map the *whole* volume, and disclose everything.
+> map the *whole* volume, and disclose everything. And recognize that the recognized
+> standards (Hummel, ASTM F2554) are **static**: the open need — and a concrete
+> contribution this book proposes (§33.9) — is a **dynamic, distortion-standardized
+> benchmark that measures detect-and-flag latency and false-alarm rate**, turning the
+> safety case's load-bearing control into a comparable, audited number.
 
 ---
 
 ## Open questions / to verify
-- Develop (or adopt) a **dynamic- and distortion-standardized** protocol extending
-  Hummel [@hummel2005] so moving-target/moving-distorter claims are comparable
-  (shared with the Ch. 30 standardization open question).
+- 🟡 **Proposed (§33.9, T2.27):** a **dynamic- and distortion-standardized** benchmark
+  (standardized trajectory + moving distorter + flag-latency/false-alarm metrics)
+  extending Hummel [@hummel2005] / ASTM F2554 [@astm_f2554]. Remaining: **pilot it as a
+  Phase-5 dynamic-error / flag-ROC simulation** before a physical rig, and take to the
+  Ch. 30 standardization community.
 - Back §33.2/§33.6 with a **Phase-5 accuracy-vs-position map** simulation and a
   **Phase-6 "characterization explorer"** tool (accuracy map + rig-floor calculator
   over the working volume) tying to the existing CRLB/working-volume tools.
@@ -240,5 +287,7 @@ marketing, not measurement. And this is precisely how you **validate the capston
   [@franz2014; @yaniv2009] validation/clinical-environment assessment with
   conditions. [@iso5725] trueness/precision (accuracy) definitions. [@gum2008]
   uncertainty propagation. [@birkfellner1998] systematic-distortion
-  characterization methodology. Budget/CRLB ties to Ch. 24–25; capstone validation
-  to Ch. 31.
+  characterization methodology. [@astm_f2554] ASTM positional-accuracy practice for
+  computer-assisted surgical systems (the formal static standard, §33.4/§33.9).
+  Budget/CRLB ties to Ch. 24–25; capstone validation to Ch. 31; dynamic-distortion
+  standardization to Ch. 30.

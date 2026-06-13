@@ -226,8 +226,8 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.C3** Deployment & Lifecycle Operations *(NEW Ch. 52)* — 🟢 DONE: install/site-survey + per-room baseline characterization (sets flag thresholds); daily field-QA/drift/scheduled-connector service → availability; post-market surveillance/MDR vigilance (21 CFR 803/EU MDR)/CAPA/recalls/PMCF (highest-N evidence → design loop); supply-chain/obsolescence (2nd-source→re-qual). +cfr803
 
 **Cluster D — Compliance expansions**
-- [ ] **T2.14** Cybersecurity for networked trackers (IEC 81001-5-1) *(expand Ch. 35)*
-- [ ] **T2.27** Standards landscape & a proposed dynamic/distortion benchmark *(expand Ch. 33; ties Ch. 30)*
+- [x] **T2.14** Cybersecurity for networked trackers *(Ch. 35 §35.7)* — 🟢 DONE: security-IS-safety (spoofed pose/tampered cal → patient harm → ISO 14971 file); IEC 81001-5-1 secure lifecycle + FDA §524B/guidance (SBOM/threat model/SPDF mandatory); EMT defense-in-depth (authenticate pose stream + cal integrity; detect-and-flag as security control). +iec81001_5_1,fda_cyber2023
+- [x] **T2.27** Standards landscape & proposed dynamic/distortion benchmark *(Ch. 33 §33.4/§33.9)* — 🟢 DONE: landscape (Hummel/ASTM F2554/ISO5725/GUM all STATIC); **proposed benchmark** (standardized trajectory+moving distorter+GT) whose decisive metric is **detect-and-flag latency/false-alarm ROC** — converts the load-bearing safety control from asserted to measured. +astm_f2554
 
 **Cluster E — Engineering-depth expansions** *(cheap; fold into parents)*
 - [ ] **T2.1** Planar/under-table field generator design & calibration *(expand Ch. 9)*
