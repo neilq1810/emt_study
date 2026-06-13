@@ -152,7 +152,11 @@ The lock-in is only as good as its reference. Four practical effects:
   extra noise into the output unless the input is band-limited around $\omega_0$
   first (Ch. 17). A true *sine* reference (or a band-limited input) avoids this.
   This interacts with FDM frequency planning (Ch. 19 §19.2): a channel on an odd
-  harmonic of another is doubly dangerous with square-wave detection.
+  harmonic of another is doubly dangerous with square-wave detection. **The flip
+  side:** in a system whose sensor signal is *deliberately* a square wave — a
+  **triangular excitation** read by the differentiating coil (Ch. 9 §9.9) — those odd
+  harmonics *are* the signal, so a **square-wave reference becomes the matched filter**
+  and the "penalty" turns into the optimal detector.
 - **Reference jitter.** Timing jitter on the reference/sample clock injects
   amplitude/phase noise (Ch. 10 §10.4, eq. 10.1); at EMT frequencies this is
   usually below the thermal floor, but it sets the ultimate coherence limit.
