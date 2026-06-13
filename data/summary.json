@@ -200,5 +200,14 @@
     "ellipsoid_cond_structured": 36.78,
     "equal_total_noise_power": true,
     "note": "Flat R=sigma^2 I vs a structured R (per-channel variance spread + within-transmit-axis correlation, Ch.11 \u00a711.6) with the SAME trace. The position CRLB and error-ellipsoid anisotropy still change -> the forward twin's noise model is a MATRIX composed from the chain (Ch.16/18/25) and measured, not the scalar sigma_B=1nT placeholder the book's CRLB assumes (gap 2). The twin makes sigma_B an explicit, measurable, structured model output."
+  },
+  "witness_divergence": {
+    "tau_mm": 2.0,
+    "approach": "+x (pose-mimicking, sim-12 worst case)",
+    "tracked_residual_margin_pct": -0.227,
+    "witness_divergence_margin_pct": 0.07,
+    "tracked_flags_first": false,
+    "witness_flags_first": true,
+    "note": "A witness sensor at a KNOWN pose cannot absorb distortion into a pose refit, so its twin-prediction divergence exposes the pose-mimicking distortion the tracked residual hides. The tracked-residual margin is ~0/negative (sim 12) while the witness margin is positive -> the witness flags BEFORE the error is dangerous. Independent redundancy (Ch.27 \u00a727.3) closes the reconciled-twin / detect-and-flag blind spot."
   }
 }

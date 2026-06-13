@@ -66,6 +66,9 @@ and the CRLB is a usable design predictor (Ch. 24).
   The noise model is a MATRIX composed from the chain (Ch.16/18/25/11), not the
   scalar sigma_B=1nT placeholder the CRLB assumes - the twin makes it explicit/measurable.
 
+## Sim 15 — Witness divergence resolves the blind spot (Ch. 56 environment twin)
+- for a pose-mimicking distorter, the tracked-sensor residual margin is -0.227% (flags AFTER danger) while a WITNESS sensor at a known pose gives 0.07% (flags FIRST) — independent redundancy closes the reconciled-twin / detect-and-flag blind spot.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever

@@ -794,6 +794,97 @@ def sim_forward_twin_noise() -> None:
     print("[sim14] forward-twin noise:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 15 — witness divergence resolves the single-residual blind spot
+#          (Ch. 56 environment twin; closes the sim-12/§33.9 gap)
+# ---------------------------------------------------------------------------
+def sim_witness_divergence() -> None:
+    """Sim 12 showed a single tracked-sensor residual misses pose-mimicking distortion
+    (negative detection margin). A WITNESS sensor at a KNOWN pose cannot absorb the
+    distortion into a pose refit, so its twin-prediction divergence exposes it. Here the
+    witness flags BEFORE the tracked pose error is dangerous where the tracked residual
+    does not -> independent redundancy closes the reconciled-twin blind spot.
+    """
+    from emtrack.coupling import _rotvec_to_R
+
+    rng = np.random.default_rng(56)
+    x0 = np.array([0.10, 0.0, 0.30, 0.20, 0.10, -0.15])     # tracked sensor (refit)
+    x_w = np.array([0.10, 0.025, 0.30, 0.0, 0.0, 0.0])     # witness at a KNOWN pose (samples same distortion)
+    z0_t, z0_w = forward_model(x0), forward_model(x_w)
+    sigma_meas = 1e-3 * float(np.linalg.norm(z0_t))
+    tau_mm = 2.0
+    a_sphere = 0.02
+    alpha = 2 * np.pi * a_sphere**3 / MU0
+
+    def coupled(x, p_d):
+        r = x[:3]; R = _rotvec_to_R(x[3:6]); M = np.zeros((3, 3))
+        for i in range(3):
+            e = np.zeros(3); e[i] = 1.0
+            Bd = dipole_field(e, r); Bg = dipole_field(e, p_d)
+            Bsec = dipole_field(-alpha * Bg, r - p_d)
+            M[:, i] = R.T @ (Bd + Bsec)
+        return M.reshape(-1)
+
+    # 1%-false-alarm thresholds from clean trials
+    ct, cw = [], []
+    for _ in range(500):
+        zt = z0_t + rng.normal(0, sigma_meas, 9)
+        ct.append(np.linalg.norm(zt - forward_model(solve_pose(zt, x0, sigma=sigma_meas))) / sigma_meas)
+        zw = z0_w + rng.normal(0, sigma_meas, 9)
+        cw.append(np.linalg.norm(zw - z0_w) / sigma_meas)          # witness: predict at KNOWN pose
+    T_t, T_w = float(np.quantile(ct, 0.99)), float(np.quantile(cw, 0.99))
+
+    sensor = x0[:3]
+    dists = np.linspace(0.20, 0.035, 28)                            # distorter approaches along +x
+    eta_l, err_l, tres_l, wdiv_l = [], [], [], []
+    for d in dists:
+        p_d = sensor + np.array([d, 0.0, 0.0])
+        zt_c = coupled(x0, p_d); zw_c = coupled(x_w, p_d)
+        eta_l.append(np.linalg.norm(zt_c - z0_t) / np.linalg.norm(z0_t))
+        e_, tr_, wd_ = [], [], []
+        for _ in range(30):
+            zt = zt_c + rng.normal(0, sigma_meas, 9)
+            xh = solve_pose(zt, x0, sigma=sigma_meas)
+            e_.append(np.linalg.norm(xh[:3] - x0[:3]) * 1e3)
+            tr_.append(np.linalg.norm(zt - forward_model(xh)) / sigma_meas)   # tracked residual (absorbs)
+            zw = zw_c + rng.normal(0, sigma_meas, 9)
+            wd_.append(np.linalg.norm(zw - z0_w) / sigma_meas)                 # witness divergence (no absorb)
+        err_l.append(np.mean(e_)); tres_l.append(np.mean(tr_)); wdiv_l.append(np.mean(wd_))
+    eta = np.array(eta_l); err = np.array(err_l); tres = np.array(tres_l); wdiv = np.array(wdiv_l)
+
+    def cross(stat, thr):
+        o = np.argsort(stat); return float(np.interp(thr, stat[o], eta[o]))
+    eta_danger = cross(err, tau_mm)
+    m_track = eta_danger - cross(tres, T_t)
+    m_wit = eta_danger - cross(wdiv, T_w)
+
+    fig, ax = plt.subplots(figsize=(6.4, 4.3))
+    ax.plot(eta * 100, tres / T_t, "s-", ms=3, color="#b91c1c", label="tracked residual / thr")
+    ax.plot(eta * 100, wdiv / T_w, "o-", ms=3, color="#166534", label="witness divergence / thr")
+    ax.axhline(1.0, ls=":", color="#334155", label="flag threshold")
+    eta_dpct = eta_danger * 100
+    ax.axvline(eta_dpct, ls="--", color="#b45309", label=f"error=τ at η={eta_dpct:.2f}%")
+    ax.set_xlabel("distortion fraction η [%]"); ax.set_ylabel("flag statistic / threshold")
+    ax.set_title("Witness divergence vs tracked residual (pose-mimicking distorter)")
+    ax.legend(fontsize=8); ax.grid(True, alpha=0.3)
+    fig.tight_layout(); fig.savefig(FIG / "ch56_witness_divergence.png", dpi=150); plt.close(fig)
+
+    res = {
+        "tau_mm": tau_mm, "approach": "+x (pose-mimicking, sim-12 worst case)",
+        "tracked_residual_margin_pct": round(m_track * 100, 3),
+        "witness_divergence_margin_pct": round(m_wit * 100, 3),
+        "tracked_flags_first": bool(m_track > 0), "witness_flags_first": bool(m_wit > 0),
+        "note": "A witness sensor at a KNOWN pose cannot absorb distortion into a pose refit, "
+        "so its twin-prediction divergence exposes the pose-mimicking distortion the tracked "
+        "residual hides. The tracked-residual margin is ~0/negative (sim 12) while the witness "
+        "margin is positive -> the witness flags BEFORE the error is dangerous. Independent "
+        "redundancy (Ch.27 §27.3) closes the reconciled-twin / detect-and-flag blind spot.",
+    }
+    (DATA / "witness_divergence.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["witness_divergence"] = res
+    print("[sim15] witness divergence:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -880,6 +971,12 @@ def write_results_md() -> None:
         "  The noise model is a MATRIX composed from the chain (Ch.16/18/25/11), not the",
         "  scalar sigma_B=1nT placeholder the CRLB assumes - the twin makes it explicit/measurable.",
         "",
+        "## Sim 15 — Witness divergence resolves the blind spot (Ch. 56 environment twin)",
+        f"- for a pose-mimicking distorter, the tracked-sensor residual margin is "
+        f"{d['witness_divergence']['tracked_residual_margin_pct']}% (flags AFTER danger) while a "  # type: ignore[index]
+        f"WITNESS sensor at a known pose gives {d['witness_divergence']['witness_divergence_margin_pct']}% "  # type: ignore[index]
+        "(flags FIRST) — independent redundancy closes the reconciled-twin / detect-and-flag blind spot.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
@@ -911,6 +1008,7 @@ def main() -> None:
     sim_distortion_flag_roc()
     sim_twin_identification()
     sim_forward_twin_noise()
+    sim_witness_divergence()
     write_results_md()
 
 

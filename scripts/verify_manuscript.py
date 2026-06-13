@@ -156,6 +156,8 @@ CONTRACT = [
      ["14.9 mm", "0.11 mm", "132", "single known pose"]),
     ("Forward-twin noise structure shifts CRLB (Ch.54)", "**/54-*.md",
      ["0.076", "0.067", "structured"]),
+    ("Witness divergence closes the blind spot (Ch.56)", "**/56-*.md",
+     ["-0.23", "+0.07", "independent redundancy"]),
 ]
 
 

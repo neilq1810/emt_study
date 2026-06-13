@@ -165,6 +165,13 @@ export const FIGURES: FigureMeta[] = [
     caption: 'Display the 95% ellipsoid from the marginalized 6-DOF covariance (×2.95 the naive block, §24.6), a tool-axis cone, and a τ-relative GREEN/AMBER/RED state.',
   },
   {
+    file: 'ch56_witness_divergence.png',
+    title: 'Witness divergence resolves the detect-and-flag blind spot',
+    chapter: 'Ch. 56',
+    chapterSlug: 'part-23-digital-twin/56-environment-twin-distortion',
+    caption: 'For a pose-mimicking distorter, the tracked-sensor residual flags only after the error is dangerous (−0.23% margin); a known-pose witness sensor flags first (+0.07%).',
+  },
+  {
     file: 'ch55_twin_identification.png',
     title: 'Calibration as twin identification',
     chapter: 'Ch. 55',
