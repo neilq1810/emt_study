@@ -2570,6 +2570,101 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "GCP standard for device clinical investigations; the methodological backbone for the clinical-evaluation chapter (study conduct, ethics, data integrity). Recognized under EU MDR Annex XV and complementary to FDA IDE (21 CFR 812)."
+    },
+    {
+      "id": "iso10993",
+      "type": "standard",
+      "title": "ISO 10993-1:2018 Biological evaluation of medical devices — Part 1: Evaluation and testing within a risk management process",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2018,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/68936.html",
+      "source_type": "standard",
+      "keywords": [
+        "biocompatibility",
+        "biological evaluation",
+        "patient-contact",
+        "cytotoxicity",
+        "ISO 10993"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Biocompatibility evaluation for patient-contacting materials; drives encapsulation/material choices for catheter sensors (Ch. 51). Risk-based selection of biological endpoints by contact type/duration."
+    },
+    {
+      "id": "iso11135",
+      "type": "standard",
+      "title": "ISO 11135:2014 Sterilization of health-care products — Ethylene oxide — Requirements for development, validation and routine control of a sterilization process",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2014,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/56137.html",
+      "source_type": "standard",
+      "keywords": [
+        "sterilization",
+        "ethylene oxide",
+        "EO",
+        "validation",
+        "SAL",
+        "health-care products"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "EO sterilization validation (low-temperature, electronics-compatible); relevant where radiation sterilization (ISO 11137) would damage sensor electronics (Ch. 51)."
+    },
+    {
+      "id": "iso17025",
+      "type": "standard",
+      "title": "ISO/IEC 17025:2017 General requirements for the competence of testing and calibration laboratories",
+      "authors": [
+        "International Organization for Standardization",
+        "International Electrotechnical Commission"
+      ],
+      "year": 2017,
+      "venue": "ISO/IEC",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/66912.html",
+      "source_type": "standard",
+      "keywords": [
+        "calibration",
+        "metrological traceability",
+        "measurement uncertainty",
+        "competence",
+        "traceability chain"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Competence + metrological traceability for calibration; anchors the factory-calibration traceability chain and golden-unit transfer (Ch. 50) to national standards."
+    },
+    {
+      "id": "cfr803",
+      "type": "regulation",
+      "title": "21 CFR Part 803 — Medical Device Reporting",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2024,
+      "venue": "U.S. Code of Federal Regulations",
+      "publisher": "U.S. FDA",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-H/part-803",
+      "source_type": "regulation",
+      "keywords": [
+        "medical device reporting",
+        "MDR",
+        "adverse event",
+        "complaints",
+        "vigilance",
+        "post-market"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "US adverse-event/complaint reporting (MDR); the US analogue of EU MDR vigilance. Backbone of post-market surveillance and the complaint->CAPA->recall loop (Ch. 52)."
     }
   ],
   "to_research": [

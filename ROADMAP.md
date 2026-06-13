@@ -221,9 +221,9 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.26** Pediatric, bariatric & deep-volume constraints *(Ch. 29 §29.10)* — 🟢 DONE: pediatric (small tools/targets, no-radiation driver); bariatric/deep = z⁴ SNR/conditioning limit (not tissue distortion); mitigations (moment/multi-gen/integration/under-table); usable-volume = region under clinical tolerance
 
 **Cluster C — Industry/operations (consolidated 9→3)**
-- [ ] **T2.C1** Manufacturing & Production (production test/end-of-line + factory cal at scale/golden-units/cal-transfer + cost/BOM/design-to-cost) *(was T2.5+T2.6+T2.13)*
-- [ ] **T2.C2** Mechanical & Sensor Durability (sterilization/biocompat/encapsulation/single-use + connector/cable reliability & intermittency — the #1 field failure) *(was T2.7+T2.8)*
-- [ ] **T2.C3** Deployment & Lifecycle Operations (install/site-survey/per-room characterization + service/field-QA/drift + post-market surveillance/vigilance/recalls + supply-chain/obsolescence) *(was T2.9+T2.10+T2.11+T2.12)*
+- [x] **T2.C1** Manufacturing & Production *(NEW Ch. 50)* — 🟢 DONE: end-of-line test layering (functional→parametric→cal→accuracy go/no-go, guard-banded golden fixture, SPC/Cpk); factory cal at scale (amortize volumetric physics → per-unit varying-DOF only; golden-units/cal-transfer/ISO 17025 traceability; on-board cal coeff); design-to-cost (BOM, channel-vs-PDOP, NRE-vs-recurring). +iso17025
+- [x] **T2.C2** Mechanical & Sensor Durability *(NEW Ch. 51)* — 🟢 DONE: sterilization (EO/radiation/steam tradeoffs), biocompat (ISO 10993), encapsulation (geometry=calibration → mech drift IS accuracy fault), single-use vs reusable; **connector/cable intermittency = #1 field failure** (µV signals, pass-at-rest/fail-under-flex, silent glitch → detect-and-flag + flex/contact screening). +iso10993,iso11135
+- [x] **T2.C3** Deployment & Lifecycle Operations *(NEW Ch. 52)* — 🟢 DONE: install/site-survey + per-room baseline characterization (sets flag thresholds); daily field-QA/drift/scheduled-connector service → availability; post-market surveillance/MDR vigilance (21 CFR 803/EU MDR)/CAPA/recalls/PMCF (highest-N evidence → design loop); supply-chain/obsolescence (2nd-source→re-qual). +cfr803
 
 **Cluster D — Compliance expansions**
 - [ ] **T2.14** Cybersecurity for networked trackers (IEC 81001-5-1) *(expand Ch. 35)*
