@@ -639,6 +639,103 @@ def sim_distortion_flag_roc() -> None:
     print("[sim12] distortion flag ROC:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 13 — twin identification = calibration (Ch. 55, the digital-twin Part)
+# ---------------------------------------------------------------------------
+def sim_twin_identification() -> None:
+    """Calibration reframed as fitting the twin's parameters to known-pose data.
+
+    The real unit has per-axis transmit/sensor GAIN errors (manufacturing tolerance,
+    Ch. 15) the nominal model ignores. Solving with the nominal ('uncalibrated') model
+    gives biased poses; identifying the gains from a golden-fixture set of KNOWN poses
+    and solving with the identified twin drives the error back to the noise floor.
+    """
+    from scipy.optimize import least_squares
+    from emtrack.coupling import coupling_tensor, _rotvec_to_R
+
+    rng = np.random.default_rng(55)
+    sigma_B = 1e-9
+    g_true = 1.0 + 0.05 * rng.standard_normal(3)   # transmit per-axis gains (~5% tol)
+    s_true = 1.0 + 0.05 * rng.standard_normal(3)   # sensor per-axis gains
+
+    def coupling_gained(x, g, s):
+        r = x[:3]; R = _rotvec_to_R(x[3:6])
+        M = R.T @ coupling_tensor(r)               # ideal coupling [j, i]
+        return (s[:, None] * M * g[None, :]).reshape(-1)
+
+    def rand_pose():
+        return np.array([rng.uniform(-0.15, 0.15), rng.uniform(-0.15, 0.15),
+                         rng.uniform(0.18, 0.34), *rng.uniform(-0.4, 0.4, 3)])
+
+    # --- calibration: golden fixture of KNOWN poses, measured with the true gains ---
+    n_cal = 12
+    cal_poses = [rand_pose() for _ in range(n_cal)]
+    Z_cal = [coupling_gained(x, g_true, s_true) + rng.normal(0, sigma_B, 9) for x in cal_poses]
+
+    # identify gains (fix g0=1 to remove the g<->s scale degeneracy; 5 free params)
+    def cal_resid(p):
+        g = np.array([1.0, p[0], p[1]]); s = p[2:5]
+        return np.concatenate([coupling_gained(x, g, s) - z for x, z in zip(cal_poses, Z_cal)])
+    sol = least_squares(cal_resid, np.ones(5), method="lm", max_nfev=4000).x
+    g_hat = np.array([1.0, sol[0], sol[1]]); s_hat = sol[2:5]
+    # the pose-relevant quantity is the product matrix P[j,i]=s_j g_i (scale-free)
+    P_true = np.outer(s_true, g_true); P_hat = np.outer(s_hat, g_hat)
+    prod_rel_err = float(np.linalg.norm(P_hat / P_hat[0, 0] - P_true / P_true[0, 0])
+                         / np.linalg.norm(P_true / P_true[0, 0]))
+
+    # --- evaluate on NEW test poses: nominal-model solve vs identified-twin solve ---
+    test = [rand_pose() for _ in range(200)]
+    raw, cal = [], []
+    for xt in test:
+        z = coupling_gained(xt, g_true, s_true) + rng.normal(0, sigma_B, 9)
+        seed = xt + np.r_[rng.normal(0, 2e-3, 3), rng.normal(0, 0.02, 3)]
+        xh_raw = solve_pose(z, seed, sigma=sigma_B)                       # nominal model (g=s=1)
+        r_cal = lambda x: (coupling_gained(x, g_hat, s_hat) - z) / sigma_B
+        xh_cal = least_squares(r_cal, seed, method="lm", max_nfev=2000).x  # identified twin
+        raw.append(np.linalg.norm(xh_raw[:3] - xt[:3]) * 1e3)
+        cal.append(np.linalg.norm(xh_cal[:3] - xt[:3]) * 1e3)
+    raw_rms = float(np.sqrt(np.mean(np.square(raw))))
+    cal_rms = float(np.sqrt(np.mean(np.square(cal))))
+
+    # how many golden poses are needed? (re-identify with 1..n_cal poses)
+    need = None
+    for k in range(1, n_cal + 1):
+        def rk(p, k=k):
+            g = np.array([1.0, p[0], p[1]]); s = p[2:5]
+            return np.concatenate([coupling_gained(x, g, s) - z
+                                   for x, z in zip(cal_poses[:k], Z_cal[:k])])
+        sk = least_squares(rk, np.ones(5), method="lm", max_nfev=4000).x
+        Pk = np.outer(sk[2:5], np.array([1.0, sk[0], sk[1]]))
+        if np.linalg.norm(Pk / Pk[0, 0] - P_true / P_true[0, 0]) / \
+           np.linalg.norm(P_true / P_true[0, 0]) < 0.02 and need is None:
+            need = k
+
+    fig, ax = plt.subplots(figsize=(6.2, 4.2))
+    ax.hist(raw, bins=30, alpha=0.6, color="#b91c1c", label=f"uncalibrated (RMS {raw_rms:.2f} mm)")
+    ax.hist(cal, bins=30, alpha=0.7, color="#166534", label=f"identified twin (RMS {cal_rms:.3f} mm)")
+    ax.set_xlabel("position error [mm]"); ax.set_ylabel("count")
+    ax.set_title("Calibration = twin identification: pose error before/after")
+    ax.legend(); ax.grid(True, alpha=0.3)
+    fig.tight_layout(); fig.savefig(FIG / "ch55_twin_identification.png", dpi=150); plt.close(fig)
+
+    res = {
+        "gain_tolerance_pct": 5.0, "n_cal_poses": n_cal,
+        "raw_pos_rms_mm": round(raw_rms, 3), "cal_pos_rms_mm": round(cal_rms, 4),
+        "improvement_factor": round(raw_rms / cal_rms, 1),
+        "product_param_rel_err": round(prod_rel_err, 4),
+        "golden_poses_needed_2pct": need,
+        "note": "Calibration as twin identification: with ~5% per-axis transmit/sensor gain "
+        "errors (Ch.15 tolerance), the NOMINAL-model solver is biased; fitting the gain "
+        "parameters to a golden-fixture set of KNOWN poses recovers the (scale-free) product "
+        "matrix and the identified-twin solver drops pose RMS to the noise floor. The "
+        "pose-relevant products are identifiable from few known poses (Ch.24 observability "
+        "applied to the calibration parameters). Demonstrates the METHOD (not vendor values).",
+    }
+    (DATA / "twin_identification.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["twin_identification"] = res
+    print("[sim13] twin identification:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -705,10 +802,22 @@ def write_results_md() -> None:
         "  redundancy (witness/2nd-generator/fusion) is required, and flag latency/false-alarm",
         "  must be MEASURED (the §33.9 benchmark), not assumed.",
         "",
+        "## Sim 13 — Twin identification = calibration (Ch. 55, digital-twin Part)",
+        f"- ~5% per-axis gain errors give an UNCALIBRATED pose RMS of "
+        f"{d['twin_identification']['raw_pos_rms_mm']} mm; identifying the gains from "  # type: ignore[index]
+        f"{d['twin_identification']['n_cal_poses']} known golden-fixture poses drops it to "  # type: ignore[index]
+        f"{d['twin_identification']['cal_pos_rms_mm']} mm "
+        f"({d['twin_identification']['improvement_factor']}× better).",  # type: ignore[index]
+        f"- the pose-relevant (scale-free) calibration products are identifiable from "
+        f"{d['twin_identification']['golden_poses_needed_2pct']} known pose(s) "  # type: ignore[index]
+        "(Ch. 24 observability applied to the calibration parameters). Demonstrates the",
+        "  method (not vendor values) — the calibration-cliff failure mode, closed.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
         "- `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC",
+        "- `figures/ch55_twin_identification.png` — pose error before/after twin identification",
         "- `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)",
         "- `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a",
         "- `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB",
@@ -733,6 +842,7 @@ def main() -> None:
     sim_6dof_crlb()
     sim_deep_volume()
     sim_distortion_flag_roc()
+    sim_twin_identification()
     write_results_md()
 
 

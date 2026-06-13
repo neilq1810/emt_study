@@ -1,0 +1,10 @@
+{
+  "gain_tolerance_pct": 5.0,
+  "n_cal_poses": 12,
+  "raw_pos_rms_mm": 14.946,
+  "cal_pos_rms_mm": 0.113,
+  "improvement_factor": 132.3,
+  "product_param_rel_err": 0.0001,
+  "golden_poses_needed_2pct": 1,
+  "note": "Calibration as twin identification: with ~5% per-axis transmit/sensor gain errors (Ch.15 tolerance), the NOMINAL-model solver is biased; fitting the gain parameters to a golden-fixture set of KNOWN poses recovers the (scale-free) product matrix and the identified-twin solver drops pose RMS to the noise floor. The pose-relevant products are identifiable from few known poses (Ch.24 observability applied to the calibration parameters). Demonstrates the METHOD (not vendor values)."
+}

@@ -149,6 +149,8 @@ CONTRACT = [
     ("Deep-volume moment lever m_t^0.25 (Ch.29)", "**/29-*.md", ["m_t^{0.25}", "16\\times"]),
     ("Distortion flag margin geometry-dependent (Ch.33)", "**/33-*.md",
      ["+0.56", "-0.26", "necessary but not sufficient"]),
+    ("Twin identification closes calibration cliff (Ch.55)", "**/55-*.md",
+     ["14.9 mm", "0.11 mm", "132", "single known pose"]),
 ]
 
 

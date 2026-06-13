@@ -56,10 +56,16 @@ and the CRLB is a usable design predictor (Ch. 24).
   redundancy (witness/2nd-generator/fusion) is required, and flag latency/false-alarm
   must be MEASURED (the §33.9 benchmark), not assumed.
 
+## Sim 13 — Twin identification = calibration (Ch. 55, digital-twin Part)
+- ~5% per-axis gain errors give an UNCALIBRATED pose RMS of 14.946 mm; identifying the gains from 12 known golden-fixture poses drops it to 0.113 mm (132.3× better).
+- the pose-relevant (scale-free) calibration products are identifiable from 1 known pose(s) (Ch. 24 observability applied to the calibration parameters). Demonstrates the
+  method (not vendor values) — the calibration-cliff failure mode, closed.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever
 - `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC
+- `figures/ch55_twin_identification.png` — pose error before/after twin identification
 - `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)
 - `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a
 - `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB

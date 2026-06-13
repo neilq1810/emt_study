@@ -164,4 +164,11 @@ export const FIGURES: FigureMeta[] = [
     chapterSlug: 'part-20-dependability-compliance/46-human-factors-usability',
     caption: 'Display the 95% ellipsoid from the marginalized 6-DOF covariance (×2.95 the naive block, §24.6), a tool-axis cone, and a τ-relative GREEN/AMBER/RED state.',
   },
+  {
+    file: 'ch55_twin_identification.png',
+    title: 'Calibration as twin identification',
+    chapter: 'Ch. 55',
+    chapterSlug: 'part-23-digital-twin/55-twin-identification-calibration',
+    caption: 'Pose-error histogram before/after identifying ±5% gain errors from known golden-fixture poses: 14.9 mm → 0.11 mm (132×) — the calibration cliff, closed as method.',
+  },
 ];
