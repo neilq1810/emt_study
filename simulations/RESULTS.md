@@ -73,8 +73,16 @@ and the CRLB is a usable design predictor (Ch. 24).
 - end-to-end target sigma 1.873 mm (T95 5.24 mm): the TRACKER is only 0.211% of target-error variance while registration+motion are 92.7%
   -> a sub-mm tracker is NOT a sub-mm system; optimize registration/motion/sync.
 
+## Sim 17 — Triangle excitation -> square sensor EMF; demod (Ch. 9 §9.9)
+- triangle field -> square-wave sensor EMF (coil differentiates); square-wave demod error ~N^-0.49 = sine lock-in SNR (err ratio 0.997), but the +/-1 reference REJECTS a large DC offset (ratio 0.993).
+
+## Sim 18 — Quadrature distortion signature (Ch. 20 §20.10, Ch. 6/27)
+- eddy (conductive) distortion is quadrature-dominated at omega*tau<1 (Q/I=3.33 at omega*tau=0.3, phase -106.7 deg); ferromagnetic is in-phase (Q~0) -> the lock-in Q channel flags CONDUCTIVE distortion selectively.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
+- `figures/ch09_triangle_square_demod.png` — triangle->square excitation & demod
+- `figures/ch20_quadrature_distortion.png` — eddy vs ferromagnetic I/Q signature
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever
 - `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC
 - `figures/ch55_twin_identification.png` — pose error before/after twin identification

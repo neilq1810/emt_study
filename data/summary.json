@@ -228,5 +228,19 @@
     "sigma_target_mm": 1.873,
     "T95_target_mm": 5.24,
     "note": "End-to-end TARGET uncertainty = quadrature of tracker CRLB (computed) + registration TRE + gated-motion residual + time-sync skew (representative clinical inputs, Ch.39/41/10). The tracker is ~0.2% of target-error variance while registration+motion are ~90% -> a sub-mm tracker does NOT make a sub-mm system; the system twin says optimize registration/motion/sync (gap 5, the 'built the tracker not the system' failure). Dominance structure is robust; absolute mm are illustrative."
+  },
+  "triangle_square_demod": {
+    "square_demod_slope": -0.49,
+    "sine_lockin_slope": -0.5,
+    "square_vs_sine_err_ratio": 0.997,
+    "offset_rejection_ratio": 0.993,
+    "note": "An induction coil differentiates, so a TRIANGULAR field gives a SQUARE-WAVE sensor EMF (NDI/Ascension patent). Square-wave synchronous demod (sign-flip-and-average) recovers the coupling with error ~1/sqrt(N) - the same matched-filter SNR as a sine lock-in on an equal-RMS sine (err ratio ~1) - so the choice is IMPLEMENTATION, not SNR. Its concrete win: the +/-1 reference has zero mean, so a large DC/baseline OFFSET is rejected (offset_rejection_ratio ~1), the built-in benefit of the polarity-inverting scheme. (Ch. 9 \u00a79.9, Ch. 20.)"
+  },
+  "quadrature_distortion": {
+    "operating_point_wt": 0.3,
+    "eddy_phase_deg_at_op": -106.7,
+    "eddy_Q_over_I_at_op": 3.33,
+    "ferro_phase_deg": 176.2,
+    "note": "Single-pole eddy model (Ch. 6 tau_e): the conductive secondary field is QUADRATURE-dominated at low omega*tau (phase -> -90 deg; Q/I = 3.3 at omega*tau=0.3) and rotates to in-phase (anti, -180 deg) at high omega*tau. A FERROMAGNETIC distorter is reactive and in-phase (Q ~ 0). So at a typical EMT operating point (omega*tau<1) the QUADRATURE channel of the lock-in flags CONDUCTIVE distortion selectively while ferromagnetic distortion is invisible in Q (caught only by the in-phase residual). Phase-sensitive detect-and-flag, near-free from the dual-phase lock-in (Ch. 20 \u00a720.10, Ch. 27)."
   }
 }

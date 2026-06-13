@@ -274,7 +274,12 @@ little to quadrature, so the phase signature helps **distinguish conductive from
 ferromagnetic distortion** — information no amplitude-only (or pulsed-DC) detector gets for
 free. This makes the phase channel a built-in **detect-and-flag** input (Ch. 27 §27.4) and
 another residual for the reconciled twin (Ch. 56), carrying exactly what a witness sensor
-would.
+would. **Computed (Phase-5, `figures/ch20_quadrature_distortion.png`):** a single-pole
+eddy model is **quadrature-dominated at $\omega\tau_e<1$** (quadrature/in-phase ratio
+$\approx3.3$ at $\omega\tau_e=0.3$, rotating from $-90^\circ$ toward $-180^\circ$ as
+frequency rises), whereas a ferromagnetic distorter stays **in-phase** ($Q\approx0$) — so
+the lock-in's $Q$ channel flags conductive distortion **selectively** across the usual
+operating band.
 
 **The catch (back to §20.3).** Absolute phase is interpretable **only if detection is
 synchronous** — the reference phase-locked to the drive (§20.3); under asynchronous

@@ -942,6 +942,140 @@ def sim_system_twin_budget() -> None:
     print("[sim16] system-twin budget:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 17 — triangle excitation -> square-wave sensor EMF; square-wave synchronous
+#          demodulation, offset rejection, vs sine lock-in (Ch. 9 §9.9, Ch. 20)
+# ---------------------------------------------------------------------------
+def sim_triangle_square_demod() -> None:
+    from scipy import signal as sig
+
+    rng = np.random.default_rng(17)
+    f0, fs = 1.0, 4000.0
+
+    # --- waveform illustration: triangle field -> square EMF (sensor differentiates) ---
+    tt = np.linspace(0, 2, int(2 * fs), endpoint=False)
+    B_tri = sig.sawtooth(2 * np.pi * f0 * tt, width=0.5)        # triangular field
+    emf_sq = -np.gradient(B_tri, tt)
+    emf_sq /= np.max(np.abs(emf_sq))                            # square EMF (= -dB/dt)
+    B_sin = np.sin(2 * np.pi * f0 * tt)
+
+    # --- amplitude estimation vs integration time (cycles); equal-RMS signals + noise ---
+    A_true, sigma = 1.0, 3.0
+    cycles = np.array([1, 2, 4, 8, 16, 32, 64, 128])
+
+    def est_square(nc, offset, trials=400):
+        n = int(nc / f0 * fs)
+        t = np.arange(n) / fs
+        ref = sig.square(2 * np.pi * f0 * t)                   # +/-1 square reference
+        errs = []
+        for _ in range(trials):
+            emf = A_true * ref + offset + rng.normal(0, sigma, n)
+            errs.append(np.mean(emf * ref) - A_true)           # offset*mean(ref)=0 -> rejected
+        return float(np.sqrt(np.mean(np.square(errs))))
+
+    def est_sine(nc, trials=400):
+        n = int(nc / f0 * fs)
+        t = np.arange(n) / fs
+        s = np.sqrt(2) * np.sin(2 * np.pi * f0 * t)            # unit-RMS sine (== square RMS)
+        errs = []
+        for _ in range(trials):
+            emf = A_true * s + rng.normal(0, sigma, n)
+            errs.append(np.mean(emf * s) - A_true)             # LS estimate (mean(s^2)=1)
+        return float(np.sqrt(np.mean(np.square(errs))))
+
+    e_sq = np.array([est_square(c, 0.0) for c in cycles])
+    e_sq_off = np.array([est_square(c, 5.0) for c in cycles])  # large baseline offset
+    e_sin = np.array([est_sine(c) for c in cycles])
+    p_sq = float(np.polyfit(np.log(cycles), np.log(e_sq), 1)[0])
+    p_sin = float(np.polyfit(np.log(cycles), np.log(e_sin), 1)[0])
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 4.0))
+    a1.plot(tt, B_tri, color="#1e3a8a", lw=1.3, label="triangular field $B(t)$")
+    a1.plot(tt, emf_sq, color="#b91c1c", lw=1.3, label=r"sensor EMF $\propto -\dot B$ (square)")
+    a1.plot(tt, B_sin, color="#94a3b8", lw=1.0, ls="--", label="sine field (contrast)")
+    a1.set_xlabel("time (cycles)"); a1.set_yticks([]); a1.legend(fontsize=7.5, loc="upper right")
+    a1.set_title("Triangle drive $\\to$ square sensor output")
+    a2.loglog(cycles, e_sq, "o-", color="#b91c1c", label=f"square demod ($\\propto N^{{{p_sq:.2f}}}$)")
+    a2.loglog(cycles, e_sq_off, "x--", color="#f59e0b", label="square demod + 5× offset")
+    a2.loglog(cycles, e_sin, "s-", color="#166534", label=f"sine lock-in ($\\propto N^{{{p_sin:.2f}}}$)")
+    a2.set_xlabel("integration (cycles)"); a2.set_ylabel("amplitude RMS error")
+    a2.set_title("Equal SNR; square rejects offset"); a2.grid(True, which="both", alpha=0.3)
+    a2.legend(fontsize=7.5)
+    fig.tight_layout(); fig.savefig(FIG / "ch09_triangle_square_demod.png", dpi=150); plt.close(fig)
+
+    res = {
+        "square_demod_slope": round(p_sq, 2), "sine_lockin_slope": round(p_sin, 2),
+        "square_vs_sine_err_ratio": round(float(np.mean(e_sq / e_sin)), 3),
+        "offset_rejection_ratio": round(float(np.mean(e_sq_off / e_sq)), 3),
+        "note": "An induction coil differentiates, so a TRIANGULAR field gives a SQUARE-WAVE "
+        "sensor EMF (NDI/Ascension patent). Square-wave synchronous demod (sign-flip-and-average) "
+        "recovers the coupling with error ~1/sqrt(N) - the same matched-filter SNR as a sine "
+        "lock-in on an equal-RMS sine (err ratio ~1) - so the choice is IMPLEMENTATION, not SNR. "
+        "Its concrete win: the +/-1 reference has zero mean, so a large DC/baseline OFFSET is "
+        "rejected (offset_rejection_ratio ~1), the built-in benefit of the polarity-inverting "
+        "scheme. (Ch. 9 §9.9, Ch. 20.)",
+    }
+    (DATA / "triangle_square_demod.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["triangle_square_demod"] = res
+    print("[sim17] triangle/square demod:", res)
+
+
+# ---------------------------------------------------------------------------
+# Sim 18 — the quadrature distortion signature: eddy (conductive) vs ferromagnetic
+#          in-phase/quadrature split vs frequency (Ch. 20 §20.10, Ch. 6/27)
+# ---------------------------------------------------------------------------
+def sim_quadrature_distortion() -> None:
+    wt = np.logspace(-2, 2, 400)                # omega * tau_eddy (Ch. 6)
+    # eddy single-pole (L-R loop) response: secondary field ~ -(j w tau)/(1 + j w tau)*primary
+    eddy = -(1j * wt) / (1 + 1j * wt)
+    I_e, Q_e = eddy.real, eddy.imag
+    phase_e = np.degrees(np.angle(eddy))
+    # ferromagnetic: reactive, in-phase, ~frequency-flat (small hysteresis Q, Ch. 6 §6.3)
+    I_f = -0.6 * np.ones_like(wt)               # flux concentration, in-phase (sign arbitrary)
+    Q_f = 0.04 * np.ones_like(wt)               # tiny loss-tangent quadrature
+
+    wt_op = 0.3                                  # representative EMT operating point (omega tau < 1)
+    e_op = -(1j * wt_op) / (1 + 1j * wt_op)
+    eddy_phase_op = float(np.degrees(np.angle(e_op)))
+    eddy_QI_op = float(abs(e_op.imag) / abs(e_op.real))
+    ferro_phase = float(np.degrees(np.arctan2(Q_f[0], I_f[0])))
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 4.0))
+    a1.semilogx(wt, I_e, color="#1e3a8a", lw=1.5, label="eddy in-phase $I$")
+    a1.semilogx(wt, Q_e, color="#b91c1c", lw=1.5, label="eddy quadrature $Q$")
+    a1.semilogx(wt, I_f, color="#1e3a8a", lw=1.2, ls="--", label="ferro in-phase $I$")
+    a1.semilogx(wt, Q_f, color="#b91c1c", lw=1.2, ls="--", label="ferro quadrature $Q\\approx0$")
+    a1.axvline(wt_op, color="#64748b", ls=":", lw=1)
+    a1.set_xlabel(r"$\omega\tau_e$ (frequency $\times$ eddy time const)")
+    a1.set_ylabel("perturbation component"); a1.grid(True, which="both", alpha=0.3)
+    a1.legend(fontsize=7.5); a1.set_title("Conductive vs ferromagnetic: I/Q vs frequency")
+    a2.semilogx(wt, phase_e, color="#7c3aed", lw=1.6, label="eddy phase")
+    a2.axhline(ferro_phase, color="#64748b", ls="--", lw=1.2, label="ferro phase (in-phase)")
+    a2.axvline(wt_op, color="#64748b", ls=":", lw=1)
+    a2.set_xlabel(r"$\omega\tau_e$"); a2.set_ylabel("phase [deg]")
+    a2.set_title("Eddy rotates $-90°\\to-180°$; ferro stays in-phase")
+    a2.grid(True, which="both", alpha=0.3); a2.legend(fontsize=7.5)
+    fig.tight_layout(); fig.savefig(FIG / "ch20_quadrature_distortion.png", dpi=150); plt.close(fig)
+
+    res = {
+        "operating_point_wt": wt_op,
+        "eddy_phase_deg_at_op": round(eddy_phase_op, 1),
+        "eddy_Q_over_I_at_op": round(eddy_QI_op, 2),
+        "ferro_phase_deg": round(ferro_phase, 1),
+        "note": "Single-pole eddy model (Ch. 6 tau_e): the conductive secondary field is "
+        f"QUADRATURE-dominated at low omega*tau (phase -> -90 deg; Q/I = {round(eddy_QI_op,1)} at "
+        f"omega*tau={wt_op}) and rotates to in-phase (anti, -180 deg) at high omega*tau. A "
+        "FERROMAGNETIC distorter is reactive and in-phase (Q ~ 0). So at a typical EMT operating "
+        "point (omega*tau<1) the QUADRATURE channel of the lock-in flags CONDUCTIVE distortion "
+        "selectively while ferromagnetic distortion is invisible in Q (caught only by the in-phase "
+        "residual). Phase-sensitive detect-and-flag, near-free from the dual-phase lock-in "
+        "(Ch. 20 §20.10, Ch. 27).",
+    }
+    (DATA / "quadrature_distortion.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["quadrature_distortion"] = res
+    print("[sim18] quadrature distortion signature:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -1041,8 +1175,23 @@ def write_results_md() -> None:
         f"registration+motion are {d['system_twin_budget']['reg_plus_motion_fraction_pct']}%",  # type: ignore[index]
         "  -> a sub-mm tracker is NOT a sub-mm system; optimize registration/motion/sync.",
         "",
+        "## Sim 17 — Triangle excitation -> square sensor EMF; demod (Ch. 9 §9.9)",
+        f"- triangle field -> square-wave sensor EMF (coil differentiates); square-wave demod "
+        f"error ~N^{d['triangle_square_demod']['square_demod_slope']} = sine lock-in SNR "  # type: ignore[index]
+        f"(err ratio {d['triangle_square_demod']['square_vs_sine_err_ratio']}), but the +/-1 "  # type: ignore[index]
+        f"reference REJECTS a large DC offset (ratio {d['triangle_square_demod']['offset_rejection_ratio']}).",  # type: ignore[index]
+        "",
+        "## Sim 18 — Quadrature distortion signature (Ch. 20 §20.10, Ch. 6/27)",
+        f"- eddy (conductive) distortion is quadrature-dominated at omega*tau<1 (Q/I="
+        f"{d['quadrature_distortion']['eddy_Q_over_I_at_op']} at omega*tau="
+        f"{d['quadrature_distortion']['operating_point_wt']}, phase "
+        f"{d['quadrature_distortion']['eddy_phase_deg_at_op']} deg); ferromagnetic is in-phase "  # type: ignore[index]
+        f"(Q~0) -> the lock-in Q channel flags CONDUCTIVE distortion selectively.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
+        "- `figures/ch09_triangle_square_demod.png` — triangle->square excitation & demod",
+        "- `figures/ch20_quadrature_distortion.png` — eddy vs ferromagnetic I/Q signature",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
         "- `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC",
         "- `figures/ch55_twin_identification.png` — pose error before/after twin identification",
@@ -1074,6 +1223,8 @@ def main() -> None:
     sim_forward_twin_noise()
     sim_witness_divergence()
     sim_system_twin_budget()
+    sim_triangle_square_demod()
+    sim_quadrature_distortion()
     write_results_md()
 
 

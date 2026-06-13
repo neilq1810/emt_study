@@ -269,7 +269,13 @@ pulsed-DC — keeps the conductor at a *constant* $\dot B$ during each ramp (a s
 response rather than a decaying transient, Ch. 6). The detection consequence ties to Ch. 20
 §20.4: when the signal is *deliberately* a square wave, a **square-wave reference** lock-in is
 its **matched filter** — the odd-harmonic content §20.4 flags as a penalty for square-wave
-detection of a *sine* becomes exactly the signal energy here. (conf: high — the differentiating-
+detection of a *sine* becomes exactly the signal energy here. **Computed (Phase-5,
+`figures/ch09_triangle_square_demod.png`):** square-wave synchronous demod of the
+square sensor EMF recovers the coupling with error $\propto N^{-0.49}$ — the *same*
+matched-filter SNR as a sine lock-in on an equal-RMS sine (error ratio $\approx1.0$),
+confirming the choice is **implementation, not SNR** — while the zero-mean $\pm1$
+reference **rejects a 5× DC/baseline offset** (residual ratio $\approx1.0$), the
+built-in advantage of the polarity-inverting scheme. (conf: high — the differentiating-
 sensor physics and the patent's waveform list are primary; which shape a specific shipping
 product uses is not asserted.)
 
