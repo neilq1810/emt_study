@@ -195,3 +195,8 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 | 27 | §27.5 | +cross-link to §30.6 (physics-informed/differentiable as the principled ML complement) |
 
 **🎉 TIER 2 COMPLETE** — all clusters A–F done (A math, B clinical/safety, C industry/ops, D compliance, E eng-depth, F frontier). 17 new verified citations across B–F; 4 new chapters (48,49,50,51,52); ~15 new sections in existing chapters. Verifier PASS (52 ch, 100 citations); build clean throughout.
+
+### Part XXIII — Model-Based Engineering & the Digital Twin (new initiative)
+| Ch | Title | State | Notes |
+|---:|-------|-------|-------|
+| 53 | The digital twin: concept & credibility | 🟢 DRAFT → review | **NEW Part opener** (from the 5-of-10-fail gap analysis): forward vs identified vs reconciled twin; EMT suits a twin (one cheap/differentiable/over-determined model serves design+calibration+monitoring; emtrack = the kernel); **credibility = the whole game** — ASME V&V 40 COU/QOI/model-risk + FDA CM&S guidance; the **"sixth way to fail"** = an unvalidated twin re-certifying the phantom's optimism; credibility ladder (COU→required rigor); honest boundary (method, not measurements). +asme_vv40, fda_cms2023, glaessgen2012. Ch. 54–57 scoped. |

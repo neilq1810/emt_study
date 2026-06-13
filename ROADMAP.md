@@ -174,6 +174,23 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
       biased-sensor bias/reference tree** — reference-stability = measurement-
       stability, Type-CF isolation, tip self-heating). Cross-refs Ch.9/16/17/25
 
+### Part XXIII — Model-Based Engineering & the Digital Twin *(new initiative)*
+- [x] Ch. 53 The digital twin: concept & credibility — **DRAFT** (forward vs identified vs
+      reconciled twin; why EMT suits a twin — one cheap, differentiable, over-determined
+      model serves design/calibration/monitoring; **the credibility problem** — ASME V&V 40
+      COU/QOI/model-risk + FDA CM&S guidance; the **"sixth way to fail"** = unvalidated twin;
+      credibility ladder). +asme_vv40, fda_cms2023, glaessgen2012
+- [ ] Ch. 54 The forward twin (differentiable field surrogate + measured noise/distorter models) — planned
+- [ ] Ch. 55 Twin identification = calibration (identifiability via Ch. 24; PINN inverse §30.6) — planned
+- [ ] Ch. 56 The environment twin & distortion (room/C-arm; §33.9 benchmark; divergence-as-flag) — planned
+- [ ] Ch. 57 The system twin & twin-in-the-loop V&V (registration/motion/sync; in-silico evidence) — planned
+
+> **Digital-twin Part rationale.** Emerged from the "5 of 10 companies fail" gap analysis:
+> the twin is the **integrative methodology** that converts the book's *understanding* into
+> a build → calibrate → validate → monitor workflow, closing (as *method*, not values) the
+> calibration, noise-floor, and in-situ-distortion gaps and partially the system-integration
+> gap. Ch. 53 is the proof-of-concept opener; Ch. 54–57 are scoped, not yet drafted.
+
 > **All technical Parts (II–XIV) now drafted.** Remaining prose: Part I Ch.2
 > (patent/academic genealogy) & Ch.3 (timelines/trees). Then non-prose phases:
 > figures (4), simulations (5), website (6), cross-ref (7), review (8), final (9).
