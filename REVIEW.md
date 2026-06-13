@@ -186,3 +186,12 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 | 37 | §37.5 | **Generator thermal & power co-design** [T2.21]: moment thermally capped (P∝I²; IEC60601-1 patient-contact temp); duty/conductor/heatsink; thermal drift=accuracy term; → multi-gen not brute moment |
 | 10 | §10.6 | **Cross-modality time sync & clock domains** [T2.23]: skew v·Δt (10ms→0.5–2mm); timestamp-at-source/PTP/trigger/latency-cal/async fusion |
 | 21 | §21.9 | **Multi-modal fusion in depth** [T2.20]: complementary failure-mode table; fusion resolves roll-null(§24.1)+hemisphere(§24.7); integrated navigator (groves)+honest fused covariance→§46.6 |
+
+### Cluster F — frontier (Ch. 30 expansions)
+| Ch | Add | Notes |
+|---:|-----|-------|
+| 30 | §30.6 | **Learned localization** [T2.18]: learned cal-map → end-to-end regression (black-box, loses covariance/flag) → **PINN/differentiable-field hybrid** (learn residual on differentiable physics, preserve uncertainty - the honest direction). +raissi2019 |
+| 30 | §30.7 | **Magnetic actuation + tracking** [T2.19]: one field actuates (τ=m×B, F=∇(m·B)) & localizes; tesla actuation-field interference (time-share) vs sense-the-actuation-magnet (reciprocal MR-array, Ch.14); closed loop (latency=loop delay, covariance=control uncertainty). +abbott2020 |
+| 27 | §27.5 | +cross-link to §30.6 (physics-informed/differentiable as the principled ML complement) |
+
+**🎉 TIER 2 COMPLETE** — all clusters A–F done (A math, B clinical/safety, C industry/ops, D compliance, E eng-depth, F frontier). 17 new verified citations across B–F; 4 new chapters (48,49,50,51,52); ~15 new sections in existing chapters. Verifier PASS (52 ch, 100 citations); build clean throughout.

@@ -2739,6 +2739,64 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "ASTM practice for measuring/reporting static positional accuracy of surgical navigation/robotic positioning systems (tracking subsystem); enables within- and between-manufacturer comparison. A real positional-accuracy standard beyond the Hummel protocol; still largely STATIC (the T2.27 dynamic/distortion gap). Editions -10/-18/-22."
+    },
+    {
+      "id": "raissi2019",
+      "type": "article",
+      "title": "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations",
+      "authors": [
+        "Raissi, Maziar",
+        "Perdikaris, Paris",
+        "Karniadakis, George E."
+      ],
+      "year": 2019,
+      "venue": "Journal of Computational Physics",
+      "volume": "378",
+      "pages": "686-707",
+      "doi": "10.1016/j.jcp.2018.10.045",
+      "url": "https://doi.org/10.1016/j.jcp.2018.10.045",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "physics-informed neural networks",
+        "PINN",
+        "inverse problems",
+        "differentiable physics",
+        "deep learning",
+        "PDE"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Canonical PINN paper: neural networks constrained by the governing PDE, solving forward and INVERSE problems. Basis for §30.6 physics-informed / differentiable-field localization and calibration. DOI verified; JCP 378:686-707."
+    },
+    {
+      "id": "abbott2020",
+      "type": "article",
+      "title": "Magnetic Methods in Robotics",
+      "authors": [
+        "Abbott, Jake J.",
+        "Diller, Eric",
+        "Petruska, Andrew J."
+      ],
+      "year": 2020,
+      "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+      "volume": "3",
+      "pages": "57-90",
+      "doi": "10.1146/annurev-control-081219-082713",
+      "url": "https://doi.org/10.1146/annurev-control-081219-082713",
+      "publisher": "Annual Reviews",
+      "source_type": "journal",
+      "keywords": [
+        "magnetic actuation",
+        "magnetic manipulation",
+        "capsule robots",
+        "microrobots",
+        "wireless actuation",
+        "forces and torques"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Unified treatment of magnetic forces/torques for remote manipulation and wireless actuation in robotics (capsule endoscopes, microrobots, steerable catheters). Anchors §30.7 magnetic actuation + tracking. DOI verified; ARCRAS 3:57-90."
     }
   ],
   "to_research": [

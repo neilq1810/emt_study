@@ -236,9 +236,9 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.20** Multi-modal fusion in depth *(Ch. 21 §21.9)* — 🟢 DONE: complementary failure modes table (EM no-LoS/distortion vs optical LoS/distortion-immune vs IMU drift vs robot flex vs imaging); fusion resolves BOTH 5-DOF roll null (§24.1) AND hemisphere ambiguity (§24.7); integrated navigator (groves) + honest fused covariance → §46.6 display
 - [x] **T2.22** Tracking-volume extension & multi-generator handoff *(Ch. 9 §9.8)* — 🟢 DONE: tile overlapping generators; common-frame inter-gen registration (cross-calibrated in overlap); fuse-through-overlap (lower PDOP) not hard-switch (avoids re-acq); TDM/FDM mutual-interference separation; architectural alt to brute moment
 
-**Cluster F — Frontier**
-- [ ] **T2.18** Deep-learning localization & calibration (end-to-end, PINN, differentiable fields) *(expand Ch. 27/30)*
-- [ ] **T2.19** Magnetic actuation + tracking (Stereotaxis, capsule robots) *(expand Ch. 30)*
+**Cluster F — Frontier** ✅ DONE
+- [x] **T2.18** Deep-learning localization & calibration *(Ch. 30 §30.6; Ch. 27 §27.5 link)* — 🟢 DONE: three levels (learned cal-map → end-to-end regression black-box → **PINN/differentiable-field hybrids**); the honest direction = learn the residual on a differentiable physics model & preserve covariance/detect-and-flag, not opaque regression. +raissi2019
+- [x] **T2.19** Magnetic actuation + tracking *(Ch. 30 §30.7)* — 🟢 DONE: one field actuates (τ=m×B, F=∇(m·B)) AND localizes; two regimes (tesla actuation field as interference → time-share/spectral-sep; OR sense the actuation magnet = reciprocal MR-array, Ch.14); closed control loop (tracking latency=loop delay, covariance=control uncertainty). +abbott2020
 
 ### Tier 3 — completeness
 - [ ] **T3.1** Inverse-Problem Global-Solution Theory (uniqueness, basins, multi-start) *(expand Ch. 23)*

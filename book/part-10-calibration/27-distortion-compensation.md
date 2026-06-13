@@ -138,7 +138,9 @@ acutely relevant to a safety-critical medical context):
 
 ML is a powerful *complement* to physics-based models and witness/fusion methods,
 not a replacement — and in a medical device it must be wrapped in detection,
-uncertainty, and validation, never trusted blindly.
+uncertainty, and validation, never trusted blindly. The principled way to get that
+complement — **physics-informed / differentiable-field models that learn only the
+residual and preserve the covariance** — is developed as a frontier in Ch. 30 §30.6.
 
 ## 27.6 Architectural rejection at the source: pulsed-DC, quantified
 
