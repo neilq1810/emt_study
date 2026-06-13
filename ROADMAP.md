@@ -11,7 +11,7 @@ change.
 | 1     | Repository structure + master outline + roadmap          | ✅ Done        |
 | 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
-| 4     | Figures & visualizations                                 | 🟡 14 figures: 10 computed (Ch.4/6/13/20/24/29/33) + 4 schematic diagrams (Ch.5/6/8/19, via make_diagrams.py); more schematics possible |
+| 4     | Figures & visualizations                                 | 🟢 18 figures: 10 computed + 8 schematic diagrams (Ch.5/6/8/13/19/24/46/48, via make_diagrams.py); all in gallery |
 | 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 12 sims incl. 6-DOF FIM, deep-volume, distortion flag-ROC) |
 | 6     | Interactive website (digital textbook + tools)           | ✅ Scaffold + 21 interactive tools; sim↔site linked (/results, /figures, 6 tools overlay Python data) |
 | 7     | Cross-referencing pass                                   | 🟢 §-ref integrity verified (849 §-refs → 349 sections, 0 dangling) + permanent verifier guard |

@@ -240,11 +240,176 @@ def diagram_excitation_schemes() -> None:
     print("[figD] ch19_excitation_schemes.png")
 
 
+# ---------------------------------------------------------------------------
+# Fig E — dipole hemisphere / parity ambiguity (Ch. 24 §24.7)
+# ---------------------------------------------------------------------------
+def diagram_hemisphere_ambiguity() -> None:
+    fig, ax = plt.subplots(figsize=(7.6, 5.6))
+    ax.set_xlim(-3.4, 3.4); ax.set_ylim(-2.7, 3.0); ax.set_aspect("equal"); ax.axis("off")
+
+    th = np.linspace(0.05, np.pi - 0.05, 200)
+    for L in (0.8, 1.4):
+        r = L * np.sin(th) ** 2
+        for sx in (1, -1):
+            ax.plot(sx * r * np.sin(th), r * np.cos(th), color="#cbd5e1", lw=0.9, zorder=1)
+    box(ax, 0, 0, 1.3, 0.5, "dipole generator", "#e2e8f0", fontsize=8)
+
+    P = np.array([2.1, 1.3])
+    for sign, fc, ec, lab, ls in ((+1, "#be123c", "#be123c", "sensor at $+\\vec r$", "-"),
+                                  (-1, "white", "#64748b", "mirror at $-\\vec r$", (0, (4, 3)))):
+        Q = sign * P
+        arrow(ax, (0, 0), tuple(Q), style="-|>", color=ec, lw=1.6, ls=ls)
+        ax.add_patch(plt.Circle(tuple(Q), 0.14, fc=fc, ec=ec, lw=1.5, zorder=5))
+        nvec = sign * np.array([0.25, 0.7])
+        arrow(ax, tuple(Q), tuple(Q + nvec), style="-|>", color=ec, lw=1.5, ls=ls)
+        ax.text(*(Q + sign * np.array([0.15, 0.42])), lab, fontsize=9, color=ec,
+                ha="left" if sign > 0 else "right")
+
+    ax.text(0, 2.55, "Single dipole generator: $+\\vec r$ and $-\\vec r$ give "
+            "IDENTICAL measurements", ha="center", fontsize=10)
+    ax.text(0, 2.12, "$K(\\vec r)\\propto 3\\hat r\\hat r^{T}-I$ is invariant under "
+            "$\\hat r\\to-\\hat r$ (global un-identifiability)", ha="center",
+            fontsize=8.5, color="#475569")
+    ax.add_patch(FancyBboxPatch((-3.2, -2.65), 6.4, 0.62, boxstyle="round,pad=0.02",
+                                fc="#ecfeff", ec="#0e7490", lw=1.0, zorder=3))
+    ax.text(0, -2.34, "Resolved by: asymmetric / planar generator (§9.7) · half-space prior · "
+            "tracking continuity · fusion (§21.9)", ha="center", fontsize=8.5, color="#0e7490")
+    ax.set_title("The dipole hemisphere / parity ambiguity (Ch. 24 §24.7)", fontsize=11)
+    fig.tight_layout(); fig.savefig(FIG / "ch24_hemisphere_ambiguity.png", dpi=150); plt.close(fig)
+    print("[figE] ch24_hemisphere_ambiguity.png")
+
+
+# ---------------------------------------------------------------------------
+# Fig F — the 5-DOF roll null and its dual-coil fix (Ch. 13)
+# ---------------------------------------------------------------------------
+def diagram_roll_null() -> None:
+    from matplotlib.patches import Ellipse
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.4, 4.6))
+    for ax in (a1, a2):
+        ax.set_xlim(-1.6, 1.6); ax.set_ylim(-1.7, 2.0); ax.set_aspect("equal"); ax.axis("off")
+
+    # panel 1: single coil, roll about its own axis is unobservable
+    a1.add_patch(Ellipse((0, 0), 0.9, 0.32, angle=0, fc="#dbeafe", ec="#1e3a8a", lw=1.6))
+    arrow(a1, (0, 0), (0, 1.2), style="-|>", color="#1e3a8a", lw=2.0)
+    a1.text(0.08, 1.15, "$\\hat n$", color="#1e3a8a", fontsize=11)
+    # roll arrow (circular) about n
+    rr = np.linspace(-0.6, 3.6, 60)
+    a1.plot(0.45 * np.cos(rr), 0.7 + 0.16 * np.sin(rr), color="#b91c1c", lw=1.6)
+    arrow(a1, (0.45 * np.cos(3.4), 0.7 + 0.16 * np.sin(3.4)),
+          (0.45 * np.cos(3.7), 0.7 + 0.16 * np.sin(3.7)), style="-|>", color="#b91c1c", lw=1.6)
+    a1.text(0, -1.25, "Single-axis sensor:\nroll about $\\hat n$ leaves every\nmeasurement "
+            "unchanged ✗ (rank-deficient $J$)", ha="center", fontsize=9, color="#b91c1c")
+    a1.set_title("5-DOF: roll unobservable", fontsize=10)
+
+    # panel 2: two coils at angle theta -> roll observable
+    a2.add_patch(Ellipse((0, 0), 0.9, 0.32, angle=0, fc="#dbeafe", ec="#1e3a8a", lw=1.6))
+    arrow(a2, (0, 0), (0, 1.2), style="-|>", color="#1e3a8a", lw=2.0)
+    a2.add_patch(Ellipse((0, 0), 0.9, 0.32, angle=55, fc="#dcfce7", ec="#166534", lw=1.6))
+    arrow(a2, (0, 0), (1.2 * np.sin(np.radians(35)), 1.2 * np.cos(np.radians(35))),
+          style="-|>", color="#166534", lw=2.0)
+    ang = np.linspace(np.pi / 2, np.radians(55), 24)
+    a2.plot(0.5 * np.cos(ang), 0.5 * np.sin(ang), color="#475569", lw=1.0)
+    a2.text(0.45, 0.5, "$\\theta$", fontsize=11, color="#475569")
+    a2.text(0, -1.25, "Second (askew) element:\nroll now observable ✓\n(observability "
+            "$\\propto\\sin\\theta$, sim 9)", ha="center", fontsize=9, color="#166534")
+    a2.set_title("6-DOF: dual coil resolves roll", fontsize=10)
+    fig.suptitle("The 5-DOF roll null and its dual-coil fix (Ch. 13)", fontsize=11)
+    fig.tight_layout(); fig.savefig(FIG / "ch13_roll_null.png", dpi=150); plt.close(fig)
+    print("[figF] ch13_roll_null.png")
+
+
+# ---------------------------------------------------------------------------
+# Fig G — design controls V-model (Ch. 48)
+# ---------------------------------------------------------------------------
+def diagram_design_controls() -> None:
+    fig, ax = plt.subplots(figsize=(9.2, 5.4))
+    ax.set_xlim(0, 10); ax.set_ylim(0, 5.4); ax.axis("off")
+
+    # left (descending) arm
+    un = box(ax, 1.6, 4.6, 2.2, 0.7, "User needs\n(intended use)", C_PHYS)
+    di = box(ax, 1.6, 3.2, 2.2, 0.7, "Design inputs\n(requirements)", C_ANALOG)
+    do = box(ax, 1.6, 1.8, 2.2, 0.7, "Design outputs\n(specs, code)", C_ANALOG)
+    # bottom
+    impl = box(ax, 5.0, 0.7, 2.4, 0.7, "Implementation\n& design transfer", "#e2e8f0")
+    # right (ascending) arm
+    ver = box(ax, 8.4, 1.8, 2.4, 0.7, "Verification\n(meets inputs?)", C_DIGITAL)
+    val = box(ax, 8.4, 3.2, 2.4, 0.7, "Validation\n(meets user needs?)", C_DIGITAL)
+    rel = box(ax, 8.4, 4.6, 2.4, 0.7, "Released device\n+ DHF", C_OUT)
+    arrow(ax, (un[0], 4.25), (di[0], 3.55)); arrow(ax, (di[0], 2.85), (do[0], 2.15))
+    arrow(ax, (do[0], 1.45), (impl[0] - 1.2, 0.85), rad=-0.1)
+    arrow(ax, (impl[0] + 1.2, 0.85), (ver[0], 1.45), rad=-0.1)
+    arrow(ax, (ver[0], 2.15), (val[0], 2.85)); arrow(ax, (val[0], 3.55), (rel[0], 4.25))
+    # horizontal V&V correspondence links (dashed)
+    arrow(ax, (do[0] + 1.1, 1.8), (ver[0] - 1.2, 1.8), style="<|-|>", color="#64748b",
+          lw=1.1, ls=(0, (4, 3)))
+    ax.text(5.0, 2.0, "verification: built it right", ha="center", fontsize=8, color="#475569")
+    arrow(ax, (un[0] + 1.1, 4.6), (val[0] - 1.2, 4.6), style="<|-|>", color="#64748b",
+          lw=1.1, ls=(0, (4, 3)), rad=-0.12)
+    ax.text(5.0, 5.0, "validation: built the right thing", ha="center", fontsize=8,
+            color="#475569")
+    ax.text(5.0, 3.5, "ISO 13485 / 21 CFR 820.30\ndesign controls;\nall captured in the DHF",
+            ha="center", fontsize=8.5, color="#7c3aed")
+    ax.set_title("Design controls: the V&V V-model (Ch. 48 §48.4–48.5)", fontsize=11)
+    fig.tight_layout(); fig.savefig(FIG / "ch48_design_controls.png", dpi=150); plt.close(fig)
+    print("[figG] ch48_design_controls.png")
+
+
+# ---------------------------------------------------------------------------
+# Fig H — navigation-confidence error ellipsoid & the coupling penalty (Ch. 46 §46.6)
+# ---------------------------------------------------------------------------
+def diagram_error_ellipsoid() -> None:
+    from matplotlib.patches import Ellipse
+
+    fig, ax = plt.subplots(figsize=(7.4, 5.4))
+    ax.set_xlim(-3.2, 3.6); ax.set_ylim(-2.8, 3.0); ax.set_aspect("equal"); ax.axis("off")
+
+    # target crosshair
+    ax.axhline(0, color="#cbd5e1", lw=0.8); ax.axvline(0, color="#cbd5e1", lw=0.8)
+    ax.plot(0, 0, "+", color="#334155", ms=14, mew=2)
+
+    # naive (orientation-known) 95% ellipse vs marginalized 6-DOF (x2.95)
+    naive_w, naive_h, angle = 1.0, 0.6, 28
+    ax.add_patch(Ellipse((0, 0), naive_w, naive_h, angle=angle, fill=False,
+                         ec="#166534", lw=1.8))
+    ax.add_patch(Ellipse((0, 0), naive_w * 2.95, naive_h * 2.95, angle=angle, fill=False,
+                         ec="#b45309", lw=1.8, ls=(0, (5, 3))))
+    ax.text(0.62, 0.30, "naive\n(orientation\nknown)", color="#166534", fontsize=8)
+    ax.text(-3.1, 1.7, "marginalized 6-DOF\n($\\times$2.95 coupling\npenalty, §24.6)",
+            color="#b45309", fontsize=8.5, ha="left")
+
+    # tool-axis cone
+    apex = np.array([-2.2, -1.8])
+    for dth in (-9, 9):
+        d = np.array([np.sin(np.radians(35 + dth)), np.cos(np.radians(35 + dth))])
+        arrow(ax, tuple(apex), tuple(apex + 2.4 * d), style="-", color="#7c3aed", lw=1.3)
+    ax.text(-1.2, -1.0, "tool-axis cone\n($\\pm2.8\\,\\sigma_\\varphi$)", color="#7c3aed",
+            fontsize=8.5)
+
+    # traffic-light confidence chip
+    for i, (c, lab) in enumerate([("#16a34a", "GREEN"), ("#d97706", "AMBER"), ("#dc2626", "RED")]):
+        ax.add_patch(plt.Circle((2.7, 2.4 - i * 0.5), 0.15, fc=c, ec="none"))
+        ax.text(2.95, 2.4 - i * 0.5, lab, va="center", fontsize=8, color=c)
+    ax.text(2.85, 2.78, "$T_{95}$ vs $\\tau$", fontsize=8, color="#334155", ha="center")
+
+    ax.text(0.2, -2.55, "Display the 95% ellipsoid from the MARGINALIZED covariance "
+            "(§24.6); using the naive block under-draws it ~3×", ha="center", fontsize=8.5,
+            color="#475569")
+    ax.set_title("Navigation-confidence display: honest error ellipsoid (Ch. 46 §46.6)",
+                 fontsize=11)
+    fig.tight_layout(); fig.savefig(FIG / "ch46_error_ellipsoid.png", dpi=150); plt.close(fig)
+    print("[figH] ch46_error_ellipsoid.png")
+
+
 def main() -> None:
     diagram_system_block()
     diagram_coupling_geometry()
     diagram_distortion_mechanism()
     diagram_excitation_schemes()
+    diagram_hemisphere_ambiguity()
+    diagram_roll_null()
+    diagram_design_controls()
+    diagram_error_ellipsoid()
     print("[done] schematic diagrams written to /figures")
 
 

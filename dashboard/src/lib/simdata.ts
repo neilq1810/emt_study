@@ -136,4 +136,32 @@ export const FIGURES: FigureMeta[] = [
     chapterSlug: 'part-07-dsp/19-excitation-channel-separation',
     caption: 'Schematic waveforms: TDM (one axis at a time), FDM (simultaneous tones), and pulsed-DC (energize, wait for eddy settling, sample).',
   },
+  {
+    file: 'ch24_hemisphere_ambiguity.png',
+    title: 'Dipole hemisphere / parity ambiguity (schematic)',
+    chapter: 'Ch. 24 §24.7',
+    chapterSlug: 'part-08-position-solvers/24-conditioning-observability-uncertainty',
+    caption: 'A sensor at +r and its mirror at −r give identical measurements (K ∝ r̂r̂ᵀ is invariant under r̂→−r̂); resolved by an asymmetric generator, a half-space prior, continuity, or fusion.',
+  },
+  {
+    file: 'ch13_roll_null.png',
+    title: 'The 5-DOF roll null and its dual-coil fix (schematic)',
+    chapter: 'Ch. 13',
+    chapterSlug: 'part-04-sensor-engineering/13-sensor-physics-geometries',
+    caption: 'Roll about a single coil axis is unobservable (rank-deficient J); a second askew element makes it observable ∝ sin θ.',
+  },
+  {
+    file: 'ch48_design_controls.png',
+    title: 'Design controls: the V&V V-model (schematic)',
+    chapter: 'Ch. 48',
+    chapterSlug: 'part-20-dependability-compliance/48-regulatory-pathways-quality-systems',
+    caption: 'User needs → inputs → outputs → implementation → verification → validation → released device + DHF; verification = "built it right", validation = "built the right thing".',
+  },
+  {
+    file: 'ch46_error_ellipsoid.png',
+    title: 'Navigation-confidence error ellipsoid (schematic)',
+    chapter: 'Ch. 46 §46.6',
+    chapterSlug: 'part-20-dependability-compliance/46-human-factors-usability',
+    caption: 'Display the 95% ellipsoid from the marginalized 6-DOF covariance (×2.95 the naive block, §24.6), a tool-axis cone, and a τ-relative GREEN/AMBER/RED state.',
+  },
 ];

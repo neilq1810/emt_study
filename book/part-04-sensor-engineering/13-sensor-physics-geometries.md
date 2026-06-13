@@ -67,7 +67,8 @@ the **roll ambiguity** — geometric, not a processing failure; no algorithm
 recovers information the sensor never encoded. The observable state is exactly
 $(\mathbf r,\ \text{2 angles of }\hat{\mathbf n}_s)$ — five numbers. A single
 straight coil or a single MR die is intrinsically a **5-DOF** sensor
-[@yaniv2009].
+[@yaniv2009]. The null and its dual-coil fix are sketched in
+`figures/ch13_roll_null.png`.
 
 > **Why this matters clinically.** A 5-DOF sensor fully localizes the *tip and
 > pointing direction* of a needle or catheter — which is all many procedures

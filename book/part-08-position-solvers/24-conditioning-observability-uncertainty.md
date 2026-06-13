@@ -270,7 +270,8 @@ weakly observable can become observable over a **short arc**. This is the formal
 for why **motion and fusion** (Ch. 21) recover the 5-DOF roll null and stabilize weak
 directions that a single static frame cannot.
 
-**The hemisphere (parity) ambiguity — the decisive global case.** The dipole coupling
+**The hemisphere (parity) ambiguity — the decisive global case** (schematic:
+`figures/ch24_hemisphere_ambiguity.png`)**.** The dipole coupling
 to a sensor at $\mathbf r$ enters through $\hat{\mathbf r}\hat{\mathbf r}^\top$, which is
 **invariant under $\hat{\mathbf r}\to-\hat{\mathbf r}$**. So a sensor at $+\mathbf r$ and
 its mirror image at $-\mathbf r$ through the generator origin produce coupling tensors
