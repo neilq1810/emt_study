@@ -16,8 +16,9 @@ story of Parts IX–X).
 > *not* directly comparable. Throughout, we prefer figures from **standardized
 > protocols** [@hummel2005] and **independent assessments** [@franz2014;
 > @yaniv2009] over datasheet claims, and tag vendor-reported values accordingly.
-> Corporate dates/acquisitions below are from vendor and trade-press sources
-> (conf: med unless corroborated).
+> The major **acquisitions** (Roper–NDI, NDI–Ascension, J&J–Biosense,
+> Covidien–superDimension, Medtronic–Covidien) were **web-corroborated across multiple
+> independent sources** in the X1 pass; items still single-source are tagged (conf: med).
 
 ---
 
@@ -44,8 +45,9 @@ story of Parts IX–X).
 - **History.** Co-founded **1986 by Jack Scully and Ernest ("Ernie") Blood**
   (a Raab et al. co-author, Ch. 1 §1.6), Vermont; pioneers of **pulsed-DC**
   tracking, famed for the **Flock of Birds** and **microBIRD**, plus OEM medical
-  modules (**trakSTAR/driveBAY**) [@ascension_roper2012]. Acquired by **Roper
-  Industries (~US\$19M, 2012)** and operated under **NDI** [@ascension_roper2012].
+  modules (**trakSTAR/driveBAY**) [@ascension_roper2012]. Acquired in **2012 by NDI**
+  (itself a **Roper** company since June 2011) and operated under NDI; the **~US\$19M**
+  figure is single-source trade press [@ascension_roper2012].
 - **Technology/architecture.** **Pulsed-DC** excitation: energize, wait for
   eddy-current settling, sample the static field (Ch. 6 §6.4) — using
   (quasi-)static field sensing rather than pure AC pickup. Native 6-DOF.
@@ -80,9 +82,10 @@ story of Parts IX–X).
 
 ## 28.4 Biosense Webster — CARTO and the EP breakthrough
 
-- **History.** **Biosense** founded **1993 by Shlomo Ben-Haim**; acquired by
-  **Johnson & Johnson in 1997 (~\$400M in shares)** and merged with Webster to form
-  **Biosense Webster** [@globes_jnj_biosense]. The scientific basis is the
+- **History.** **Biosense** founded ~**1993 by Shlomo Ben-Haim** (the CARTO inventor,
+  Ch. 1–2); acquired by **Johnson & Johnson on 29 Sept 1997 for ~\$400M** and merged with
+  Cordis Webster (~1998) to form **Biosense Webster** (J&J date/figure corroborated;
+  founding year conf: med per the patent genealogy) [@globes_jnj_biosense]. The scientific basis is the
   Gepstein/Ben-Haim 1997 nonfluoroscopic electroanatomical-mapping paper
   [@gepstein1997] (Ch. 1 §1.8); **CARTO 3** launched 2009.
 - **Technology/architecture.** Magnetic localization of a catheter sensor over an
@@ -133,9 +136,10 @@ standard; per-product implementation varies.)
 
 - **superDimension (ENB).** Electromagnetic **navigation bronchoscopy**: a CT-
   derived 3-D airway map plus an EM-tracked steerable catheter to reach
-  peripheral lung lesions. Acquired by **Covidien (~\$300M, 2012)**; **Medtronic**
-  closed its Covidien acquisition in **Jan 2015** [@covidien_superdimension2012]
-  (Ch. 29). (conf: med — trade-press figures.)
+  peripheral lung lesions. Acquired by **Covidien for ~\$300M** (announced Mar 2012,
+  closed May 2012); **Medtronic** closed its **~\$50B Covidien** acquisition on
+  **26 Jan 2015** [@covidien_superdimension2012] (Ch. 29). (conf: high — dates/figures
+  corroborated across multiple independent sources.)
 - **Robotic bronchoscopy/navigation** (e.g. robotic platforms integrating EM or
   hybrid localization) and **ENT/IR navigation** systems increasingly embed EM
   tracking; specific vendors/architectures to be surveyed with primary sources.
@@ -175,10 +179,14 @@ through eq. 8.1 and the three error classes (Ch. 25) turns "which is better?" in
 ---
 
 ## Open questions / to verify
-- Corroborate all corporate dates/figures (Polhemus 1969; Ascension 1986 / Roper
-  2012 / \$19M; J&J–Biosense 1997 / \$400M; Covidien–superDimension 2012 / \$300M;
-  Medtronic–Covidien 2015) against a second independent source each; several are
-  currently single-source trade press (conf: med).
+- ✅ **Corroborated (X1 web pass, 2026-06):** **Roper→NDI** (3 Jun 2011) and
+  **NDI→Ascension** (2012); **J&J→Biosense** (29 Sept 1997, ~\$400M, → Biosense Webster);
+  **Covidien→superDimension** (~\$300M, announced Mar / closed May 2012);
+  **Medtronic→Covidien** (closed 26 Jan 2015, ~\$50B) — all multi-source. **Still
+  single-source (conf: med):** the Ascension **~\$19M** figure and the **Biosense 1993**
+  founding year (consistent with the patent genealogy, Ch. 2).
+- Corroborate the remaining founding dates (Polhemus 1969; Ascension 1986) against a
+  second independent source each.
 - Replace qualitative EnSite/Rhythmia architecture notes with per-product primary/
   regulatory sources (510(k)/CE technical files).
 - Build a sourced **performance table** using only standardized-protocol or

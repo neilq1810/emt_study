@@ -255,16 +255,19 @@ measurement and the book currently models only absolute generator-frame tracking
 - [ ] **T3.12** Magnetic Field Safety & Exposure Limits (ICNIRP/IEEE C95.1) *(new; ties Ch. 17)*
 
 ### Cross-cutting workstreams (not chapters — run alongside the tiers)
-- 🟡 **X1 — Credibility/verification pass.** *In progress.* Built a runnable
-  verifier (`scripts/verify_manuscript.py`): checks citation integrity, figure/data
-  reference existence, chapter cross-ref range, placeholder scan, and a curated
-  **sim↔prose number contract** — currently **PASS** (83/83 citations resolve, 0
-  broken, 0 dangling refs, 0 placeholders, 7/7 sim numbers in sync). Re-confirmed
-  via web: **mr_capsule** (Wang/Meng/Hu, *EMBS'06* pp. 2522–2525, PMID 17946518 —
-  **year corrected 2008→2006**) and **birkfellner1998** (Med Phys 25(11):2242–2248,
-  DOI 10.1118/1.598425, PMID 9829253; 9-author list corrected). Remaining: corporate
-  dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1 prefactor; the Ch. 31/33/34/37
-  illustrative budgets (back with sim or measurement); §33.5 metrology vendor specs.
+- 🟢 **X1 — Credibility/verification pass.** *Largely done.* Built a runnable
+  verifier (`scripts/verify_manuscript.py`): citation integrity, figure/data reference
+  existence, chapter cross-ref range, placeholder scan, and a curated **sim↔prose number
+  contract** — **PASS** (100/100 citations resolve, 0 broken, 0 dangling, 0 placeholders,
+  7/7 sim numbers in sync). Web-corroborated and corrected: **mr_capsule** (Wang/Meng/Hu,
+  *EMBS'06* pp. 2522–2525, PMID 17946518 — **year fixed 2008→2006**); **birkfellner1998**
+  (Med Phys 25(11):2242–2248, DOI 10.1118/1.598425, PMID 9829253; 9-author list fixed);
+  and the **Ch. 28 acquisitions** (Roper–NDI Jun 2011, NDI–Ascension 2012, J&J–Biosense
+  29 Sep 1997 ~\$400M, Covidien–superDimension ~\$300M 2012, Medtronic–Covidien
+  26 Jan 2015 ~\$50B). Confirmed the **Ch. 31/33/34/37 illustrative budgets are honestly
+  labeled** (conf-tagged; back-with-sim is X3, not X1). Remaining (minor): Ascension \$19M
+  & Biosense-1993 founding (single-source); pulsed-DC eq. 27.1 prefactor; §33.5 metrology
+  vendor specs — each appropriately hedged.
 - [ ] **X2 — Mathematics-depth upgrades (Section E)** woven into the owning chapters
   (6-DOF FIM, nonlinear observability, TRE theory, manifold solve, GP distortion).
 - [ ] **X3 — Simulation/figure backing.** Implement the deferred sims (below) +
