@@ -178,3 +178,11 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 | 52 | Deployment & Lifecycle Operations | 🟢 DRAFT → review | **NEW** [T2.C3]: install/site-survey+per-room baseline (sets flag thresholds); field-QA/drift/scheduled-connector service→availability; post-market surveillance/MDR vigilance (21CFR803/EU MDR)/CAPA/recalls/PMCF→design loop; obsolescence (2nd-source→re-qual). +cfr803 |
 | 35 | Software architecture & lifecycle | 🟢 +§35.7 | **+§35.7 Cybersecurity** [T2.14]: security-is-safety (spoofed pose/tampered cal→harm→ISO14971); IEC 81001-5-1 secure lifecycle + FDA §524B (SBOM/threat model/SPDF mandatory); authenticate pose stream+cal integrity; detect-and-flag as security control. +iec81001_5_1,fda_cyber2023 |
 | 33 | Characterization & benchmarking | 🟢 +§33.9 | **+§33.9 Standards landscape + proposed dynamic/distortion benchmark** [T2.27]: Hummel/ASTM F2554/ISO5725/GUM all static; proposed trajectory+moving-distorter benchmark whose key metric is **detect-and-flag latency/false-alarm ROC** (asserted→measured). +astm_f2554 |
+
+### Cluster E — engineering-depth expansions (folded into owning chapters)
+| Ch | Add | Notes |
+|---:|-----|-------|
+| 9 | §9.7 + §9.8 | **§9.7 planar/under-table generator** [T2.1] (harmonic-shaped board, mapped model, breaks §24.7 hemisphere ambiguity, shorter range→better z⁴) + **§9.8 multi-generator handoff** [T2.22] (tile+overlap, fuse-not-switch, lower PDOP, TDM/FDM separation) |
+| 37 | §37.5 | **Generator thermal & power co-design** [T2.21]: moment thermally capped (P∝I²; IEC60601-1 patient-contact temp); duty/conductor/heatsink; thermal drift=accuracy term; → multi-gen not brute moment |
+| 10 | §10.6 | **Cross-modality time sync & clock domains** [T2.23]: skew v·Δt (10ms→0.5–2mm); timestamp-at-source/PTP/trigger/latency-cal/async fusion |
+| 21 | §21.9 | **Multi-modal fusion in depth** [T2.20]: complementary failure-mode table; fusion resolves roll-null(§24.1)+hemisphere(§24.7); integrated navigator (groves)+honest fused covariance→§46.6 |

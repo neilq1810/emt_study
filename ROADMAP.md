@@ -230,11 +230,11 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.27** Standards landscape & proposed dynamic/distortion benchmark *(Ch. 33 §33.4/§33.9)* — 🟢 DONE: landscape (Hummel/ASTM F2554/ISO5725/GUM all STATIC); **proposed benchmark** (standardized trajectory+moving distorter+GT) whose decisive metric is **detect-and-flag latency/false-alarm ROC** — converts the load-bearing safety control from asserted to measured. +astm_f2554
 
 **Cluster E — Engineering-depth expansions** *(cheap; fold into parents)*
-- [ ] **T2.1** Planar/under-table field generator design & calibration *(expand Ch. 9)*
-- [ ] **T2.21** Field-generator thermal & power-electronics co-design *(expand Ch. 9/37)*
-- [ ] **T2.23** Cross-modality time sync & clock domains *(expand Ch. 10/35)*
-- [ ] **T2.20** EM–optical–robot–imaging multi-modal fusion in depth *(expand Ch. 21)*
-- [ ] **T2.22** Tracking-volume extension & multi-generator handoff *(new)*
+- [x] **T2.1** Planar/under-table field generator *(Ch. 9 §9.7)* — 🟢 DONE: distributed coil board under-table (out of sterile field); harmonic-synthesized shaping; mapped/calibrated forward model (Ch.7/26); **asymmetry breaks the §24.7 hemisphere ambiguity for free** + shorter range improves z⁴ CRLB
+- [x] **T2.21** Generator thermal & power co-design *(Ch. 37 §37.5)* — 🟢 DONE: moment is THERMALLY capped (P∝I² vs B∝I; patient-contact temp IEC 60601-1); duty/conductor/heat-sink levers; thermal drift IS a calibration/accuracy term; can't brute-force deep volume → multi-generator
+- [x] **T2.23** Cross-modality time sync & clock domains *(Ch. 10 §10.6)* — 🟢 DONE: per-device clocks; skew error v·Δt (10ms→0.5–2mm = millimetre-class); timestamp-at-source, PTP/1588/hardware-trigger, latency calibration, async/out-of-sequence fusion
+- [x] **T2.20** Multi-modal fusion in depth *(Ch. 21 §21.9)* — 🟢 DONE: complementary failure modes table (EM no-LoS/distortion vs optical LoS/distortion-immune vs IMU drift vs robot flex vs imaging); fusion resolves BOTH 5-DOF roll null (§24.1) AND hemisphere ambiguity (§24.7); integrated navigator (groves) + honest fused covariance → §46.6 display
+- [x] **T2.22** Tracking-volume extension & multi-generator handoff *(Ch. 9 §9.8)* — 🟢 DONE: tile overlapping generators; common-frame inter-gen registration (cross-calibrated in overlap); fuse-through-overlap (lower PDOP) not hard-switch (avoids re-acq); TDM/FDM mutual-interference separation; architectural alt to brute moment
 
 **Cluster F — Frontier**
 - [ ] **T2.18** Deep-learning localization & calibration (end-to-end, PINN, differentiable fields) *(expand Ch. 27/30)*
