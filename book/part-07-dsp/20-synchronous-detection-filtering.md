@@ -13,11 +13,13 @@ frequency and low-pass filter — which is the matched filter for a known-freque
 tone and achieves an extraordinarily narrow effective noise bandwidth. This
 chapter derives the lock-in and its **equivalent noise bandwidth** rigorously,
 proves its optimality via the single-bin DFT, then treats the *implementation*
-realities that decide whether a lock-in performs to theory — reference phase and
-harmonic content, dynamic reserve, analog vs. digital realization — and finishes
-with pulsed-DC matched filtering and adaptive interference cancellation. The
-open-source Anser platform is a concrete digital-lock-in EMT realization
-[@jaeger2017].
+realities that decide whether a lock-in performs to theory — **synchronous vs.
+asynchronous detection** (the shared-clock coherence that makes both leakage *and*
+phase behave), reference phase and harmonic content, dynamic reserve, analog vs.
+digital realization, and the **significance of the phase channel** (orientation sign
+and a quadrature distortion signature) — and finishes with pulsed-DC matched filtering
+and adaptive interference cancellation. The open-source Anser platform is a concrete
+digital-lock-in EMT realization [@jaeger2017].
 
 ---
 
@@ -113,10 +115,19 @@ Three consequences:
    problem [@kay1993; @scofield1994]. The lock-in is therefore not merely
    convenient but *optimal* — no linear or nonlinear estimator does better at
    recovering a known-frequency tone's amplitude.
-3. **Leakage discipline.** If sampling is *not* coherent, the tone falls between
-   bins and **spectral leakage** biases the estimate and spills into neighbours.
-   Coherent clocking (Ch. 10) or windowing (§20.8) is mandatory; this is the DSP
-   reason coherence is a first-class system requirement.
+3. **Synchronous vs. asynchronous detection (leakage *and* phase).** Whether
+   detection is *synchronous* turns on one clock decision: if the **excitation
+   (DAC) and acquisition (ADC) share a timebase** so the reference is phase-locked
+   to the actual drive — as the open-source Anser does with a common DAQ sample
+   clock [@jaeger2017] — then sampling is coherent (integer cycles per window), the
+   lock-in's $X,Y$ are *exactly* the DFT bin (20.4), there is **no leakage**, and
+   the **absolute phase $\phi$ is meaningful** (§20.10). If the clocks **free-run
+   (asynchronous)**, the tone falls between bins → **spectral leakage** biases every
+   channel *and* the absolute phase drifts arbitrarily; you must then either
+   **window** (§20.8) or **estimate** each tone's frequency/phase before
+   demodulating. Synchronous (shared-clock) detection is therefore the cleanest path
+   and the reason coherence is a first-class system requirement (Ch. 10) — it buys
+   both leakage-free amplitude *and* a usable phase channel.
 
 ## 20.4 Reference quality: phase, harmonics, jitter, dynamic reserve
 
@@ -234,6 +245,40 @@ much higher near the generator — consistent with the CRLB sub-mm prediction
 integration time (eq. 20.3) — the steep price of the $1/\sqrt T$ law. (conf:
 high — direct application of (20.2)–(20.3) with the Ch. 15 floor.)
 
+## 20.10 The phase channel: orientation sign and the quadrature distortion signature
+
+The dual-phase lock-in computes the phase $\phi=\operatorname{atan2}(Y,X)$ (20.1) **for
+free**, and discarding it (magnitude-only detection) throws away two genuinely useful
+things — so for an AC system the phase should *not* be disregarded.
+
+**1 — The sign of the coupling (orientation).** A quasistatic dipole coupling $M_{ij}$ is
+*real* and can be **negative** (Ch. 5 §5.4); against a stable system phase reference,
+$\phi$ collapses to $0$ or $\pi$, i.e. it carries the **sign** of $M_{ij}$. That sign is
+orientation information the magnitude alone discards — it is what lets the closed-form
+initializer resolve coupling-matrix signs (Ch. 23 §23.5), so a magnitude-only detector
+forfeits observability the dual-phase detector keeps.
+
+**2 — The quadrature component as a distortion sentinel.** A *pristine* quasistatic
+coupling sits entirely in one phase (the calibrated system phase). A **conductive/eddy
+distorter does not**: the eddy secondary field is driven by $dB/dt$ and, through the
+conductor's resistance, **lags the primary**, injecting a **quadrature** component (Ch. 6).
+So a growing quadrature signal — a departure of $\phi$ from its calibrated value — is a
+**direct, near-free indicator of conductive distortion** that the same lock-in already
+measures. It is even *selective*: a **ferromagnetic** distorter perturbs the field largely
+**in phase** (a reactive, near-lossless flux concentration, Ch. 6 §6.3) and contributes
+little to quadrature, so the phase signature helps **distinguish conductive from
+ferromagnetic distortion** — information no amplitude-only (or pulsed-DC) detector gets for
+free. This makes the phase channel a built-in **detect-and-flag** input (Ch. 27 §27.4) and
+another residual for the reconciled twin (Ch. 56), carrying exactly what a witness sensor
+would.
+
+**The catch (back to §20.3).** Absolute phase is interpretable **only if detection is
+synchronous** — the reference phase-locked to the drive (§20.3); under asynchronous
+detection $\phi$ drifts and the quadrature sentinel is unusable. So the value of the phase
+channel is itself an argument for shared-clock coherent detection. (conf: high for the
+principle — the eddy quadrature signature is standard; the exact phase-vs-frequency
+behaviour is regime-dependent, Ch. 6.)
+
 ---
 
 ## Failure modes
@@ -256,6 +301,11 @@ high — direct application of (20.2)–(20.3) with the Ch. 15 floor.)
 - Build a Phase-5 notebook for the Rician low-SNR magnitude bias and the
   square-wave harmonic-folding penalty, with curves.
 - Confirm representative dynamic-reserve figures against a primary source.
+- Simulate the **quadrature distortion signature** (§20.10): the in-phase/quadrature
+  split of an eddy distorter vs a ferromagnetic distorter across frequency, as a
+  phase-sensitive detect-and-flag input (ties Ch. 6/27, the §56 reconciled twin).
+- Source Anser's primary description of the **synchronous (shared-clock) acquisition**
+  (§20.3) to ground the async-vs-sync detail beyond the general principle.
 
 ## Sources cited
 - [@scofield1994] lock-in derivation, ENBW, optimality. [@kay1993] matched-filter/
