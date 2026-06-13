@@ -61,6 +61,11 @@ and the CRLB is a usable design predictor (Ch. 24).
 - the pose-relevant (scale-free) calibration products are identifiable from 1 known pose(s) (Ch. 24 observability applied to the calibration parameters). Demonstrates the
   method (not vendor values) — the calibration-cliff failure mode, closed.
 
+## Sim 14 — Forward-twin noise model: structure matters (Ch. 54, gap 2)
+- at EQUAL total noise power, a structured measurement covariance vs flat sigma^2 I shifts the position CRLB 0.0764->0.0673 mm (x0.881) and the ellipsoid anisotropy 30.0->36.78.
+  The noise model is a MATRIX composed from the chain (Ch.16/18/25/11), not the
+  scalar sigma_B=1nT placeholder the CRLB assumes - the twin makes it explicit/measurable.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever

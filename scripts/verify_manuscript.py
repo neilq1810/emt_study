@@ -13,7 +13,7 @@ Checks
   2. Reference existence  - every figures/*.png and data/*.{json,csv} named in
                             the prose exists on disk.
   3. Cross-ref range      - no "Ch. N"/"Chapter N" beyond the last chapter.
-  4. Placeholder scan     - no TODO/TBD/XXX/to-generate/placeholder left in prose.
+  4. Placeholder scan     - no TODO/TBD/XXX/to-generate (or bracketed/UPPER placeholder) markers left in prose.
   5. Sim<->prose contract - curated headline numbers in data/summary.json still
                             appear verbatim in their chapter (catches drift when
                             a sim is re-run and a value changes).
@@ -34,7 +34,10 @@ BIB = ROOT / "citations" / "bibliography.json"
 # `@key` tokens that are NOT citations: `@<digits>` is "at <value>" (e.g. "@300 Ω",
 # "@10 kHz") and `@key` is the literal convention example in each chapter header.
 NON_CITE = re.compile(r"^\d+$")
-PLACEHOLDERS = re.compile(r"\b(TODO|TBD|FIXME|XXX|to-generate|to generate|placeholder)\b", re.I)
+# Unambiguous editorial markers only. (The *word* "placeholder" is legitimate prose —
+# Ch. 54 argues sigma_B is a placeholder — so it is not auto-flagged; bracketed/upper
+# marker forms still are.)
+PLACEHOLDERS = re.compile(r"\b(TODO|TBD|FIXME|XXX|to-generate|to generate)\b|\[(placeholder|fill[^\]]*)\]|\bPLACEHOLDER\b")
 
 
 def chapters() -> list[pathlib.Path]:
@@ -151,6 +154,8 @@ CONTRACT = [
      ["+0.56", "-0.26", "necessary but not sufficient"]),
     ("Twin identification closes calibration cliff (Ch.55)", "**/55-*.md",
      ["14.9 mm", "0.11 mm", "132", "single known pose"]),
+    ("Forward-twin noise structure shifts CRLB (Ch.54)", "**/54-*.md",
+     ["0.076", "0.067", "structured"]),
 ]
 
 

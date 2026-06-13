@@ -12,7 +12,7 @@ change.
 | 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
 | 4     | Figures & visualizations                                 | 🟢 19 figures: 11 computed + 8 schematic; all in gallery |
-| 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 13 sims incl. 6-DOF FIM, deep-volume, distortion flag-ROC, twin identification) |
+| 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 14 sims incl. 6-DOF FIM, deep-volume, flag-ROC, twin identification, twin-noise) |
 | 6     | Interactive website (digital textbook + tools)           | ✅ Scaffold + 21 interactive tools; sim↔site linked (/results, /figures, 6 tools overlay Python data) |
 | 7     | Cross-referencing pass                                   | 🟢 §-ref integrity verified (849 §-refs → 349 sections, 0 dangling) + permanent verifier guard |
 | 8     | Technical review                                         | ⬜ Not started |
@@ -180,7 +180,7 @@ Each chapter carries a status header: `RESEARCH → DRAFT → REVIEWED → VERIF
       model serves design/calibration/monitoring; **the credibility problem** — ASME V&V 40
       COU/QOI/model-risk + FDA CM&S guidance; the **"sixth way to fail"** = unvalidated twin;
       credibility ladder). +asme_vv40, fda_cms2023, glaessgen2012
-- [ ] Ch. 54 The forward twin (differentiable field surrogate + measured noise/distorter models) — planned
+- [x] Ch. 54 The forward twin — **DRAFT** (pose→(mean, Jacobian, **covariance**) map; field fidelity ladder dipole→harmonic surrogate (Ch.7, sim1); differentiability (§30.6); **the noise layer closes gap 2** — σ_B=1nT is a placeholder, the twin composes R from the measured chain (Ch.16/18/25/37); **sim 14: at equal noise power, R's STRUCTURE shifts CRLB 0.076→0.067mm (12%) + anisotropy 30→37**; per-layer credibility). +sim14
 - [x] Ch. 55 Twin identification = calibration — **DRAFT** (calibration = fitting the twin's params to known-pose data, eq. 55.1; **identifiability = Ch. 24 observability on the calibration Jacobian** — the gain-product rank-5 degeneracy; **sim 13: ±5% gain errors → 14.9 mm uncalibrated → 0.11 mm calibrated, 132×, identifiable from 1 known pose**; parameter hierarchy + factory amortization answering Ch. 50 §50.2; differentiable/PINN inverse; held-out validation per Ch. 53). +sim13, ch55 figure
 - [ ] Ch. 56 The environment twin & distortion (room/C-arm; §33.9 benchmark; divergence-as-flag) — planned
 - [ ] Ch. 57 The system twin & twin-in-the-loop V&V (registration/motion/sync; in-silico evidence) — planned

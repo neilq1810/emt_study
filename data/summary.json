@@ -191,5 +191,14 @@
     "product_param_rel_err": 0.0001,
     "golden_poses_needed_2pct": 1,
     "note": "Calibration as twin identification: with ~5% per-axis transmit/sensor gain errors (Ch.15 tolerance), the NOMINAL-model solver is biased; fitting the gain parameters to a golden-fixture set of KNOWN poses recovers the (scale-free) product matrix and the identified-twin solver drops pose RMS to the noise floor. The pose-relevant products are identifiable from few known poses (Ch.24 observability applied to the calibration parameters). Demonstrates the METHOD (not vendor values)."
+  },
+  "forward_twin_noise": {
+    "pos_sigma_flat_mm": 0.0764,
+    "pos_sigma_structured_mm": 0.0673,
+    "ratio_structured_over_flat": 0.881,
+    "ellipsoid_cond_flat": 30.0,
+    "ellipsoid_cond_structured": 36.78,
+    "equal_total_noise_power": true,
+    "note": "Flat R=sigma^2 I vs a structured R (per-channel variance spread + within-transmit-axis correlation, Ch.11 \u00a711.6) with the SAME trace. The position CRLB and error-ellipsoid anisotropy still change -> the forward twin's noise model is a MATRIX composed from the chain (Ch.16/18/25) and measured, not the scalar sigma_B=1nT placeholder the book's CRLB assumes (gap 2). The twin makes sigma_B an explicit, measurable, structured model output."
   }
 }

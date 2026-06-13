@@ -736,6 +736,64 @@ def sim_twin_identification() -> None:
     print("[sim13] twin identification:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 14 — forward-twin noise model: covariance STRUCTURE shifts the CRLB
+#          even at fixed total noise power (Ch. 54, gap 2 / Ch. 11 §11.6, Ch. 25)
+# ---------------------------------------------------------------------------
+def sim_forward_twin_noise() -> None:
+    """The forward twin's third output is the measurement covariance R, not a scalar
+    sigma_B. R is composed from the chain (sensor self-noise + AFE + ADC + generator +
+    ambient, Ch.16/18/25) and carries calibration-induced correlations (Ch.11 §11.6).
+    Holding TOTAL noise power fixed (equal trace), the CRLB still changes with R's
+    structure -> the noise model is a matrix to measure, not a constant to assume.
+    """
+    from emtrack.crlb import jacobian
+
+    sigma = 1e-9
+    x0 = np.array([0.08, 0.0, 0.28, 0.2, 0.1, -0.15])
+    J = jacobian(x0)  # 9x6
+
+    def pos_sigma(R):
+        cov = np.linalg.inv(J.T @ np.linalg.inv(R) @ J)
+        return float(np.sqrt(np.trace(cov[:3, :3])) * 1e3), cov[:3, :3]
+
+    # flat baseline R0 = sigma^2 I
+    R0 = sigma**2 * np.eye(9)
+    s0, c0 = pos_sigma(R0)
+
+    # structured R: per-channel relative variances (AFE/axis spread) + within-transmit-axis
+    # correlation (calibration-induced, Ch.11 §11.6); normalized to the SAME trace as R0.
+    d = np.array([0.5, 0.5, 2.5, 0.8, 0.8, 2.2, 0.6, 0.6, 2.6])  # weaker signal axes noisier
+    C = np.eye(9)
+    rho = 0.35
+    for g in ([0, 3, 6], [1, 4, 7], [2, 5, 8]):  # channels sharing a transmit axis
+        for a in g:
+            for b in g:
+                if a != b:
+                    C[a, b] = rho
+    Rs = np.diag(np.sqrt(d)) @ C @ np.diag(np.sqrt(d)) * sigma**2
+    Rs *= np.trace(R0) / np.trace(Rs)  # equal total noise power
+    s1, c1 = pos_sigma(Rs)
+
+    res = {
+        "pos_sigma_flat_mm": round(s0, 4),
+        "pos_sigma_structured_mm": round(s1, 4),
+        "ratio_structured_over_flat": round(s1 / s0, 3),
+        "ellipsoid_cond_flat": round(float(np.linalg.cond(c0)), 2),
+        "ellipsoid_cond_structured": round(float(np.linalg.cond(c1)), 2),
+        "equal_total_noise_power": True,
+        "note": "Flat R=sigma^2 I vs a structured R (per-channel variance spread + "
+        "within-transmit-axis correlation, Ch.11 §11.6) with the SAME trace. The position "
+        "CRLB and error-ellipsoid anisotropy still change -> the forward twin's noise model "
+        "is a MATRIX composed from the chain (Ch.16/18/25) and measured, not the scalar "
+        "sigma_B=1nT placeholder the book's CRLB assumes (gap 2). The twin makes sigma_B an "
+        "explicit, measurable, structured model output.",
+    }
+    (DATA / "forward_twin_noise.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["forward_twin_noise"] = res
+    print("[sim14] forward-twin noise:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -813,6 +871,15 @@ def write_results_md() -> None:
         "(Ch. 24 observability applied to the calibration parameters). Demonstrates the",
         "  method (not vendor values) — the calibration-cliff failure mode, closed.",
         "",
+        "## Sim 14 — Forward-twin noise model: structure matters (Ch. 54, gap 2)",
+        f"- at EQUAL total noise power, a structured measurement covariance vs flat "
+        f"sigma^2 I shifts the position CRLB "
+        f"{d['forward_twin_noise']['pos_sigma_flat_mm']}->{d['forward_twin_noise']['pos_sigma_structured_mm']} mm "
+        f"(x{d['forward_twin_noise']['ratio_structured_over_flat']}) and the ellipsoid "
+        f"anisotropy {d['forward_twin_noise']['ellipsoid_cond_flat']}->{d['forward_twin_noise']['ellipsoid_cond_structured']}.",
+        "  The noise model is a MATRIX composed from the chain (Ch.16/18/25/11), not the",
+        "  scalar sigma_B=1nT placeholder the CRLB assumes - the twin makes it explicit/measurable.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
@@ -843,6 +910,7 @@ def main() -> None:
     sim_deep_volume()
     sim_distortion_flag_roc()
     sim_twin_identification()
+    sim_forward_twin_noise()
     write_results_md()
 
 
