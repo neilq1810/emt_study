@@ -1,0 +1,19 @@
+{
+  "terms_mm": {
+    "tracker (CRLB)": 0.0861,
+    "registration TRE": 1.0,
+    "motion (gated resid.)": 1.5,
+    "time-sync (v.dt)": 0.5
+  },
+  "variance_fraction_pct": {
+    "tracker (CRLB)": 0.21,
+    "registration TRE": 28.51,
+    "motion (gated resid.)": 64.15,
+    "time-sync (v.dt)": 7.13
+  },
+  "tracker_fraction_pct": 0.211,
+  "reg_plus_motion_fraction_pct": 92.7,
+  "sigma_target_mm": 1.873,
+  "T95_target_mm": 5.24,
+  "note": "End-to-end TARGET uncertainty = quadrature of tracker CRLB (computed) + registration TRE + gated-motion residual + time-sync skew (representative clinical inputs, Ch.39/41/10). The tracker is ~0.2% of target-error variance while registration+motion are ~90% -> a sub-mm tracker does NOT make a sub-mm system; the system twin says optimize registration/motion/sync (gap 5, the 'built the tracker not the system' failure). Dominance structure is robust; absolute mm are illustrative."
+}

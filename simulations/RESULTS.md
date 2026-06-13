@@ -69,6 +69,10 @@ and the CRLB is a usable design predictor (Ch. 24).
 ## Sim 15 — Witness divergence resolves the blind spot (Ch. 56 environment twin)
 - for a pose-mimicking distorter, the tracked-sensor residual margin is -0.227% (flags AFTER danger) while a WITNESS sensor at a known pose gives 0.07% (flags FIRST) — independent redundancy closes the reconciled-twin / detect-and-flag blind spot.
 
+## Sim 16 — System-twin target-uncertainty budget (Ch. 57, gap 5)
+- end-to-end target sigma 1.873 mm (T95 5.24 mm): the TRACKER is only 0.211% of target-error variance while registration+motion are 92.7%
+  -> a sub-mm tracker is NOT a sub-mm system; optimize registration/motion/sync.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever

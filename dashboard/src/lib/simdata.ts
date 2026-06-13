@@ -178,4 +178,11 @@ export const FIGURES: FigureMeta[] = [
     chapterSlug: 'part-23-digital-twin/55-twin-identification-calibration',
     caption: 'Pose-error histogram before/after identifying ±5% gain errors from known golden-fixture poses: 14.9 mm → 0.11 mm (132×) — the calibration cliff, closed as method.',
   },
+  {
+    file: 'ch57_system_budget.png',
+    title: 'System-twin target-uncertainty budget',
+    chapter: 'Ch. 57',
+    chapterSlug: 'part-23-digital-twin/57-system-twin-vv',
+    caption: 'End-to-end target error by source: the tracker is ~0.2% of the variance; registration + motion are ~93% — a sub-mm tracker is not a sub-mm system.',
+  },
 ];

@@ -158,6 +158,8 @@ CONTRACT = [
      ["0.076", "0.067", "structured"]),
     ("Witness divergence closes the blind spot (Ch.56)", "**/56-*.md",
      ["-0.23", "+0.07", "independent redundancy"]),
+    ("System twin: tracker is not the dominant term (Ch.57)", "**/57-*.md",
+     ["0.2", "93", "1.87"]),
 ]
 
 

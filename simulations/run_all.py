@@ -885,6 +885,63 @@ def sim_witness_divergence() -> None:
     print("[sim15] witness divergence:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 16 — end-to-end target-uncertainty budget: the system twin shows the
+#          tracker is NOT the dominant term (Ch. 57; gap 5 / §46.6 / §10.6)
+# ---------------------------------------------------------------------------
+def sim_system_twin_budget() -> None:
+    """The system twin propagates tracker + registration + motion + time-sync to the
+    TARGET uncertainty the clinician sees. The tracker term (computed CRLB) is a tiny
+    fraction; registration and motion dominate -> optimize the system, not the tracker
+    (the 'built the tracker, not the system' failure, quantified). The clinical terms
+    are REPRESENTATIVE inputs (Ch.39/41/10), labelled illustrative; the dominance
+    structure is the robust result, not the exact mm.
+    """
+    sigma_B = 1e-9
+    sig_track = float(crlb_position_sigma(np.array([0.0, 0.0, 0.30, 0.2, 0.1, -0.15]), sigma_B) * 1e3)
+    tre = 1.0          # registration TRE [mm] (Ch.39, representative)
+    motion = 1.5       # residual respiratory motion after gating [mm] (Ch.41, representative)
+    v_mms, dt_ms = 100.0, 5.0
+    sync = v_mms * 1e-3 * dt_ms  # time-sync skew v*dt [mm] (§10.6)
+
+    terms = {"tracker (CRLB)": sig_track, "registration TRE": tre,
+             "motion (gated resid.)": motion, "time-sync (v.dt)": sync}
+    var = {k: v**2 for k, v in terms.items()}
+    tot = sum(var.values())
+    frac = {k: v / tot for k, v in var.items()}
+    sigma_target = float(np.sqrt(tot)); t95 = 2.8 * sigma_target
+
+    fig, ax = plt.subplots(figsize=(6.6, 4.0))
+    labels = list(terms); fr = [frac[k] * 100 for k in labels]
+    colors = ["#166534", "#b45309", "#b91c1c", "#6d28d9"]
+    ax.barh(labels, fr, color=colors)
+    for i, f in enumerate(fr):
+        ax.text(f + 0.7, i, f"{f:.1f}%  ({terms[labels[i]]:.3g} mm)", va="center", fontsize=8)
+    ax.set_xlabel("share of TARGET-error variance [%]")
+    ax.set_title(f"System-twin error budget: target $\\sigma$={sigma_target:.2f} mm, "
+                 f"$T_{{95}}$={t95:.1f} mm")
+    ax.set_xlim(0, max(fr) * 1.4)
+    fig.tight_layout(); fig.savefig(FIG / "ch57_system_budget.png", dpi=150); plt.close(fig)
+
+    res = {
+        "terms_mm": {k: round(v, 4) for k, v in terms.items()},
+        "variance_fraction_pct": {k: round(v * 100, 2) for k, v in frac.items()},
+        "tracker_fraction_pct": round(frac["tracker (CRLB)"] * 100, 3),
+        "reg_plus_motion_fraction_pct": round(
+            (frac["registration TRE"] + frac["motion (gated resid.)"]) * 100, 1),
+        "sigma_target_mm": round(sigma_target, 3), "T95_target_mm": round(t95, 2),
+        "note": "End-to-end TARGET uncertainty = quadrature of tracker CRLB (computed) + "
+        "registration TRE + gated-motion residual + time-sync skew (representative clinical "
+        "inputs, Ch.39/41/10). The tracker is ~0.2% of target-error variance while "
+        "registration+motion are ~90% -> a sub-mm tracker does NOT make a sub-mm system; the "
+        "system twin says optimize registration/motion/sync (gap 5, the 'built the tracker not "
+        "the system' failure). Dominance structure is robust; absolute mm are illustrative.",
+    }
+    (DATA / "system_twin_budget.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["system_twin_budget"] = res
+    print("[sim16] system-twin budget:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -977,6 +1034,13 @@ def write_results_md() -> None:
         f"WITNESS sensor at a known pose gives {d['witness_divergence']['witness_divergence_margin_pct']}% "  # type: ignore[index]
         "(flags FIRST) — independent redundancy closes the reconciled-twin / detect-and-flag blind spot.",
         "",
+        "## Sim 16 — System-twin target-uncertainty budget (Ch. 57, gap 5)",
+        f"- end-to-end target sigma {d['system_twin_budget']['sigma_target_mm']} mm "  # type: ignore[index]
+        f"(T95 {d['system_twin_budget']['T95_target_mm']} mm): the TRACKER is only "
+        f"{d['system_twin_budget']['tracker_fraction_pct']}% of target-error variance while "  # type: ignore[index]
+        f"registration+motion are {d['system_twin_budget']['reg_plus_motion_fraction_pct']}%",  # type: ignore[index]
+        "  -> a sub-mm tracker is NOT a sub-mm system; optimize registration/motion/sync.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
@@ -1009,6 +1073,7 @@ def main() -> None:
     sim_twin_identification()
     sim_forward_twin_noise()
     sim_witness_divergence()
+    sim_system_twin_budget()
     write_results_md()
 
 
