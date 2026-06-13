@@ -194,11 +194,11 @@ def diagram_distortion_mechanism() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Fig D — excitation/multiplexing schemes: TDM / FDM / pulsed-DC (Ch. 19, Ch. 10)
+# Fig D — excitation/multiplexing schemes: TDM / FDM / CDM / pulsed-DC (Ch. 19, Ch. 10)
 # ---------------------------------------------------------------------------
 def diagram_excitation_schemes() -> None:
     t = np.linspace(0, 1, 1000)
-    fig, axs = plt.subplots(3, 1, figsize=(8.2, 5.6), sharex=True)
+    fig, axs = plt.subplots(4, 1, figsize=(8.2, 7.0), sharex=True)
 
     # TDM: three axes active in sequence
     ax = axs[0]
@@ -218,8 +218,23 @@ def diagram_excitation_schemes() -> None:
     ax.set_title("FDM — all axes simultaneously, separated by frequency", fontsize=9.5, loc="left")
     ax.set_ylim(-1.2, 5.6)
 
-    # pulsed-DC: step then settle, sample after eddy decay
+    # CDM: all axes simultaneously, separated by orthogonal Walsh-Hadamard codes
     ax = axs[2]
+    H = np.array([[1, 1, 1, 1], [1, -1, 1, -1], [1, 1, -1, -1], [1, -1, -1, 1]])
+    codes = H[1:4]  # three non-trivial Hadamard rows -> three channels
+    nchip = codes.shape[1]
+    for i, code in enumerate(codes):
+        chip = np.clip((t * nchip).astype(int), 0, nchip - 1)
+        ax.step(t, code[chip] * 0.8 + (2 - i) * 2.2, where="post", lw=1.1, color=f"C{i}")
+        ax.text(1.01, (2 - i) * 2.2, f"code {i+1}", va="center", fontsize=8, color=f"C{i}")
+    for k in range(1, nchip):
+        ax.axvline(k / nchip, color="#cbd5e1", lw=0.6, ls=":")
+    ax.set_title("CDM — all axes simultaneously, separated by orthogonal (Hadamard) codes",
+                 fontsize=9.5, loc="left")
+    ax.set_ylim(-1.2, 5.6)
+
+    # pulsed-DC: step then settle, sample after eddy decay
+    ax = axs[3]
     for i in range(3):
         base = (2 - i) * 2.2
         seg = (t >= i / 3) & (t < (i + 1) / 3)

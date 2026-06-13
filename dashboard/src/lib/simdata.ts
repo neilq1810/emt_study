@@ -134,7 +134,7 @@ export const FIGURES: FigureMeta[] = [
     title: 'Excitation / channel-separation schemes (schematic)',
     chapter: 'Ch. 19',
     chapterSlug: 'part-07-dsp/19-excitation-channel-separation',
-    caption: 'Schematic waveforms: TDM (one axis at a time), FDM (simultaneous tones), and pulsed-DC (energize, wait for eddy settling, sample).',
+    caption: 'Schematic waveforms: TDM (one axis at a time), FDM (simultaneous tones), CDM (simultaneous, orthogonal Hadamard codes), and pulsed-DC (energize, wait for eddy settling, sample).',
   },
   {
     file: 'ch24_hemisphere_ambiguity.png',
