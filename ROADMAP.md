@@ -14,7 +14,7 @@ change.
 | 4     | Figures & visualizations                                 | 🟡 9 computed figures (Ch.4/6/20/24/29/33); schematic diagrams pending |
 | 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 12 sims incl. 6-DOF FIM, deep-volume, distortion flag-ROC) |
 | 6     | Interactive website (digital textbook + tools)           | ✅ Scaffold + 21 interactive tools; sim↔site linked (/results, /figures, 6 tools overlay Python data) |
-| 7     | Cross-referencing pass                                   | ⬜ Not started |
+| 7     | Cross-referencing pass                                   | 🟢 §-ref integrity verified (849 §-refs → 349 sections, 0 dangling) + permanent verifier guard |
 | 8     | Technical review                                         | ⬜ Not started |
 | 9     | Publication-ready version                                | ⬜ Not started |
 

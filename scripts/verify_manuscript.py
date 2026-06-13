@@ -87,6 +87,44 @@ def check_crossrefs() -> list[str]:
     return errs
 
 
+def _existing_sections() -> set[str]:
+    """All section ids from `## N.M` / `### N.M[.K]` headers across the book."""
+    sec: set[str] = set()
+    for f in chapters():
+        for m in re.finditer(r"^#{2,3}\s+(\d+)\.(\d+)(?:\.(\d+))?", f.read_text(), re.M):
+            sec.add(f"{m.group(1)}.{m.group(2)}")
+            if m.group(3):
+                sec.add(f"{m.group(1)}.{m.group(2)}.{m.group(3)}")
+    return sec
+
+
+def check_section_crossrefs() -> list[str]:
+    """Every §N.M (and range endpoint) must resolve to an existing section header
+    (matched at the N.M level, so inline sub-subsections are allowed)."""
+    sections = _existing_sections()
+    chap_nums = {int(re.match(r"(\d+)", p.name).group(1)) for p in chapters()}
+    errs, n_refs = [], 0
+
+    def ok(ch: str, sec_full: str) -> bool:
+        base = ".".join(sec_full.split(".")[:2])
+        return int(ch) not in chap_nums or sec_full in sections or base in sections
+
+    for f in BOOK.rglob("*.md"):
+        t = f.read_text()
+        for m in re.finditer(r"§\s?(\d+)\.(\d+)(?:\.(\d+))?", t):
+            n_refs += 1
+            full = f"{m.group(1)}.{m.group(2)}" + (f".{m.group(3)}" if m.group(3) else "")
+            if not ok(m.group(1), full):
+                errs.append(f"DANGLING §{full} in {f.name} (no such section)")
+        # range endpoints: §N.A–[N.]B  /  §§N.A-B
+        for m in re.finditer(r"§{1,2}\s?(\d+)\.(\d+)\s?[–\-]\s?(?:(\d+)\.)?(\d+)", t):
+            end_ch = m.group(3) or m.group(1)
+            if not ok(end_ch, f"{end_ch}.{m.group(4)}"):
+                errs.append(f"DANGLING §{end_ch}.{m.group(4)} (range endpoint) in {f.name}")
+    print(f"  section cross-refs: {n_refs} §-refs, {len(sections)} sections, {len(errs)} dangling")
+    return sorted(set(errs))
+
+
 def check_placeholders() -> list[str]:
     errs = []
     for f in chapters():
@@ -144,8 +182,9 @@ def main() -> int:
         ("1. Citation integrity", check_citations),
         ("2. Reference existence", check_references),
         ("3. Cross-ref range", check_crossrefs),
-        ("4. Placeholder scan", check_placeholders),
-        ("5. Sim<->prose contract", check_contract),
+        ("4. Section cross-ref resolution", check_section_crossrefs),
+        ("5. Placeholder scan", check_placeholders),
+        ("6. Sim<->prose contract", check_contract),
     ]:
         print(name)
         all_errs += fn()
