@@ -32,3 +32,16 @@ body {
 .sidebar-link[aria-current='page'] {
   @apply bg-accent/10 text-accent font-semibold;
 }
+
+/* Auto-rendered manuscript figures (remark-figures.mjs): computed plots and
+   schematic diagrams from /figures, inserted after the paragraph that references
+   them. Centered, bordered, with a small monospace source caption. */
+.prose figure.md-figure {
+  @apply my-6 mx-auto max-w-2xl rounded-lg border border-slate-200 bg-white p-3 text-center;
+}
+.prose figure.md-figure img {
+  @apply mx-auto w-full rounded border border-slate-100;
+}
+.prose figure.md-figure figcaption {
+  @apply mt-2 text-xs text-slate-500;
+}
