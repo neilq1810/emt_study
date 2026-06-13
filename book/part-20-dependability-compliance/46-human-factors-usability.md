@@ -114,6 +114,73 @@ and require acknowledgement; tier the alarm so it is salient but not fatiguing.
 *interface*, not the user, has failed and must be redesigned. That is the IEC 62366
 posture: **use error is a design defect, not operator error.**
 
+## 46.6 A concrete uncertainty-display specification
+
+§46.4 argues *that* uncertainty must be shown; this section specifies *how*, turning the
+covariances the book already computes into pixels. The inputs are all in hand: the
+solver's **6-DOF pose covariance** $\mathbf P$ (Ch. 11 §11.6, Ch. 24 §24.6), the
+registration **TRE** at the target (Ch. 39), and any **distortion/quality flag**
+(Ch. 27 NIS). The design problem is to map them to a display whose apparent confidence
+tracks the *actual* reliability (§46.3).
+
+**1 — Render the position ellipsoid honestly.** Take the position block
+$\mathbf P_{pp}$ (the $3\times3$ part of $\mathbf P$); its eigenvectors are the
+error-ellipsoid axes and its eigenvalues $\lambda_i$ the squared semi-axes. A
+**95 % containment** ellipsoid scales each axis by $\sqrt{\chi^2_{3,0.95}}=\sqrt{7.815}
+=2.80$ (three DOF), so the rendered semi-axes are $2.80\sqrt{\lambda_i}$; a single
+projected axis uses the $1.96\sigma$ (1-DOF) factor. **Critical safety tie:**
+$\mathbf P_{pp}$ **must be the orientation-marginalized block of the full $6\times6$
+$\mathbf F^{-1}$** (§24.6), *not* the orientation-known $\mathbf F_{pp}^{-1}$ — the
+latter is optimistic by the pose-invariant $\approx2.95\times$ coupling penalty, so a
+display built on it would **under-draw the ellipsoid by ~3×** and manufacture exactly
+the false certainty §46.4 warns against.
+
+**2 — Render the tool-axis cone.** The orientation block gives an angular uncertainty;
+draw the tool axis as a **cone** whose half-angle is $2.80\,\sigma_\varphi$ (95 %,
+3-DOF) or $1.96\,\sigma_\varphi$ per axis. Because orientation degrades as $z^3$ and
+position as $z^4$ (§24.6), the cone and the ellipsoid grow at *different* rates with
+range — both must be live, not a single fudge factor.
+
+**3 — Compose with registration.** The quantity the clinician actually cares about is
+**target uncertainty**, so combine pose and registration in quadrature (independent
+contributions): $\sigma_\text{tgt}=\sqrt{\sigma_\text{pos}^2+\text{TRE}^2}$, and inflate
+on a distortion flag (Ch. 27). Report the **predicted 95 % target error**
+$T_{95}=2.80\,\sigma_\text{tgt}$ — not FRE (Ch. 39 §39.3).
+
+**Worked numbers (Phase-5 CRLB, $\sigma_B=1$ nT).** At mid-volume ($z=0.3$ m) the
+marginalized position $\sigma_\text{pos}=0.086$ mm (§24.6), so the **95 % position ball
+has radius $2.80\times0.086\approx0.24$ mm**; orientation $\sigma_\varphi=0.033^\circ$
+gives a **95 % tool-axis cone half-angle $\approx0.092^\circ$**. With a representative
+registration $\text{TRE}=0.8$ mm (Ch. 39), $T_{95}=2.80\sqrt{0.086^2+0.8^2}\approx2.25$
+mm — i.e. **registration, not the tracker, dominates the number the surgeon sees**, and
+the display should say so. (Had the display used the optimistic orientation-known
+covariance, the tracker term would read $0.029$ mm — invisible — reinforcing the wrong
+intuition that the tracker is "perfect.")
+
+**4 — Map to a navigation-confidence state.** Collapse $T_{95}$ and the flags to a
+**tiered GREEN/AMBER/RED** indicator against the *clinical* tolerance $\tau$ (the
+accuracy the procedure requires, Ch. 29/45 — e.g. $\tau\approx2$ mm for many ENB
+targets):
+
+| State | Condition | Display behaviour |
+|---|---|---|
+| 🟢 GREEN | $T_{95}<\tfrac12\tau$, no flag, geometry well-conditioned | full-confidence crosshair + small ellipsoid |
+| 🟡 AMBER | $\tfrac12\tau\le T_{95}<\tau$, **or** near volume edge / high PDOP (§24.3), **or** reference suspect | enlarged ellipsoid, caution colour, prompt to verify |
+| 🔴 RED | $T_{95}\ge\tau$, **or** distortion flag set, **or** loss of tracking | **grey-out/blank** the navigation; do not show a pose |
+
+This makes the detect-and-flag control (§46.3) a concrete pixel behaviour and ties the
+threshold to the *procedure's* requirement rather than a fixed number. Two
+implementation cautions: **hysteresis** on the state transitions (and a short temporal
+filter on $\mathbf P$) so the indicator does not flicker AMBER↔GREEN frame-to-frame
+(Ch. 12 update rate), and a **monotonic, pre-attentive** colour/size encoding so a busy
+operator reads it at a glance (§46.2 alarm fatigue). The companion regulatory anchors are
+the **FDA Human-Factors guidance** [@fda_hf2016] and **IEC 60601-1-6** [@iec60601_1_6],
+which make this display a validated, not merely tasteful, design. (conf: med — the
+$\chi^2$/TRE math and the §24.6 covariance are exact; the specific $\tau$-fractions and the
+GREEN/AMBER/RED cut-points are a *proposed* scheme to be tuned per indication and validated
+summatively (§46.5). A Phase-6 demo rendering live $\mathbf P$→ellipsoid is the natural
+companion.)
+
 > **Engineering takeaway.** The clinician is part of the navigated system, so a correct
 > pose can still cause harm through **use error** — and usability engineering
 > (IEC 62366) is therefore a safety discipline, not a polish step. EMT's defining
@@ -129,12 +196,13 @@ posture: **use error is a design defect, not operator error.**
 ---
 
 ## Open questions / to verify
-- Specify the **uncertainty-visualisation** scheme concretely (ellipsoid rendering,
-  confidence-coupled crosshair, TRE-based registration indicator) as a worked UI design
-  + a Phase-6 demo, tying Ch. 24/39/43 covariances to pixels (T2.24).
-- Add the **FDA Human Factors guidance** (2016, "Applying Human Factors and Usability
-  Engineering to Medical Devices") and **IEC 60601-1-6** (usability collateral) as
-  companion regulatory references (T2.16).
+- ✅ **Resolved (§46.6, T2.24):** concrete uncertainty-display spec — $\chi^2_{3,0.95}$
+  ellipsoid/cone scaling on the **orientation-marginalized** §24.6 covariance (the
+  optimistic block under-draws by ~2.95×), quadrature composition with TRE, and a
+  $\tau$-relative GREEN/AMBER/RED navigation-confidence state. Remaining: a Phase-6 demo
+  rendering live $\mathbf P\to$ellipsoid, and per-indication tuning of the cut-points.
+- ✅ **Resolved:** **FDA Human-Factors guidance** [@fda_hf2016] and **IEC 60601-1-6**
+  [@iec60601_1_6] added as companion references (§46.5/§46.6).
 - Build a representative **critical-task list** and **hazard-related use-scenario**
   set for EP and ENB, with summative acceptance criteria (ties Ch. 45 RMF).
 - Source clinical evidence on **automation bias / over-trust in surgical navigation**
@@ -144,7 +212,8 @@ posture: **use error is a design defect, not operator error.**
 ## Sources cited
 - [@iec62366] usability-engineering process, critical tasks, summative validation.
   [@parasuraman1997] automation misuse/disuse and trust calibration — the basis for
-  §46.3. The uncertainty to be displayed comes from Ch. 11/24 (covariance), Ch. 39 (TRE),
+  §46.3. [@fda_hf2016] FDA HF/usability guidance and [@iec60601_1_6] usability
+  collateral standard — the regulatory anchors for §46.5/§46.6. The uncertainty to be displayed comes from Ch. 11/24 (covariance), Ch. 39 (TRE),
   Ch. 43 (propagated chain); use-related hazards feed the ISO 14971 file (Ch. 45); the
   detect-and-flag control whose human boundary this chapter closes is Ch. 27/44; the
   benefit (radiation) and FRE-misuse ties are Ch. 45/39.

@@ -169,3 +169,29 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 
 ## User-review queue
 - [ ] Ch. 19–25 — awaiting review (batch)
+
+| 48 | Regulatory pathways & quality systems | 🟢 DRAFT → review | **NEW chapter** [T2.16+T2.15]: intended-use→class; US 510(k)/De Novo/PMA + EU MDR GSPR/Rule 11/CER; ISO 13485 + 21 CFR 820/QMSR design controls (input→output→V&V→DHF); V&V master plan matrix; standards-to-evidence map. +iso13485,cfr820,eu_mdr,fda_510k,fda_denovo |
+| 49 | Clinical evaluation & preclinical | 🟢 DRAFT → review | **NEW chapter** [T2.17]: evidence V-model; preclinical-model trade table (phantom/cadaver/animal: realism vs control vs ground-truth); surrogate-vs-clinical endpoint (NAVIGATE); GCP design/powering/bias; navigation pitfalls (GT circularity, surrogate trap). +iso14155 |
+
+| 50 | Manufacturing & Production | 🟢 DRAFT → review | **NEW** [T2.C1]: end-of-line test (functional→parametric→cal→accuracy go/no-go, golden fixture+guard-band, SPC/Cpk); factory cal at scale (amortize physics→per-unit varying DOF; golden-units/cal-transfer/ISO17025 traceability; on-board cal coeff); design-to-cost (BOM, channel-vs-PDOP, NRE). +iso17025 |
+| 51 | Mechanical & Sensor Durability | 🟢 DRAFT → review | **NEW** [T2.C2]: sterilization (EO/rad/steam tradeoffs), biocompat (ISO10993), encapsulation (geometry=calibration), single-use vs reusable; **connector/cable intermittency = #1 field failure** (µV→huge rel. error, pass-at-rest/fail-under-flex, silent glitch→detect-and-flag). +iso10993,iso11135 |
+| 52 | Deployment & Lifecycle Operations | 🟢 DRAFT → review | **NEW** [T2.C3]: install/site-survey+per-room baseline (sets flag thresholds); field-QA/drift/scheduled-connector service→availability; post-market surveillance/MDR vigilance (21CFR803/EU MDR)/CAPA/recalls/PMCF→design loop; obsolescence (2nd-source→re-qual). +cfr803 |
+| 35 | Software architecture & lifecycle | 🟢 +§35.7 | **+§35.7 Cybersecurity** [T2.14]: security-is-safety (spoofed pose/tampered cal→harm→ISO14971); IEC 81001-5-1 secure lifecycle + FDA §524B (SBOM/threat model/SPDF mandatory); authenticate pose stream+cal integrity; detect-and-flag as security control. +iec81001_5_1,fda_cyber2023 |
+| 33 | Characterization & benchmarking | 🟢 +§33.9 | **+§33.9 Standards landscape + proposed dynamic/distortion benchmark** [T2.27]: Hummel/ASTM F2554/ISO5725/GUM all static; proposed trajectory+moving-distorter benchmark whose key metric is **detect-and-flag latency/false-alarm ROC** (asserted→measured). +astm_f2554 |
+
+### Cluster E — engineering-depth expansions (folded into owning chapters)
+| Ch | Add | Notes |
+|---:|-----|-------|
+| 9 | §9.7 + §9.8 | **§9.7 planar/under-table generator** [T2.1] (harmonic-shaped board, mapped model, breaks §24.7 hemisphere ambiguity, shorter range→better z⁴) + **§9.8 multi-generator handoff** [T2.22] (tile+overlap, fuse-not-switch, lower PDOP, TDM/FDM separation) |
+| 37 | §37.5 | **Generator thermal & power co-design** [T2.21]: moment thermally capped (P∝I²; IEC60601-1 patient-contact temp); duty/conductor/heatsink; thermal drift=accuracy term; → multi-gen not brute moment |
+| 10 | §10.6 | **Cross-modality time sync & clock domains** [T2.23]: skew v·Δt (10ms→0.5–2mm); timestamp-at-source/PTP/trigger/latency-cal/async fusion |
+| 21 | §21.9 | **Multi-modal fusion in depth** [T2.20]: complementary failure-mode table; fusion resolves roll-null(§24.1)+hemisphere(§24.7); integrated navigator (groves)+honest fused covariance→§46.6 |
+
+### Cluster F — frontier (Ch. 30 expansions)
+| Ch | Add | Notes |
+|---:|-----|-------|
+| 30 | §30.6 | **Learned localization** [T2.18]: learned cal-map → end-to-end regression (black-box, loses covariance/flag) → **PINN/differentiable-field hybrid** (learn residual on differentiable physics, preserve uncertainty - the honest direction). +raissi2019 |
+| 30 | §30.7 | **Magnetic actuation + tracking** [T2.19]: one field actuates (τ=m×B, F=∇(m·B)) & localizes; tesla actuation-field interference (time-share) vs sense-the-actuation-magnet (reciprocal MR-array, Ch.14); closed loop (latency=loop delay, covariance=control uncertainty). +abbott2020 |
+| 27 | §27.5 | +cross-link to §30.6 (physics-informed/differentiable as the principled ML complement) |
+
+**🎉 TIER 2 COMPLETE** — all clusters A–F done (A math, B clinical/safety, C industry/ops, D compliance, E eng-depth, F frontier). 17 new verified citations across B–F; 4 new chapters (48,49,50,51,52); ~15 new sections in existing chapters. Verifier PASS (52 ch, 100 citations); build clean throughout.

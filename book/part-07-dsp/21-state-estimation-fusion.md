@@ -226,6 +226,43 @@ over-smoothing hiding real motion; mis-tuned covariance producing overconfident
 time-skew in fusion. The reported covariance must be *consistent* (§21.8) to be
 trustworthy for clinical use.
 
+## 21.9 Multi-modal fusion in depth: complementarity and the integrated navigator
+
+§21.7 introduced EM+IMU+optical; the deeper point is *why* it works: the modalities have
+**complementary failure modes**, so fusion buys **robustness and observability**, not merely
+noise averaging.
+
+| Modality | Strength | Blind spot |
+|---|---|---|
+| **EM** | no line-of-sight — sees hidden tips | distortion (Ch. 6/27); degrades as $z^4$ (Ch. 24) |
+| **Optical** | distortion-immune, high accuracy | needs line-of-sight; only external rigid bodies |
+| **IMU** | high-rate, self-contained, no LoS | integration drift (bias) |
+| **Robot kinematics** | strong motion prior, known tool base | flex/backlash |
+| **Imaging (US/fluoro/CT)** | anatomical, near-truth registration | intermittent; dose/LoS-limited |
+
+The fusion argument is that **each covers another's blind spot**: optical **anchors EM and
+bounds its distortion** where LoS exists (giving the NIS distortion test of §21.8 an
+independent reference), while EM **provides continuity when the optical marker is occluded**;
+the IMU **bridges EM dropouts and supplies the roll** a 5-DOF sensor lacks (resolving the
+roll null of §24.1 via the error-state filter, §21.5), while EM **bounds IMU drift**; the
+robot's kinematics **tighten** the EM estimate and EM **corrects kinematic flex**.
+
+**The observability payoff (tie to Ch. 24).** Each added modality appends rows to the
+measurement Jacobian, which **lowers PDOP (§24.3)** and can resolve *both* layers of the
+observability problem: the **local** 5-DOF roll null (§24.1) **and** the **global**
+hemisphere/parity ambiguity (§24.7) — fusion is the general resolver named there. This makes
+the fusion chapter and the observability chapter one story: more independent measurements →
+fuller rank → a uniquely and well-conditioned pose.
+
+**Architecture.** The **error-state filter** (§21.5) is the natural *integrated navigator*
+(the multisensor-navigation framing of [@groves2013]): each modality enters as a measurement
+with its **own $\mathbf R$ and its own timestamp** — so the **cross-modality sync of Ch. 10
+§10.6 is a precondition**, and the filter must handle **asynchronous, out-of-sequence**
+updates. The dividend is honest uncertainty: the **fused covariance** (Ch. 24/46) reflects
+*which* modalities are currently contributing — tight when optical and EM agree, widening to
+EM-only when the marker is occluded — which is exactly the reliability-tracking signal the
+confidence display of Ch. 46 §46.6 renders to the clinician.
+
 ---
 
 ## Open questions / to verify
@@ -243,4 +280,6 @@ trustworthy for clinical use.
   [@sola2017] error-state (multiplicative) orientation filter.
   [@arulampalam2002] particle filtering (SIR, degeneracy, resampling).
   [@barshalom2001] EKF, fusion, consistency (NIS/NEES), smoothing.
-  [@raab1979] historical predictor/corrector precedent.
+  [@groves2013] multisensor integrated navigation — the §21.9 integrated-navigator framing.
+  [@raab1979] historical predictor/corrector precedent. Cross-modality timebase: Ch. 10 §10.6;
+  observability payoff: Ch. 24 §24.1/§24.7; confidence display: Ch. 46 §46.6.

@@ -150,6 +150,71 @@ CMOS-MEMS Lorentz-force/resonant magnetometers (Ch. 14.4) offer integration at t
 cost of thermomechanical noise; continued co-integration with the AFE (Part V) is
 an engineering frontier.
 
+## 30.6 Learned localization: end-to-end, PINN, and differentiable fields
+
+§30.3 covered learned *distortion compensation*; the broader frontier is how deeply
+learning should penetrate the localization chain (physics forward model → iterative solve,
+Ch. 23 → calibration map, Ch. 26 → distortion correction, Ch. 27 §27.5). Three levels, in
+increasing ambition and risk:
+
+1. **Learned calibration / distortion maps** (today's workhorse, §30.3, Ch. 27 §27.5): a
+   network maps measured field → corrected field or a pose correction. Effective, but bound
+   by the **no-testing-on-training-data** discipline (Ch. 27/33) and by generalization to
+   unseen rooms.
+2. **End-to-end pose regression:** a network maps raw coupling measurements **directly** to
+   pose, bypassing the explicit solver — fast (no iteration) but a **black box** that
+   discards the covariance/CRLB (Ch. 24), the observability diagnostics (§24.1/§24.7), and
+   the detect-and-flag handle (Ch. 27). For a safety device that must emit **honest
+   uncertainty** (Ch. 46 §46.6), a bare regressor is at odds with the book's honesty
+   contract unless it is paired with calibrated uncertainty estimation.
+3. **Physics-informed / differentiable-field hybrids** (the principled direction): keep the
+   **dipole/Maxwell physics (Ch. 4) and the harmonic field model (Ch. 7) as a
+   *differentiable* forward model**, and learn only the **residual** — manufacturing
+   variation, room distortion. A **physics-informed neural network** [@raissi2019]
+   constrains the network by the governing equations, so it generalizes from far less data,
+   stays physically plausible, and — crucially — can solve the **inverse** problem. Because
+   the forward model is differentiable, gradients back-propagate through the solver, so
+   calibration can be trained end-to-end *while the physics supplies the inductive bias and
+   the covariance machinery survives*.
+
+The unifying judgement: the deep learning that belongs in a clinical localizer is the kind
+that **augments the physics and preserves the uncertainty** (learned residual on a
+differentiable field, with a probabilistic head), **not** the kind that replaces the solver
+with an opaque regressor. Inverse-problem PINNs over the differentiable field model are the
+most promising and most honest frontier here. (conf: med — direction is well-motivated;
+EMT-specific results are still emerging.)
+
+## 30.7 Magnetic actuation + tracking
+
+A distinct frontier collapses two functions onto one magnetic field: **actuation** (moving a
+magnetic tool) *and* **localization**. The clinical exemplars are **magnetically steered
+catheters** (large external magnets deflect a magnet-tipped catheter, as in remote magnetic
+EP navigation) and **magnetically actuated capsule endoscopes** propelled and steered through
+the GI tract [@abbott2020]. The physics is the same dipole relations the book began with: a
+magnetic moment in an applied field feels a **torque** $\boldsymbol\tau=\mathbf m\times\mathbf
+B$ (aligning it to the field) and a **force** $\mathbf F=\nabla(\mathbf m\cdot\mathbf B)$
+(needing a gradient) — [@abbott2020] unifies these — so the **same field equations (Ch. 4)
+that localize a sensor also actuate a magnet**.
+
+The actuation–tracking interaction splits into two regimes:
+- **Actuation field as interference.** Manipulation fields are **tesla-scale**, dwarfing the
+  µT tracking field (Ch. 4 §4.7) and saturating sensor cores/electronics (Ch. 14) — a severe
+  distortion and dynamic-range problem (Ch. 6, Ch. 9 §9.6). Sensing must be **time-
+  multiplexed or spectrally separated** from actuation.
+- **Actuation magnet as the tracking signal.** Alternatively, **localize the tool by sensing
+  its own magnet** with an external array — exactly the **reciprocal MR-array topology** of
+  Ch. 14 (the capsule-localization demonstration of Ch. 14.3.6). One magnet then serves both
+  roles, but the inverse problem must **disentangle the controlled actuation field from the
+  tool's response**.
+
+Either way, localization closes a **control loop**: the estimated pose feeds back to drive
+the actuation toward a target, so **tracking latency (Ch. 12) becomes loop delay** and the
+**pose covariance (Ch. 24) becomes control uncertainty**, while the actuation kinematics act
+as a **motion prior** for the estimator (Ch. 21). The tracker is no longer a bystander but
+part of the actuation servo — the frontier where Parts II–VIII (sense a pose) meet robotics
+(act on it). (conf: med — established in research/early-clinical magnetic-navigation systems;
+the unified actuation+tracking design is an active area.)
+
 ## 30.5 Open problems
 
 A consolidated list of what remains genuinely unsolved (each cross-referenced to
@@ -190,11 +255,18 @@ where the book frames it):
 - Source recent (2023–2025) results on **TMR sub-pT/biomagnetic** sensing and any
   *tracking*-specific MR demonstrations to update §30.4 (Ch. 14 open question).
 - Track standardization efforts for dynamic/distortion assessment protocols
-  beyond Hummel [@hummel2005].
+  beyond Hummel [@hummel2005] — the proposed flag-ROC benchmark of Ch. 33 §33.9 (T2.27).
 - Add active grants/conferences/lab list (project brief) with verifiable sources.
+- ✅ **Added (§30.6, T2.18):** learned localization (PINN/differentiable fields) framed
+  [@raissi2019]. Remaining: an EMT-specific PINN/differentiable-solver pilot (Phase-5)
+  reporting accuracy + *calibrated uncertainty* vs the classical solver.
+- ✅ **Added (§30.7, T2.19):** magnetic actuation + tracking framed [@abbott2020].
+  Remaining: a quantified actuation-field-vs-tracking-field interference/time-share budget.
 
 ## Sources cited
 - [@cavaliere2023; @kindratenko2005] ML/witness compensation. [@davies2021;
   @monteblanco2021] TMR/MR noise & bias. [@budker2007] optical/atomic (SERF).
   [@barry2020] NV-diamond. [@plotkin2003] arrays. [@hummel2005; @yaniv2009]
-  SOTA/assessment. Fusion framework from Ch. 21; trilemma from Ch. 12.
+  SOTA/assessment. [@raissi2019] physics-informed neural networks (§30.6 learned
+  localization). [@abbott2020] magnetic methods in robotics (§30.7 actuation+tracking).
+  Fusion framework from Ch. 21; trilemma from Ch. 12.

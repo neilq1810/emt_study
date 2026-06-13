@@ -2380,6 +2380,423 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "Foundational nonlinear observability: the observability rank condition via Lie derivatives of the output; local weak observability. Distinguishes local (linear, J-rank) from global observability in Ch. 24.7. DOI verified; IEEE TAC 22(5):728-740."
+    },
+    {
+      "id": "fda_hf2016",
+      "type": "report",
+      "title": "Applying Human Factors and Usability Engineering to Medical Devices: Guidance for Industry and Food and Drug Administration Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2016,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/applying-human-factors-and-usability-engineering-medical-devices",
+      "source_type": "guidance",
+      "keywords": [
+        "human factors",
+        "usability",
+        "critical tasks",
+        "use error",
+        "summative validation",
+        "FDA guidance"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "FDA HF/usability guidance (issued 2016-02-03): critical-task analysis, formative/summative human-factors validation, use-related risk. Companion to IEC 62366 for §46 and the US regulatory pathway (Ch. 48)."
+    },
+    {
+      "id": "iec60601_1_6",
+      "type": "standard",
+      "title": "IEC 60601-1-6 Medical electrical equipment - Part 1-6: General requirements for basic safety and essential performance - Collateral standard: Usability",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2010,
+      "venue": "IEC",
+      "publisher": "International Electrotechnical Commission",
+      "url": "https://webstore.iec.ch/publication/2599",
+      "source_type": "standard",
+      "keywords": [
+        "usability",
+        "collateral standard",
+        "IEC 60601",
+        "basic safety",
+        "essential performance"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Collateral usability standard that points to IEC 62366-1 as the means of compliance; ties the HF process (Ch. 46) into the 60601 safety framework (Ch. 17/45)."
+    },
+    {
+      "id": "iso13485",
+      "type": "standard",
+      "title": "ISO 13485:2016 Medical devices — Quality management systems — Requirements for regulatory purposes",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2016,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/59752.html",
+      "source_type": "standard",
+      "keywords": [
+        "QMS",
+        "quality management system",
+        "design controls",
+        "ISO 13485",
+        "regulatory"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "The medical-device QMS standard; clause 7.3 design & development controls are the backbone of Ch. 48. Recognized for CE marking and harmonized with the US QMSR (2026)."
+    },
+    {
+      "id": "cfr820",
+      "type": "regulation",
+      "title": "21 CFR Part 820 — Quality System Regulation (amended by the Quality Management System Regulation, QMSR, final rule 2024)",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2024,
+      "venue": "U.S. Code of Federal Regulations",
+      "publisher": "U.S. FDA",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-H/part-820",
+      "source_type": "regulation",
+      "keywords": [
+        "Quality System Regulation",
+        "QSR",
+        "design controls",
+        "820.30",
+        "QMSR",
+        "design history file"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "US device QMS rule; 820.30 design controls. QMSR final rule (89 FR 7496, published 2024-02-02) incorporates ISO 13485 by reference, effective 2026-02-02 - harmonizing US QMS with ISO 13485."
+    },
+    {
+      "id": "eu_mdr",
+      "type": "regulation",
+      "title": "Regulation (EU) 2017/745 of the European Parliament and of the Council on medical devices (Medical Device Regulation, MDR)",
+      "authors": [
+        "European Parliament and Council of the European Union"
+      ],
+      "year": 2017,
+      "venue": "Official Journal of the European Union",
+      "publisher": "European Union",
+      "url": "https://eur-lex.europa.eu/eli/reg/2017/745/oj",
+      "source_type": "regulation",
+      "keywords": [
+        "EU MDR",
+        "GSPR",
+        "Annex I",
+        "classification rules",
+        "conformity assessment",
+        "notified body",
+        "CE mark",
+        "clinical evaluation"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "EU MDR; General Safety and Performance Requirements (Annex I), classification rules (Annex VIII, incl. software Rule 11), conformity assessment (Annexes IX-XI), clinical evaluation (Annex XIV). Date of application 2021-05-26."
+    },
+    {
+      "id": "fda_510k",
+      "type": "report",
+      "title": "The 510(k) Program: Evaluating Substantial Equivalence in Premarket Notifications [510(k)] — Guidance for Industry and FDA Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2014,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/510k-program-evaluating-substantial-equivalence-premarket-notifications-510k",
+      "source_type": "guidance",
+      "keywords": [
+        "510(k)",
+        "substantial equivalence",
+        "predicate device",
+        "premarket notification",
+        "intended use"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "FDA guidance defining the substantial-equivalence decision logic for 510(k); the dominant pathway for Class II navigation systems with a predicate."
+    },
+    {
+      "id": "fda_denovo",
+      "type": "report",
+      "title": "De Novo Classification Process (Evaluation of Automatic Class III Designation) — Guidance for Industry and FDA Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2021,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/de-novo-classification-process-evaluation-automatic-class-iii-designation",
+      "source_type": "guidance",
+      "keywords": [
+        "De Novo",
+        "novel device",
+        "Class I/II without predicate",
+        "FD&C Act 513(f)(2)",
+        "special controls"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Pathway for novel low/moderate-risk devices lacking a predicate (statute: FD&C Act 513(f)(2)); establishes a new device type + special controls that later devices can use as a predicate."
+    },
+    {
+      "id": "iso14155",
+      "type": "standard",
+      "title": "ISO 14155:2020 Clinical investigation of medical devices for human subjects — Good clinical practice",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2020,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/71690.html",
+      "source_type": "standard",
+      "keywords": [
+        "clinical investigation",
+        "good clinical practice",
+        "GCP",
+        "clinical evidence",
+        "ISO 14155",
+        "ethics"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "GCP standard for device clinical investigations; the methodological backbone for the clinical-evaluation chapter (study conduct, ethics, data integrity). Recognized under EU MDR Annex XV and complementary to FDA IDE (21 CFR 812)."
+    },
+    {
+      "id": "iso10993",
+      "type": "standard",
+      "title": "ISO 10993-1:2018 Biological evaluation of medical devices — Part 1: Evaluation and testing within a risk management process",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2018,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/68936.html",
+      "source_type": "standard",
+      "keywords": [
+        "biocompatibility",
+        "biological evaluation",
+        "patient-contact",
+        "cytotoxicity",
+        "ISO 10993"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Biocompatibility evaluation for patient-contacting materials; drives encapsulation/material choices for catheter sensors (Ch. 51). Risk-based selection of biological endpoints by contact type/duration."
+    },
+    {
+      "id": "iso11135",
+      "type": "standard",
+      "title": "ISO 11135:2014 Sterilization of health-care products — Ethylene oxide — Requirements for development, validation and routine control of a sterilization process",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2014,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/56137.html",
+      "source_type": "standard",
+      "keywords": [
+        "sterilization",
+        "ethylene oxide",
+        "EO",
+        "validation",
+        "SAL",
+        "health-care products"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "EO sterilization validation (low-temperature, electronics-compatible); relevant where radiation sterilization (ISO 11137) would damage sensor electronics (Ch. 51)."
+    },
+    {
+      "id": "iso17025",
+      "type": "standard",
+      "title": "ISO/IEC 17025:2017 General requirements for the competence of testing and calibration laboratories",
+      "authors": [
+        "International Organization for Standardization",
+        "International Electrotechnical Commission"
+      ],
+      "year": 2017,
+      "venue": "ISO/IEC",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/66912.html",
+      "source_type": "standard",
+      "keywords": [
+        "calibration",
+        "metrological traceability",
+        "measurement uncertainty",
+        "competence",
+        "traceability chain"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Competence + metrological traceability for calibration; anchors the factory-calibration traceability chain and golden-unit transfer (Ch. 50) to national standards."
+    },
+    {
+      "id": "cfr803",
+      "type": "regulation",
+      "title": "21 CFR Part 803 — Medical Device Reporting",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2024,
+      "venue": "U.S. Code of Federal Regulations",
+      "publisher": "U.S. FDA",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-H/part-803",
+      "source_type": "regulation",
+      "keywords": [
+        "medical device reporting",
+        "MDR",
+        "adverse event",
+        "complaints",
+        "vigilance",
+        "post-market"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "US adverse-event/complaint reporting (MDR); the US analogue of EU MDR vigilance. Backbone of post-market surveillance and the complaint->CAPA->recall loop (Ch. 52)."
+    },
+    {
+      "id": "iec81001_5_1",
+      "type": "standard",
+      "title": "IEC 81001-5-1:2021 Health software and health IT systems safety, effectiveness and security — Part 5-1: Security — Activities in the product life cycle",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2021,
+      "venue": "IEC",
+      "publisher": "International Electrotechnical Commission",
+      "url": "https://www.iso.org/standard/76097.html",
+      "source_type": "standard",
+      "keywords": [
+        "cybersecurity",
+        "secure product development",
+        "health software",
+        "SBOM",
+        "threat modeling",
+        "IEC 62443-4-1",
+        "post-market vulnerability"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Secure-lifecycle standard for health software (adapts IEC 62443-4-1): secure development, threat modeling, SBOM, post-market vulnerability management across the product life cycle. The security counterpart to IEC 62304 (Ch. 35)."
+    },
+    {
+      "id": "fda_cyber2023",
+      "type": "report",
+      "title": "Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions — Guidance for Industry and FDA Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2023,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cybersecurity-medical-devices-quality-system-considerations-and-content-premarket-submissions",
+      "source_type": "guidance",
+      "keywords": [
+        "cybersecurity",
+        "cyber device",
+        "section 524B",
+        "SBOM",
+        "secure product development framework",
+        "premarket submission",
+        "threat model"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "FDA premarket cybersecurity guidance (Sept 2023). Legal basis: FD&C Act section 524B (added Dec 2022) makes cybersecurity mandatory for 'cyber devices' in 510(k)/De Novo/PMA. Requires SPDF, threat model, SBOM, vulnerability management."
+    },
+    {
+      "id": "astm_f2554",
+      "type": "standard",
+      "title": "ASTM F2554-22 Standard Practice for Measurement of Positional Accuracy of Computer-Assisted Surgical Systems",
+      "authors": [
+        "ASTM International"
+      ],
+      "year": 2022,
+      "venue": "ASTM International",
+      "publisher": "ASTM International",
+      "url": "https://store.astm.org/f2554-22.html",
+      "source_type": "standard",
+      "keywords": [
+        "positional accuracy",
+        "surgical navigation",
+        "computer-assisted surgery",
+        "accuracy measurement",
+        "tracking subsystem",
+        "standardized reporting"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "ASTM practice for measuring/reporting static positional accuracy of surgical navigation/robotic positioning systems (tracking subsystem); enables within- and between-manufacturer comparison. A real positional-accuracy standard beyond the Hummel protocol; still largely STATIC (the T2.27 dynamic/distortion gap). Editions -10/-18/-22."
+    },
+    {
+      "id": "raissi2019",
+      "type": "article",
+      "title": "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations",
+      "authors": [
+        "Raissi, Maziar",
+        "Perdikaris, Paris",
+        "Karniadakis, George E."
+      ],
+      "year": 2019,
+      "venue": "Journal of Computational Physics",
+      "volume": "378",
+      "pages": "686-707",
+      "doi": "10.1016/j.jcp.2018.10.045",
+      "url": "https://doi.org/10.1016/j.jcp.2018.10.045",
+      "publisher": "Elsevier",
+      "source_type": "journal",
+      "keywords": [
+        "physics-informed neural networks",
+        "PINN",
+        "inverse problems",
+        "differentiable physics",
+        "deep learning",
+        "PDE"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Canonical PINN paper: neural networks constrained by the governing PDE, solving forward and INVERSE problems. Basis for §30.6 physics-informed / differentiable-field localization and calibration. DOI verified; JCP 378:686-707."
+    },
+    {
+      "id": "abbott2020",
+      "type": "article",
+      "title": "Magnetic Methods in Robotics",
+      "authors": [
+        "Abbott, Jake J.",
+        "Diller, Eric",
+        "Petruska, Andrew J."
+      ],
+      "year": 2020,
+      "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+      "volume": "3",
+      "pages": "57-90",
+      "doi": "10.1146/annurev-control-081219-082713",
+      "url": "https://doi.org/10.1146/annurev-control-081219-082713",
+      "publisher": "Annual Reviews",
+      "source_type": "journal",
+      "keywords": [
+        "magnetic actuation",
+        "magnetic manipulation",
+        "capsule robots",
+        "microrobots",
+        "wireless actuation",
+        "forces and torques"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Unified treatment of magnetic forces/torques for remote manipulation and wireless actuation in robotics (capsule endoscopes, microrobots, steerable catheters). Anchors §30.7 magnetic actuation + tracking. DOI verified; ARCRAS 3:57-90."
     }
   ],
   "to_research": [

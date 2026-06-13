@@ -123,8 +123,7 @@ pose engine is regulated **software**.
   **no-testing-on-training-data** discipline carried over from calibration and
   characterization (Ch. 26 §26.5, Ch. 33 §33.1).
 - **Cybersecurity.** A networked tracker (OpenIGTLink/ROS in the OR) has an attack
-  surface; premarket cybersecurity expectations now accompany the safety case.
-  (conf: med — regulatory framing; specific guidance to cite.)
+  surface, and a compromise is a **safety** event — developed fully in §35.7.
 
 ## 35.5 Numerical robustness, determinism & reproducibility
 
@@ -149,6 +148,51 @@ own [`simulations/`](../../simulations) and [`dashboard/`](../../dashboard) (Ch.
 §31.8, Ch. 32). A fully open, **IEC 62304-validated** medical-grade tracking stack
 remains an opportunity rather than a reality (Ch. 30).
 
+## 35.7 Cybersecurity for networked trackers
+
+A clinical EMT system is **networked** — it streams pose over OpenIGTLink/ROS, talks to
+imaging and navigation software (§35.3), pulls software updates, and is serviced remotely
+(Ch. 52) — so it has an attack surface. The decisive framing is that for a tracker,
+**security is a safety property**: the realistic threats do not steal data, they
+**corrupt the pose**.
+
+- **A spoofed or altered pose stream** → the navigation shows the instrument where it is
+  not → **wrong-site therapy** (the master hazard, Ch. 45), with the operator
+  over-trusting an authoritative-looking crosshair (Ch. 46).
+- **Tampered calibration data** (in transit from the factory chain of Ch. 50, or at rest)
+  → a **silent accuracy fault** indistinguishable from a calibration drift (Ch. 26 §26.6).
+- **Denial of service** → frozen or dropped navigation mid-procedure → loss of the
+  essential performance the safety case promised (Ch. 12/17).
+
+So cybersecurity hazards enter the **ISO 14971 risk file** (Ch. 45) on the same footing
+as a hardware fault or a use error (Ch. 46) — security and safety are one analysis.
+
+**The secure-lifecycle obligation.** Security, like safety, is a *process*, not a feature:
+- **IEC 81001-5-1** [@iec81001_5_1] defines the **secure product development lifecycle**
+  for health software (adapting IEC 62443-4-1): threat modeling, secure design and coding,
+  an **SBOM**, vulnerability and patch management, and **post-market** security monitoring —
+  the security peer of the IEC 62304 safety lifecycle (§35.4).
+- **US FDA** now makes this **mandatory**: FD&C Act **§524B** requires every premarket
+  submission for a *cyber device* to include a threat model, an SBOM, a secure-development
+  framework, and a vulnerability-management plan [@fda_cyber2023] — cybersecurity has moved
+  from recommendation to **legal precondition for clearance** (Ch. 48). The EU MDR carries
+  parallel security expectations within the GSPR, reinforced by the wider EU cyber regime.
+- The **SBOM is the SOUP list with teeth** (§35.4): the same version-pinned third-party
+  components (RTOS, linear-algebra/solver libraries, the OpenIGTLink/ROS stack) must be
+  **continuously monitored for disclosed vulnerabilities** over the device's decade-long
+  field life (Ch. 52), not assessed once.
+
+**Defense in depth, EMT-specific.** Beyond generic hygiene (secure boot, **signed
+updates**, network segmentation of the OR, least privilege, audit logging — which doubles
+as the forensic log of §35.5): **integrity-protect and authenticate the pose stream and the
+calibration data**, because those are the assets whose corruption injures a patient. And
+the book's recurring **detect-and-flag** is also a security control — an implausible pose
+injected by an attacker trips the *same* consistency / innovation (NIS) checks that catch
+distortion (Ch. 21 §21.8, Ch. 27), so the honesty machinery built for physics also raises
+the bar for spoofing. Security and the safety case are, once more, the same discipline.
+(conf: high — standards/statute verified; the safety-security framing is the consensus
+position.)
+
 > **Engineering takeaway.** The algorithms are necessary but not sufficient. A
 > deployable EMT system is a layered, real-time software architecture that streams
 > **timestamped pose + covariance + status** through standard interfaces
@@ -161,9 +205,12 @@ remains an opportunity rather than a reality (Ch. 30).
 ---
 
 ## Open questions / to verify
+- ✅ **Resolved (§35.7, T2.14):** premarket **cybersecurity** developed and cited —
+  IEC 81001-5-1 secure lifecycle [@iec81001_5_1] and FDA §524B / guidance
+  [@fda_cyber2023], framed as a safety property (spoofed pose / tampered calibration →
+  patient harm). Remaining: a worked EMT **threat model + SBOM** example.
 - Add a primary citation for **IGSTK** (e.g. the IGSTK architecture/state-machine
-  paper) and for **SlicerIGT**, and a verified reference for **premarket
-  cybersecurity** guidance (FDA/IEC 81001-5-1) to firm up §35.3/§35.4.
+  paper) and for **SlicerIGT** to firm up §35.3/§35.6.
 - Provide a concrete **OpenIGTLink message mapping** for pose + covariance + status
   (a worked schema), tying the Ch. 11 §11.6 data contract to the wire format.
 - Add a worked **software-safety-classification** example (Class B vs C) for a named
@@ -175,5 +222,7 @@ remains an opportunity rather than a reality (Ch. 30).
 - [@tokuda2009] OpenIGTLink network protocol. [@lasso2014] PLUS integration toolkit.
   [@fedorov2012] 3D Slicer navigation platform. [@iec62304] medical-device software
   life-cycle standard (safety classes A/B/C, SOUP). [@jaeger2017] Anser
-  (OpenIGTLink-native open-source EMT). Real-time/algorithm ties to Ch. 21–24 and
-  Ch. 22; regulatory/essential-performance ties to Ch. 17, 29.
+  (OpenIGTLink-native open-source EMT). [@iec81001_5_1] secure-software lifecycle and
+  [@fda_cyber2023] FDA premarket cybersecurity (§524B) — the §35.7 security peer of
+  IEC 62304. Real-time/algorithm ties to Ch. 21–24 and Ch. 22;
+  regulatory/essential-performance ties to Ch. 17, 29; risk file Ch. 45; lifecycle Ch. 48/52.

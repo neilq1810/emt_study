@@ -188,6 +188,59 @@ enough to resolve signal at the far edge against the noise floor of the Ch. 4
 plus margin — sizes the AFE gain ranging and ADC ENOB requirements of Ch. 16 and
 Ch. 18, and is one of the hardest constraints in the whole system.
 
+## 9.7 The planar / under-table generator — the medical form factor
+
+The co-located orthogonal triad (§9.2) has the cleanest model but the wrong *shape* for
+the operating room: it radiates symmetrically and wants to sit where the anatomy is. The
+clinical answer is a **flat, distributed coil board** — the "field generator" — placed
+**under the table or mattress**, projecting a usable volume into the half-space *above* it
+(the patient), while staying **out of the sterile field and out of the way**. This is the
+form factor of essentially every fielded medical EMT system.
+
+- **Design.** Multiple **non-co-located** coils on a plane, with drive amplitudes/phases
+  chosen by the **spherical-harmonic synthesis of §9.3**, produce strong, smoothly varying
+  gradients (good observability / low PDOP, Ch. 24) over the clinical workspace above the
+  board. The fields are deliberately *not* simple co-located dipoles.
+- **Calibration is the price.** Because the field is not an analytic triad, the forward
+  model must be **mapped/calibrated** — the Tier 3/4 harmonic field model of Ch. 7 §7.2,
+  built by the volumetric field mapping of Ch. 26. The planar generator trades **model
+  simplicity for clinical form factor**: a calibrated numeric forward model in exchange for
+  a generator that fits the workflow.
+- **Two payoffs tie back to earlier results.** (1) The array's **spatial extent and
+  asymmetry break the dipole hemisphere/parity ambiguity** of §24.7 — a distributed
+  under-table generator distinguishes which side the sensor is on, resolving for free the
+  *global* un-identifiability that a single point-dipole generator cannot. (2) Placing the
+  generator **just under the patient shortens the working distance**, directly improving
+  the $1/r^3$ SNR and the $z^4$ position CRLB (Ch. 24 §24.5) — the deep-volume lever of
+  Ch. 29 §29.10.
+- **Trade-offs.** The usable volume is **one-sided and range-limited** — accuracy falls
+  with height above the board (the Ch. 24 edge) — and the board's own conductors/PCB can
+  introduce eddy effects (Ch. 6); siting it under a metal table makes the **per-room
+  characterization** of Ch. 52 §52.1 mandatory.
+
+## 9.8 Extending the working volume: multi-generator handoff
+
+A single generator's usable volume is bounded by the $z^4$ CRLB (Ch. 24) and by the
+**moment ceiling** that power and heat impose (§9.1; the thermal co-design of Ch. 37
+§37.5). To cover a larger workspace — whole-body, a long catheter pull, a big patient
+(§29.10) — **tile multiple generators** over overlapping sub-volumes. That creates a
+**handoff problem** with three parts:
+
+- **Common frame.** Both generators' poses must be known in one coordinate frame
+  (inter-generator registration, Ch. 43); conveniently, a sensor in the **overlap region**
+  is seen by both and **cross-calibrates the inter-generator transform** as it moves.
+- **Continuity, not switching.** In the overlap, both generators are observed, so the pose
+  has **more information (lower PDOP, §24.3)** — *fusing* both estimates beats hard-switching
+  and avoids a positional jump. Continuity through the overlap also avoids making the
+  handoff a **re-acquisition moment** (the basin/ambiguity risk of §24.4).
+- **Mutual interference.** Generators sharing the band must be separated — **TDM** time-
+  sharing or **distinct FDM frequencies** (Ch. 19) — so A's field does not corrupt B's
+  measurement.
+
+Multi-generator coverage is therefore the *architectural* alternative to brute-force moment
+for large volumes: when thermal limits (§37.5) cap a single generator, add generators and
+fuse through the overlap.
+
 ---
 
 ## Open questions / to verify

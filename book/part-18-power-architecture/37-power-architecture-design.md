@@ -158,6 +158,37 @@ The biased-sensor case (TMR/MR/Hall/fluxgate; Ch. 14.3, 16.6, 17) makes power a
 > all of it is EMT-specific because the power and the measurement share one magnetic
 > channel.
 
+## 37.5 Generator thermal management & the power–moment–duty co-design
+
+The single most-wanted knob in EMT is **more moment** — it buys SNR, range, and deep-volume
+accuracy (§9.1, Ch. 24, Ch. 29 §29.10) — and it is the knob **heat** takes away. The field
+scales with the coil current ($B\propto I\cdot N A$, §9.1), but the dissipation scales with
+its **square** ($P=I^2R$, §37.2), so **doubling the moment at fixed geometry quadruples the
+heat**. That makes the achievable moment **thermally capped**, not electrically capped, and
+the cap is set by two limits at once:
+- the **coil/insulation temperature rating** (and the field drift it causes — below), and
+- for a patient-adjacent **under-table generator** (§9.7), the **surface/patient-contact
+  temperature limit** of IEC 60601-1 [@iec60601_1] (Ch. 17) — a *safety* ceiling on how hot
+  the board may get.
+
+**Co-design levers** (all trade against moment): **duty cycle** — pulsed-DC and TDM
+(Ch. 10) dissipate only during active slots, so average heat falls with duty even at high
+peak field; **conductor sizing / copper fill** to lower $R$; and **thermal mass and
+heat-sinking** to raise the steady-state ceiling. The decisive design consequence: you
+**cannot brute-force deep-volume coverage by cranking moment** (§29.10) because thermal
+limits intervene — which is exactly why volume extension turns to **multi-generator handoff**
+(§9.8) instead.
+
+**Thermal drift is also an accuracy term.** Coil heating changes $R$ and, slightly, the coil
+**geometry** — both shift the produced field, i.e. a **calibration drift** (Ch. 15 §15.5,
+Ch. 26 §26.6) that presents as a pose error. Ratiometric current sensing (§37.2) defends the
+*amplitude* but not the *geometry*, so thermal management is simultaneously a **safety**
+requirement (patient-contact temperature), a **stability/accuracy** requirement (bounded
+field drift), and a **power-electronics** requirement (the resonant drive of §9.4 is
+efficient at the carrier, but transient settling and dissipation bound how fast the drive
+can change between TDM slots, §37.2/Ch. 10). The generator's power, heat, accuracy, and
+update rate are therefore one coupled design problem.
+
 ---
 
 ## Open questions / to verify

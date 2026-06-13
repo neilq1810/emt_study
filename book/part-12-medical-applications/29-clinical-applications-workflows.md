@@ -144,6 +144,87 @@ bars.
 > motion, and distortion as by the tracker itself, and it must be delivered inside
 > a regulated safety/EMC framework with honest, flagged uncertainty.
 
+## 29.8 Simultaneous multi-tool tracking
+
+Many procedures track **more than one instrument at once** — multiple catheters in an
+EP study (a mapping catheter, an ablation catheter, a coronary-sinus reference), or a
+scope plus a tool. The architectural fact that makes this tractable is that **passive
+sensor coils do not interfere with one another**: each sensor merely *measures* the
+generator's shared field (Ch. 4/5), and its re-radiated field is negligible against the
+generator's, so adding sensors adds **no transmit-side cost and no meaningful mutual
+crosstalk**. The cost is on the **receive and compute side**: each tracked coil needs its
+own front-end/ADC channel (Ch. 16/18) and an independent pose solve (Ch. 23), and the
+**aggregate** demodulation + solve must still fit the frame (Ch. 12/22). So the scaling
+law is "one field, many independent receivers," and the budget is **channels × per-frame
+compute**, not signal contention — the opposite of a transmit-multiplexed system.
+
+Two caveats. First, if tools carry their **own transmitters** (active beacons) rather
+than sensing a common generator, the multiple sources *do* contend and must be separated
+by **FDM/TDM/CDM** (Ch. 19 §19.7) — the multi-tool case is then a channel-separation
+problem with the crosstalk and frame-rate trades of Ch. 19. Second, multi-tool tracking
+makes **identity and frame management** a first-class concern: the system must reliably
+**associate each pose with the right physical tool** and the right coordinate frame
+(Ch. 43), or it commits the mode-confusion use error of Ch. 46 §46.2. The per-tool update
+rate also divides the shared compute budget, so an N-tool system trades latency against N
+(Ch. 12) — a real constraint in fast cardiac mapping.
+
+## 29.9 Challenging environments: MRI, hybrid OR, radiotherapy
+
+EMT's accuracy is set as much by the **room** as by the device (Ch. 6 distortion, Ch. 27
+compensation). Three environments stress it in distinct ways:
+
+- **MRI / MR-guided intervention.** The MRI bore is the **most hostile** EM environment:
+  a multi-tesla static $B_0$ saturates any ferromagnetic core (Ch. 14) and exerts forces/
+  torques (a projectile-safety hazard), while switched gradients and RF flood the band and
+  the conductive bore/gradient/shield structures produce severe eddy-current distortion
+  (Ch. 6). Conventional AC EMT is effectively **incompatible with the bore**; MR-guided
+  tracking instead tends to use the scanner's *own* gradients (active **micro-coil/
+  fiducial** tracking) — a different modality (Ch. 30) — or restricts EMT to MR-conditional
+  designs outside the high-field region. The honest engineering statement is that EMT and
+  the MRI bore do not mix without a fundamentally different sensing approach.
+- **Hybrid OR / angiography suite.** A large **C-arm**, table, and imaging hardware are
+  **moving conductive masses**: the distortion is **dynamic** and depends on C-arm pose, so
+  a static field map is insufficient and the system needs **pose-aware compensation** or
+  the detect-and-flag of Ch. 27 (the C-arm compensation of [@cavaliere2023]). This is the
+  environment where the dynamic/distortion benchmark of Ch. 33 (T2.27) matters most.
+- **Image-guided radiotherapy (IGRT).** Here EMT serves **real-time target-motion
+  management** — continuous localization of an implanted sensor/transponder so the beam can
+  **gate or track** a moving tumour (the motion-management problem of Ch. 41). The
+  constraints are the linac gantry's moving metal, MV/kV imaging interference, and the need
+  for robust, low-latency tracking **during beam-on** with fail-safe behaviour (loss of
+  tracking must hold the beam, Ch. 46).
+
+In all three, the lesson of Part X holds: **characterize the actual room**, prefer
+under-table/planar generators away from the metal where possible (Ch. 9, T2.1), and rely
+on detect-and-flag so a distorted pose is never silently trusted.
+
+## 29.10 Patient-population constraints: pediatric, bariatric, deep-volume
+
+The patient sets the **geometry**, and geometry sets the achievable accuracy through the
+range law of Ch. 24:
+
+- **Pediatric.** Smaller anatomy means smaller targets and **tighter absolute-accuracy
+  needs**, and smaller vessels/airways constrain **sensor size** (smaller coils → less
+  moment/signal, Ch. 13/15). The compensating advantage is decisive: EMT adds **no ionizing
+  radiation**, which matters most in radiation-sensitive children — a primary clinical
+  driver for navigation over fluoroscopy here.
+- **Bariatric / deep targets.** Obesity and deep anatomy push the **source–sensor distance**
+  up, and because signal falls as $1/r^3$ and the position CRLB grows as **$z^4$** (Ch. 24
+  §24.5), accuracy degrades sharply with depth — *not* because tissue distorts the field
+  (it does not, Ch. 4), but because the field weakens and flattens. Deep-volume operation is
+  therefore fundamentally an **SNR/conditioning** problem.
+- **Deep-volume mitigations.** All follow from the same budget (Ch. 24 §24.6 synthesis):
+  raise the **transmit moment** (power/thermal-limited, Ch. 9, T2.21); extend the volume
+  with **multiple generators / handoff** (T2.22); reduce noise or **integrate longer** (at a
+  latency cost, Ch. 12); or place an **under-table/planar** generator to shorten the working
+  distance (T2.1). The accuracy-vs-range curve of Ch. 24 is the design tool that says, for a
+  given patient depth, whether the spec is even reachable.
+
+The unifying point: there is no single "tracking volume" — the *usable* volume is the
+region where the propagated target uncertainty (Ch. 46 §46.6) stays under the **clinical
+tolerance for that population and procedure**, and pediatric vs bariatric cases sit at
+opposite ends of that map.
+
 ---
 
 ## Open questions / to verify
@@ -155,6 +236,11 @@ bars.
 - Source specific FDA 510(k)/CE clearances for named systems (Aurora, CARTO,
   superDimension) with clearance numbers/dates (ties Ch. 28).
 - Add EP clinical-outcome and EM+US/CT fusion-accuracy references for §29.1/29.4.
+- Add primary references for **MR micro-coil/fiducial tracking** (§29.9) and an
+  **electromagnetic/transponder IGRT motion-tracking** study to firm up §29.9
+  (currently physics-grounded, conf: med).
+- Quantify the **deep-volume reachability map** (§29.10) for representative bariatric
+  depths with a Phase-5 CRLB run at extended range + raised moment (ties Ch. 24/T2.21/22).
 
 ## Sources cited
 - [@gepstein1997] EP electroanatomical mapping. [@folch2019] NAVIGATE ENB outcomes.

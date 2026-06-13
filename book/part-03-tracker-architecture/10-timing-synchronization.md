@@ -166,6 +166,38 @@ Timing choices set the **update rate**, a clinically critical spec:
 
 These feed directly into the end-to-end latency budget of Ch. 12.
 
+## 10.6 Cross-modality time synchronization & clock domains
+
+§§10.3–10.5 synchronize *within* the tracker. But a clinical system **fuses several
+devices** — the EM tracker, an IMU, an optical tracker, imaging (US/fluoro/CT), robot
+encoders — and **each has its own clock and its own latency**. Fusion (Ch. 21) and
+registration (Ch. 40/43) assume the measurements they combine share a **common timebase**;
+when they do not, the error is direct and often dominant.
+
+**The skew error is a first-class accuracy term.** A time offset $\Delta t$ between two
+modalities observing a target moving at velocity $v$ injects a position error
+$\approx v\,\Delta t$. At catheter/respiratory speeds (≈50–200 mm/s), a **10 ms** skew gives
+**0.5–2 mm** — comparable to the entire accuracy budget. This is the quantified form of the
+"time-skew in fusion" failure mode flagged in Ch. 21 §21.8: cross-modality sync is not a
+detail, it is a millimetre-class error source.
+
+**Mechanisms.**
+- **Timestamp at the source** — each modality stamps its sample at the instant of
+  *acquisition*, not arrival, so downstream buffering/jitter cannot corrupt the time.
+- **Align the clock domains** — a shared **hardware trigger / sync line**, **IEEE 1588 PTP**,
+  or a **PPS** reference ties the domains to a common epoch.
+- **Calibrate fixed latency** — measure each modality's pipeline delay (Ch. 12) and
+  compensate it; for **periodic** motion, additionally phase-align via the gating signal
+  (Ch. 41).
+- **Cross the domains in software** — the integrated filter (Ch. 21) ingests **asynchronous,
+  out-of-sequence** measurements by interpolating/extrapolating each to a common time using
+  its timestamp; the determinism this needs is the reproducibility requirement of Ch. 35
+  §35.5.
+
+The throughline: a trustworthy **timestamp travels with every measurement**, and the fusion
+estimator is built to consume measurements on one timeline — without which the most accurate
+per-modality pose still fuses into a millimetre error.
+
 ---
 
 ## Open questions / to verify

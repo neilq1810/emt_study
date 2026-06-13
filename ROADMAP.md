@@ -213,32 +213,32 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.4** Nonlinear observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(Ch. 24 §24.7)* — 🟢 DONE: Hermann–Krener rank condition / Lie derivatives; local-vs-global; **hemisphere/parity ambiguity** (r̂→−r̂ invariance → global un-identifiability) + resolutions (asymmetric generator/half-space prior/continuity/fusion). +hermann1977
 
 **Cluster B — Clinical & safety completers**
-- [ ] **T2.24** Uncertainty communication & navigation-confidence display *(new; ties Ch. 24/T1.10)*
-- [ ] **T2.16+T2.15** Regulatory pathways & quality systems (510(k)/De Novo/PMA; EU MDR/GSPR; V&V; ISO 13485 / 21 CFR 820) *(merged; Part XX; ties Ch. 29)*
-- [ ] **T2.17** Clinical evaluation, preclinical (phantom/cadaver/animal) & study design *(new; ties Ch. 29/33)*
-- [ ] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(new)*
-- [ ] **T2.25** EMT in MRI / hybrid OR / image-guided radiotherapy *(new)*
-- [ ] **T2.26** Pediatric, bariatric & deep-volume constraints *(new; ties Ch. 29)*
+- [x] **T2.24** Uncertainty communication & navigation-confidence display *(Ch. 46 §46.6)* — 🟢 DONE: χ²₃,₀.₉₅ ellipsoid/cone on the **orientation-marginalized** §24.6 covariance (optimistic block under-draws ~2.95×), TRE quadrature, τ-relative GREEN/AMBER/RED state; +fda_hf2016, iec60601_1_6
+- [x] **T2.16+T2.15** Regulatory pathways & quality systems *(NEW Ch. 48)* — 🟢 DONE: intended-use→classification; US 510(k)/De Novo/PMA; EU MDR GSPR/Rule 11/CER; ISO 13485 + 21 CFR 820/QMSR design controls; **V&V master plan** (design-input→standard→test→acceptance matrix); standards-to-evidence map. +iso13485,cfr820,eu_mdr,fda_510k,fda_denovo
+- [x] **T2.17** Clinical evaluation & preclinical study design *(NEW Ch. 49)* — 🟢 DONE: evidence V-model (bench→phantom→cadaver→animal→human→PMCF); preclinical-model trade table; **surrogate-vs-clinical endpoint** (NAVIGATE); GCP study design/powering/bias; navigation-specific pitfalls (GT circularity, surrogate trap, learning curve). +iso14155
+- [x] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(Ch. 29 §29.8)* — 🟢 DONE: passive sensors don't contend (one field, many receivers) → cost is channels×compute not signal; active-beacon case → FDM/TDM/CDM (Ch.19); identity/frame management + N-vs-latency trade
+- [x] **T2.25** EMT in MRI / hybrid OR / image-guided radiotherapy *(Ch. 29 §29.9)* — 🟢 DONE: MRI bore incompatible (B0 saturation/force, gradient+RF+eddy) → micro-coil tracking instead; hybrid-OR dynamic C-arm distortion; IGRT beam-on motion tracking/gating w/ fail-safe
+- [x] **T2.26** Pediatric, bariatric & deep-volume constraints *(Ch. 29 §29.10)* — 🟢 DONE: pediatric (small tools/targets, no-radiation driver); bariatric/deep = z⁴ SNR/conditioning limit (not tissue distortion); mitigations (moment/multi-gen/integration/under-table); usable-volume = region under clinical tolerance
 
 **Cluster C — Industry/operations (consolidated 9→3)**
-- [ ] **T2.C1** Manufacturing & Production (production test/end-of-line + factory cal at scale/golden-units/cal-transfer + cost/BOM/design-to-cost) *(was T2.5+T2.6+T2.13)*
-- [ ] **T2.C2** Mechanical & Sensor Durability (sterilization/biocompat/encapsulation/single-use + connector/cable reliability & intermittency — the #1 field failure) *(was T2.7+T2.8)*
-- [ ] **T2.C3** Deployment & Lifecycle Operations (install/site-survey/per-room characterization + service/field-QA/drift + post-market surveillance/vigilance/recalls + supply-chain/obsolescence) *(was T2.9+T2.10+T2.11+T2.12)*
+- [x] **T2.C1** Manufacturing & Production *(NEW Ch. 50)* — 🟢 DONE: end-of-line test layering (functional→parametric→cal→accuracy go/no-go, guard-banded golden fixture, SPC/Cpk); factory cal at scale (amortize volumetric physics → per-unit varying-DOF only; golden-units/cal-transfer/ISO 17025 traceability; on-board cal coeff); design-to-cost (BOM, channel-vs-PDOP, NRE-vs-recurring). +iso17025
+- [x] **T2.C2** Mechanical & Sensor Durability *(NEW Ch. 51)* — 🟢 DONE: sterilization (EO/radiation/steam tradeoffs), biocompat (ISO 10993), encapsulation (geometry=calibration → mech drift IS accuracy fault), single-use vs reusable; **connector/cable intermittency = #1 field failure** (µV signals, pass-at-rest/fail-under-flex, silent glitch → detect-and-flag + flex/contact screening). +iso10993,iso11135
+- [x] **T2.C3** Deployment & Lifecycle Operations *(NEW Ch. 52)* — 🟢 DONE: install/site-survey + per-room baseline characterization (sets flag thresholds); daily field-QA/drift/scheduled-connector service → availability; post-market surveillance/MDR vigilance (21 CFR 803/EU MDR)/CAPA/recalls/PMCF (highest-N evidence → design loop); supply-chain/obsolescence (2nd-source→re-qual). +cfr803
 
 **Cluster D — Compliance expansions**
-- [ ] **T2.14** Cybersecurity for networked trackers (IEC 81001-5-1) *(expand Ch. 35)*
-- [ ] **T2.27** Standards landscape & a proposed dynamic/distortion benchmark *(expand Ch. 33; ties Ch. 30)*
+- [x] **T2.14** Cybersecurity for networked trackers *(Ch. 35 §35.7)* — 🟢 DONE: security-IS-safety (spoofed pose/tampered cal → patient harm → ISO 14971 file); IEC 81001-5-1 secure lifecycle + FDA §524B/guidance (SBOM/threat model/SPDF mandatory); EMT defense-in-depth (authenticate pose stream + cal integrity; detect-and-flag as security control). +iec81001_5_1,fda_cyber2023
+- [x] **T2.27** Standards landscape & proposed dynamic/distortion benchmark *(Ch. 33 §33.4/§33.9)* — 🟢 DONE: landscape (Hummel/ASTM F2554/ISO5725/GUM all STATIC); **proposed benchmark** (standardized trajectory+moving distorter+GT) whose decisive metric is **detect-and-flag latency/false-alarm ROC** — converts the load-bearing safety control from asserted to measured. +astm_f2554
 
 **Cluster E — Engineering-depth expansions** *(cheap; fold into parents)*
-- [ ] **T2.1** Planar/under-table field generator design & calibration *(expand Ch. 9)*
-- [ ] **T2.21** Field-generator thermal & power-electronics co-design *(expand Ch. 9/37)*
-- [ ] **T2.23** Cross-modality time sync & clock domains *(expand Ch. 10/35)*
-- [ ] **T2.20** EM–optical–robot–imaging multi-modal fusion in depth *(expand Ch. 21)*
-- [ ] **T2.22** Tracking-volume extension & multi-generator handoff *(new)*
+- [x] **T2.1** Planar/under-table field generator *(Ch. 9 §9.7)* — 🟢 DONE: distributed coil board under-table (out of sterile field); harmonic-synthesized shaping; mapped/calibrated forward model (Ch.7/26); **asymmetry breaks the §24.7 hemisphere ambiguity for free** + shorter range improves z⁴ CRLB
+- [x] **T2.21** Generator thermal & power co-design *(Ch. 37 §37.5)* — 🟢 DONE: moment is THERMALLY capped (P∝I² vs B∝I; patient-contact temp IEC 60601-1); duty/conductor/heat-sink levers; thermal drift IS a calibration/accuracy term; can't brute-force deep volume → multi-generator
+- [x] **T2.23** Cross-modality time sync & clock domains *(Ch. 10 §10.6)* — 🟢 DONE: per-device clocks; skew error v·Δt (10ms→0.5–2mm = millimetre-class); timestamp-at-source, PTP/1588/hardware-trigger, latency calibration, async/out-of-sequence fusion
+- [x] **T2.20** Multi-modal fusion in depth *(Ch. 21 §21.9)* — 🟢 DONE: complementary failure modes table (EM no-LoS/distortion vs optical LoS/distortion-immune vs IMU drift vs robot flex vs imaging); fusion resolves BOTH 5-DOF roll null (§24.1) AND hemisphere ambiguity (§24.7); integrated navigator (groves) + honest fused covariance → §46.6 display
+- [x] **T2.22** Tracking-volume extension & multi-generator handoff *(Ch. 9 §9.8)* — 🟢 DONE: tile overlapping generators; common-frame inter-gen registration (cross-calibrated in overlap); fuse-through-overlap (lower PDOP) not hard-switch (avoids re-acq); TDM/FDM mutual-interference separation; architectural alt to brute moment
 
-**Cluster F — Frontier**
-- [ ] **T2.18** Deep-learning localization & calibration (end-to-end, PINN, differentiable fields) *(expand Ch. 27/30)*
-- [ ] **T2.19** Magnetic actuation + tracking (Stereotaxis, capsule robots) *(expand Ch. 30)*
+**Cluster F — Frontier** ✅ DONE
+- [x] **T2.18** Deep-learning localization & calibration *(Ch. 30 §30.6; Ch. 27 §27.5 link)* — 🟢 DONE: three levels (learned cal-map → end-to-end regression black-box → **PINN/differentiable-field hybrids**); the honest direction = learn the residual on a differentiable physics model & preserve covariance/detect-and-flag, not opaque regression. +raissi2019
+- [x] **T2.19** Magnetic actuation + tracking *(Ch. 30 §30.7)* — 🟢 DONE: one field actuates (τ=m×B, F=∇(m·B)) AND localizes; two regimes (tesla actuation field as interference → time-share/spectral-sep; OR sense the actuation magnet = reciprocal MR-array, Ch.14); closed control loop (tracking latency=loop delay, covariance=control uncertainty). +abbott2020
 
 ### Tier 3 — completeness
 - [ ] **T3.1** Inverse-Problem Global-Solution Theory (uniqueness, basins, multi-start) *(expand Ch. 23)*
@@ -255,16 +255,19 @@ measurement and the book currently models only absolute generator-frame tracking
 - [ ] **T3.12** Magnetic Field Safety & Exposure Limits (ICNIRP/IEEE C95.1) *(new; ties Ch. 17)*
 
 ### Cross-cutting workstreams (not chapters — run alongside the tiers)
-- 🟡 **X1 — Credibility/verification pass.** *In progress.* Built a runnable
-  verifier (`scripts/verify_manuscript.py`): checks citation integrity, figure/data
-  reference existence, chapter cross-ref range, placeholder scan, and a curated
-  **sim↔prose number contract** — currently **PASS** (83/83 citations resolve, 0
-  broken, 0 dangling refs, 0 placeholders, 7/7 sim numbers in sync). Re-confirmed
-  via web: **mr_capsule** (Wang/Meng/Hu, *EMBS'06* pp. 2522–2525, PMID 17946518 —
-  **year corrected 2008→2006**) and **birkfellner1998** (Med Phys 25(11):2242–2248,
-  DOI 10.1118/1.598425, PMID 9829253; 9-author list corrected). Remaining: corporate
-  dates/$ figures (Ch. 28/3); pulsed-DC eq. 27.1 prefactor; the Ch. 31/33/34/37
-  illustrative budgets (back with sim or measurement); §33.5 metrology vendor specs.
+- 🟢 **X1 — Credibility/verification pass.** *Largely done.* Built a runnable
+  verifier (`scripts/verify_manuscript.py`): citation integrity, figure/data reference
+  existence, chapter cross-ref range, placeholder scan, and a curated **sim↔prose number
+  contract** — **PASS** (100/100 citations resolve, 0 broken, 0 dangling, 0 placeholders,
+  7/7 sim numbers in sync). Web-corroborated and corrected: **mr_capsule** (Wang/Meng/Hu,
+  *EMBS'06* pp. 2522–2525, PMID 17946518 — **year fixed 2008→2006**); **birkfellner1998**
+  (Med Phys 25(11):2242–2248, DOI 10.1118/1.598425, PMID 9829253; 9-author list fixed);
+  and the **Ch. 28 acquisitions** (Roper–NDI Jun 2011, NDI–Ascension 2012, J&J–Biosense
+  29 Sep 1997 ~\$400M, Covidien–superDimension ~\$300M 2012, Medtronic–Covidien
+  26 Jan 2015 ~\$50B). Confirmed the **Ch. 31/33/34/37 illustrative budgets are honestly
+  labeled** (conf-tagged; back-with-sim is X3, not X1). Remaining (minor): Ascension \$19M
+  & Biosense-1993 founding (single-source); pulsed-DC eq. 27.1 prefactor; §33.5 metrology
+  vendor specs — each appropriately hedged.
 - [ ] **X2 — Mathematics-depth upgrades (Section E)** woven into the owning chapters
   (6-DOF FIM, nonlinear observability, TRE theory, manifold solve, GP distortion).
 - [ ] **X3 — Simulation/figure backing.** Implement the deferred sims (below) +
