@@ -219,6 +219,14 @@ range law of Ch. 24:
   latency cost, Ch. 12); or place an **under-table/planar** generator to shorten the working
   distance (T2.1). The accuracy-vs-range curve of Ch. 24 is the design tool that says, for a
   given patient depth, whether the spec is even reachable.
+- **Computed — the moment lever is weak (Phase-5, `data/deep_volume_crlb.json`,
+  `figures/ch29_deep_volume_crlb.png`).** Because $\sigma_\text{pos}\propto z^4/m_t$ (fitted
+  $\sigma\propto m_t^{-1.0}$), the **usable depth grows only as $z_\text{max}\propto
+  m_t^{0.25}$**: at $\sigma_B=1$ nT and a 1 mm (1σ) target, the usable depth extends
+  $0.55\to0.78\to1.11$ m for a $1\times/4\times/16\times$ moment — i.e. a **$16\times$ moment
+  (≈$16\times$ power) buys only $\sim2\times$ depth**. This is the quantitative reason
+  deep-volume/bariatric coverage hits the generator **thermal wall** (§37.5) and is better
+  served by **multi-generator handoff** (§9.8) than by brute moment.
 
 The unifying point: there is no single "tracking volume" — the *usable* volume is the
 region where the propagated target uncertainty (Ch. 46 §46.6) stays under the **clinical

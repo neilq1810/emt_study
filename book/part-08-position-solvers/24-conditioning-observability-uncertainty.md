@@ -282,7 +282,7 @@ of conditioning, §24.2, resolves it). This is the rigorous form of the "sign/mi
 ambiguity" flagged in §24.1 and the mirror basins the closed-form initializer inherits
 (Ch. 23 §23.5). Every fielded system breaks the symmetry, and the ways it does are worth
 naming:
-- **Asymmetric generator geometry** — a *planar, multi-coil* generator (Ch. 9; T2.1)
+- **Asymmetric generator geometry** — a *planar, multi-coil* generator (Ch. 9 §9.7; T2.1)
   whose coils are not co-located has spatial extent that distinguishes the two
   hemispheres; the symmetry is broken by construction.
 - **A half-space prior** — the sensor is physically on one known side (the patient
@@ -290,7 +290,7 @@ naming:
 - **Continuity / tracking** — start in the known hemisphere and track; continuity keeps
   the estimate in the correct basin, and **re-acquisition is the dangerous moment**
   (§24.4).
-- **Fusion** — an independent modality (IMU/optical, Ch. 21) disambiguates directly.
+- **Fusion** — an independent modality (IMU/optical, Ch. 21 §21.9) disambiguates directly.
 
 The lesson is that EMT observability has **two layers**: local (linear, the $\mathbf J$/
 Fisher rank of §§24.1–24.6, which motion and a second element fix) and **global** (the

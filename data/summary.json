@@ -136,5 +136,50 @@
     "coupling_penalty_invariant": 2.952,
     "orientation_power_law_exponent": 3.0,
     "note": "Marginalized position CRLB (position block of the full 6x6 F^-1) vs naive (inverse of the F_pp block alone, ignoring orientation). The ratio is the coupling penalty from estimating unknown orientation (Schur complement) and is a pose-INVARIANT constant ~2.952 (variance ~8.7x) for the co-located triad/triad geometry: the honest 6-DOF position CRLB is ~3x worse than an orientation-known bound. Orientation CRLB scales as z^3.0 (one power less than position's z^4, because orientation reads the field itself while position reads its gradient)."
+  },
+  "deep_volume": {
+    "sigma_B_T": 1e-09,
+    "target_mm": 1.0,
+    "zmax_m_by_moment": {
+      "m_t=1": 0.554,
+      "m_t=4": 0.783,
+      "m_t=16": 1.108
+    },
+    "sigma_vs_moment_exponent": -1.0,
+    "depth_vs_moment_exponent": 0.25,
+    "note": "CRLB sigma_pos ~ 1/m_t (exponent ~-1) at fixed range, so usable depth z_max(tau) ~ m_t^0.25: a 16x moment buys only ~2x depth. Doubling usable depth needs ~16x moment (~16x power -> Ch.37 thermal wall) -> multi-generator (Ch.9.8) is the practical deep-volume/bariatric route, not brute moment."
+  },
+  "distortion_flag_roc": {
+    "tau_mm": 2.0,
+    "sigma_meas_frac": 0.001,
+    "flag_threshold_1pct_FA": 3.32,
+    "by_direction": {
+      "+x": {
+        "eta_flag_pct": 0.76,
+        "eta_danger_pct": 0.501,
+        "margin_pct": -0.259,
+        "flag_first": false
+      },
+      "+z": {
+        "eta_flag_pct": 0.467,
+        "eta_danger_pct": 1.023,
+        "margin_pct": 0.556,
+        "flag_first": true
+      },
+      "diag": {
+        "eta_flag_pct": 0.645,
+        "eta_danger_pct": 0.516,
+        "margin_pct": -0.129,
+        "flag_first": false
+      }
+    },
+    "margin_range_pct": [
+      -0.259,
+      0.556
+    ],
+    "any_negative_margin": true,
+    "roc_auc_worst_dir": 1.0,
+    "worst_direction": "+x",
+    "note": "A single-sensor residual (redundant 9>6 measurement, Ch.27) detects only the part of distortion INCONSISTENT with the dipole model; distortion that mimics a 6-DOF pose shift inflates error but not the residual. The detection margin (eta_danger - eta_flag) is therefore GEOMETRY-DEPENDENT and can be NEGATIVE (flag fires AFTER the error is dangerous). Conclusion: a single residual flag is necessary but NOT sufficient -> independent redundancy (witness sensor Ch.27.3, 2nd generator Ch.9.8, fusion Ch.21.9) is required, and flag latency/false-alarm MUST be measured per the proposed Ch.33 \u00a733.9 benchmark, not assumed."
   }
 }

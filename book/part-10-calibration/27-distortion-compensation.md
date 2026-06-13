@@ -323,6 +323,13 @@ No method fully escapes physics:
 - **Strong, close, fast-moving distorters** can overwhelm any compensation; the
   honest response is detect-and-flag (§27.4), keep distorters away (the clinical
   protocol lesson of [@poulin2002]), or fall back to fused/other modalities.
+- **A single-residual flag has a blind spot.** A redundancy/residual flag (§27.4)
+  catches only distortion *inconsistent* with the model; distortion that **mimics a 6-DOF
+  pose shift** inflates the pose error but not the residual. A Phase-5 pilot (Ch. 33 §33.9,
+  `data/distortion_flag_roc.json`) shows the detection margin going **negative** for such a
+  distorter — the flag fires *after* the error is dangerous — which is why single-sensor
+  detection must be backed by **independent** redundancy (witness §27.3, second generator
+  Ch. 9 §9.8, fusion Ch. 21 §21.9), not trusted alone.
 - **Compensation reduces, it does not eliminate.** Reported reductions are
   $\sim$5–10×, not to zero: static mapping took a ~1.56% raw distortion to ~0.20%
   residual in the Ch. 25 worked budget (~8×), and witness compensation took a

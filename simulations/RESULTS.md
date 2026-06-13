@@ -46,8 +46,20 @@ and the CRLB is a usable design predictor (Ch. 24).
 - skin depth at 10 kHz [mm]: {'Copper': 0.6609, 'Aluminium': 0.8507, 'Stainless 304 (non-mag)': 4.2536} (Cu value matches the Ch. 6 §6.2 hand calculation).
 - pulsed-DC settling figure is an illustrative single-τ model (labelled as such).
 
+## Sim 11 — Deep-volume CRLB & the moment lever (Ch. 29 §29.10, Ch. 24/37)
+- usable depth (σ ≤ 1.0 mm) by moment: {'m_t=1': 0.554, 'm_t=4': 0.783, 'm_t=16': 1.108} m
+- σ ∝ m_t^-1.0 and z_max ∝ m_t^0.25 → a 16× moment buys only ~2× depth; doubling depth needs ~16× power (Ch. 37 thermal wall) → multi-generator (Ch. 9.8).
+
+## Sim 12 — Dynamic-distortion flag ROC (Ch. 33 §33.9, Ch. 27)
+- single-residual flag detection margin is GEOMETRY-DEPENDENT: [-0.259, 0.556] % across distorter directions, and NEGATIVE for pose-mimicking distortion → flag fires AFTER the error exceeds τ=2.0 mm.
+- conclusion: a single residual flag is necessary but not sufficient; independent
+  redundancy (witness/2nd-generator/fusion) is required, and flag latency/false-alarm
+  must be MEASURED (the §33.9 benchmark), not assumed.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
+- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever
+- `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC
 - `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)
 - `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a
 - `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB

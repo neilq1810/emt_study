@@ -11,10 +11,10 @@ change.
 | 1     | Repository structure + master outline + roadmap          | ✅ Done        |
 | 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
-| 4     | Figures & visualizations                                 | 🟡 7 computed figures (Ch.4/6/20/24); schematic diagrams pending |
-| 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 7 sims incl. eddy/skin-depth) |
+| 4     | Figures & visualizations                                 | 🟡 9 computed figures (Ch.4/6/20/24/29/33); schematic diagrams pending |
+| 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 12 sims incl. 6-DOF FIM, deep-volume, distortion flag-ROC) |
 | 6     | Interactive website (digital textbook + tools)           | ✅ Scaffold + 21 interactive tools; sim↔site linked (/results, /figures, 6 tools overlay Python data) |
-| 7     | Cross-referencing pass                                   | ⬜ Not started |
+| 7     | Cross-referencing pass                                   | 🟢 §-ref integrity verified (849 §-refs → 349 sections, 0 dangling) + permanent verifier guard |
 | 8     | Technical review                                         | ⬜ Not started |
 | 9     | Publication-ready version                                | ⬜ Not started |
 
@@ -270,8 +270,12 @@ measurement and the book currently models only absolute generator-frame tracking
   vendor specs — each appropriately hedged.
 - [ ] **X2 — Mathematics-depth upgrades (Section E)** woven into the owning chapters
   (6-DOF FIM, nonlinear observability, TRE theory, manifold solve, GP distortion).
-- [ ] **X3 — Simulation/figure backing.** Implement the deferred sims (below) +
-  a 6-DOF CRLB sim; raise figure coverage (Phase 4) beyond the current 8.
+- 🟡 **X3 — Simulation/figure backing.** Done: 6-DOF FIM (sim10), **deep-volume CRLB +
+  moment lever** (sim11: σ∝1/m_t, z_max∝m_t^0.25 → 16× moment = 2× depth), **dynamic-
+  distortion flag-ROC** (sim12: detection margin geometry-dependent +0.56%…−0.26%, NEGATIVE
+  for pose-mimicking distortion → single residual flag necessary-but-not-sufficient). 12 sims,
+  9 computed figures, sim↔prose contract at 9 assertions. Remaining: schematic diagrams; more
+  figure coverage.
 - [ ] **X4 — Consolidation & cross-reference pass (Phase 7).** Integrate Parts
   XV–XX into the narrative; audit every `Ch. X §Y` and `[@key]`; convert in-chapter
   "open questions" from a to-do list into resolved text or a single tracked appendix.
