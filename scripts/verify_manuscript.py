@@ -108,6 +108,9 @@ CONTRACT = [
     ("Monte-Carlo ~3% of CRLB (Ch.24)", "**/24-*.md", ["3%"]),
     ("Closed-form eig 1:1:4 (Ch.23)", "**/23-*.md", ["4{:}1{:}1", "4:1:1", "1:1:4"]),
     ("Dual-coil roll obs 0/0.55/1.0 (Ch.13)", "**/13-*.md", ["sin"]),
+    ("Deep-volume moment lever m_t^0.25 (Ch.29)", "**/29-*.md", ["m_t^{0.25}", "16\\times"]),
+    ("Distortion flag margin geometry-dependent (Ch.33)", "**/33-*.md",
+     ["+0.56", "-0.26", "necessary but not sufficient"]),
 ]
 
 

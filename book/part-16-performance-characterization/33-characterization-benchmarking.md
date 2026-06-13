@@ -251,8 +251,23 @@ measured. A standardized dynamic-distortion benchmark with an explicit
 control from a design intention into a **measured, comparable, auditable** property — which
 is exactly what a "definitive" benchmark for clinical EMT should do, and a concrete
 candidate to take to the standardization community (Ch. 30). (conf: med — the landscape and
-gap are well-supported; the specific benchmark is a *proposal* to be piloted and refined,
-e.g. as a Phase-5 dynamic-error/flag-ROC simulation before a physical rig.)
+gap are well-supported; the specific benchmark is a *proposal* to be refined before a
+physical rig.)
+
+**Pilot result — and a sharp warning (Phase-5, `data/distortion_flag_roc.json`,
+`figures/ch33_distortion_flag_roc.png`).** Simulating a conducting-sphere distorter
+approaching a mid-volume sensor, with the **single-sensor residual** as the flag (the
+redundant $9>6$ measurement of §27.4), the **detection margin** — the distortion fraction at
+which the pose error reaches the $\tau=2$ mm tolerance *minus* the fraction at which the flag
+crosses its 1 %-false-alarm threshold — is **geometry-dependent and ranges from $+0.56\%$
+(flag fires well before danger) to $-0.26\%$ (flag fires *after* the error is dangerous)**. The
+negative case is **distortion that mimics a 6-DOF pose shift**: it inflates the pose error but
+*not* the residual, so a single residual flag cannot see it. The lesson sharpens the whole
+detect-and-flag argument: a single residual check is **necessary but not sufficient**, and
+catching pose-mimicking distortion demands **independent redundancy** — a witness sensor
+(§27.3), a second generator (Ch. 9 §9.8), or fusion (Ch. 21 §21.9). This is precisely why the
+flag's margin must be **measured** by a benchmark like the one above, not assumed — the pilot
+*found* the blind spot that an assertion would have hidden.
 
 > **Engineering takeaway.** Characterization is the empirical twin of the error
 > budget. A figure of merit without its conditions, its distribution, and its

@@ -451,6 +451,194 @@ def sim_6dof_crlb() -> None:
     print("[sim10] 6-DOF CRLB:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 11 — deep-volume CRLB & the moment lever (Ch. 29 §29.10, Ch. 24/37)
+# ---------------------------------------------------------------------------
+def sim_deep_volume() -> None:
+    """Position CRLB out to bariatric depths and the cost of reaching them.
+
+    sigma_pos ~ z^4 * sigma_B / m_t, so holding an accuracy target tau at depth z
+    needs moment m_t ~ z^4 -> doubling usable depth costs ~16x moment (=> ~16x
+    power, the thermal wall of Ch. 37 -> multi-generator, Ch. 9.8).
+    """
+    sigma_B = 1e-9
+    target_mm = 1.0  # clinical 1-sigma position target [mm]
+    zs = np.linspace(0.2, 1.3, 60)
+    moments = [1.0, 4.0, 16.0]
+    curves, zmax = {}, {}
+    for m_t in moments:
+        sig = np.array([crlb_position_sigma(np.array([0, 0, z, 0, 0, 0.0]), sigma_B, m_t=m_t) * 1e3
+                        for z in zs])
+        curves[f"m_t={m_t:g}"] = sig
+        # interpolate the depth where sigma crosses the target (sigma increasing in z)
+        zmax[f"m_t={m_t:g}"] = (float(np.interp(target_mm, sig, zs))
+                                if sig[0] <= target_mm <= sig[-1] else float("nan"))
+    # verify sigma ~ 1/m_t (at fixed z) and z_max ~ m_t^0.25
+    z_ref = 0.5
+    s_vs_m = np.array([crlb_position_sigma(np.array([0, 0, z_ref, 0, 0, 0.0]), sigma_B, m_t=m) * 1e3
+                       for m in moments])
+    inv_m_exp = float(np.polyfit(np.log(moments), np.log(s_vs_m), 1)[0])  # expect -1
+    zmax_vals = np.array([zmax[f"m_t={m:g}"] for m in moments])
+    depth_exp = float(np.polyfit(np.log(moments), np.log(zmax_vals), 1)[0])  # expect ~0.25
+
+    fig, ax = plt.subplots(figsize=(6.2, 4.3))
+    for k, sig in curves.items():
+        ax.semilogy(zs, sig, "o-", ms=3, label=k)
+    ax.axhline(target_mm, ls="--", color="gray", label=f"target {target_mm:g} mm")
+    ax.set_xlabel("range z [m]"); ax.set_ylabel("CRLB position $\\sigma$ [mm]")
+    ax.set_title("Deep-volume CRLB and the moment lever ($\\sigma_B=1$ nT)")
+    ax.grid(True, which="both", alpha=0.3); ax.legend()
+    fig.tight_layout(); fig.savefig(FIG / "ch29_deep_volume_crlb.png", dpi=140); plt.close(fig)
+
+    res = {
+        "sigma_B_T": sigma_B, "target_mm": target_mm,
+        "zmax_m_by_moment": {k: round(v, 3) for k, v in zmax.items()},
+        "sigma_vs_moment_exponent": round(inv_m_exp, 2),   # ~ -1.0
+        "depth_vs_moment_exponent": round(depth_exp, 2),   # ~ 0.25
+        "note": "CRLB sigma_pos ~ 1/m_t (exponent ~-1) at fixed range, so usable depth "
+        "z_max(tau) ~ m_t^0.25: a 16x moment buys only ~2x depth. Doubling usable depth "
+        "needs ~16x moment (~16x power -> Ch.37 thermal wall) -> multi-generator (Ch.9.8) "
+        "is the practical deep-volume/bariatric route, not brute moment.",
+    }
+    (DATA / "deep_volume_crlb.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["deep_volume"] = res
+    print("[sim11] deep-volume CRLB:", res)
+
+
+# ---------------------------------------------------------------------------
+# Sim 12 — dynamic-distortion flag ROC: does detect-and-flag fire before the
+#          pose error exceeds the clinical tolerance? (Ch. 33 §33.9, Ch. 27)
+# ---------------------------------------------------------------------------
+def sim_distortion_flag_roc() -> None:
+    from emtrack.coupling import _rotvec_to_R
+
+    sigma_B = 1e-9
+    x0 = np.array([0.10, 0.0, 0.30, 0.20, 0.10, -0.15])  # mid-volume tilted pose
+    z_clean = forward_model(x0)
+    sig_scale = float(np.linalg.norm(z_clean))
+    sigma_meas = 1e-3 * sig_scale  # measurement noise ~0.1% of signal (well-conditioned)
+    tau_mm = 2.0                   # clinical tolerance [mm] (e.g. ENB)
+
+    rng = np.random.default_rng(33)  # local seed -> reproducible regardless of call order
+    a_sphere = 0.02  # distorter radius [m]
+    alpha = 2 * np.pi * a_sphere**3 / MU0  # conducting-sphere induced-dipole polarizability (Ch.6)
+
+    def coupling_with_distorter(x, p_d):
+        r_vec = x[:3]; R = _rotvec_to_R(x[3:6])
+        M = np.zeros((3, 3))
+        for i in range(3):
+            e = np.zeros(3); e[i] = 1.0
+            Bd = dipole_field(e, r_vec)                 # direct field at sensor (m_t=1)
+            Bg_d = dipole_field(e, p_d)                 # generator field at distorter
+            m_e = -alpha * Bg_d                          # induced eddy dipole
+            Bsec = dipole_field(m_e, r_vec - p_d)        # secondary field at sensor
+            M[:, i] = R.T @ (Bd + Bsec)
+        return M.reshape(-1)
+
+    sensor = x0[:3]
+    # clean-trial residual baseline (no distorter) -> false-alarm reference & threshold
+    clean_res = []
+    for _ in range(500):
+        zz = z_clean + rng.normal(0, sigma_meas, z_clean.shape)
+        xh = solve_pose(zz, x0, sigma=sigma_meas)
+        clean_res.append(np.linalg.norm(zz - forward_model(xh)) / sigma_meas)
+    clean_res = np.array(clean_res)
+    T_flag = float(np.quantile(clean_res, 0.99))  # 1% false-alarm threshold
+
+    # The detectability of distortion depends on its GEOMETRY: distortion that mimics a
+    # pose shift (lies in the 6-DOF tangent space) inflates error but not the residual.
+    # Sweep distorter approach DIRECTION to characterize the margin range.
+    directions = {
+        "+x": np.array([1.0, 0, 0]), "+z": np.array([0, 0, 1.0]),
+        "diag": np.array([1.0, 1.0, 1.0]) / np.sqrt(3),
+    }
+    dists = np.linspace(0.20, 0.035, 28)
+    per_dir, margins = {}, []
+    curves_for_plot = None
+    for name, u in directions.items():
+        eta_l, err_l, res_l = [], [], []
+        for d in dists:
+            p_d = sensor + d * u
+            z_d = coupling_with_distorter(x0, p_d)
+            eta_l.append(np.linalg.norm(z_d - z_clean) / sig_scale)
+            errs, resid = [], []
+            for _ in range(30):
+                zz = z_d + rng.normal(0, sigma_meas, z_d.shape)
+                xh = solve_pose(zz, x0, sigma=sigma_meas)
+                errs.append(np.linalg.norm(xh[:3] - x0[:3]) * 1e3)
+                resid.append(np.linalg.norm(zz - forward_model(xh)) / sigma_meas)
+            err_l.append(float(np.mean(errs))); res_l.append(float(np.mean(resid)))
+        eta_a, err_a, res_a = np.array(eta_l), np.array(err_l), np.array(res_l)
+        order = np.argsort(err_a)
+        eta_danger = float(np.interp(tau_mm, err_a[order], eta_a[order]))
+        order_r = np.argsort(res_a)
+        eta_flag = float(np.interp(T_flag, res_a[order_r], eta_a[order_r]))
+        margin = eta_danger - eta_flag
+        margins.append(margin)
+        per_dir[name] = {"eta_flag_pct": round(eta_flag * 100, 3),
+                         "eta_danger_pct": round(eta_danger * 100, 3),
+                         "margin_pct": round(margin * 100, 3),
+                         "flag_first": bool(margin > 0)}
+        if name == "+z":  # representative for the figure
+            curves_for_plot = (eta_a * 100, err_a, res_a)
+
+    # ROC at a near-danger operating point for the worst (most pose-mimicking) direction
+    worst = min(per_dir, key=lambda k: per_dir[k]["margin_pct"])
+    u = directions[worst]
+    # pick d giving error ~ tau
+    eta_tmp = []
+    for d in dists:
+        zz = coupling_with_distorter(x0, sensor + d * u)
+        eta_tmp.append(np.linalg.norm(zz - z_clean) / sig_scale)
+    # operating distorter at the closest distance in the sweep
+    z_op = coupling_with_distorter(x0, sensor + dists[-1] * u)
+    dist_res = []
+    for _ in range(500):
+        zz = z_op + rng.normal(0, sigma_meas, z_op.shape)
+        xh = solve_pose(zz, x0, sigma=sigma_meas)
+        dist_res.append(np.linalg.norm(zz - forward_model(xh)) / sigma_meas)
+    dist_res = np.array(dist_res)
+    Ts = np.linspace(0, max(dist_res.max(), clean_res.max()), 200)
+    tpr = np.array([(dist_res >= T).mean() for T in Ts])
+    fpr = np.array([(clean_res >= T).mean() for T in Ts])
+    auc = float(abs(np.trapezoid(tpr[::-1], fpr[::-1])))
+
+    eta_pl, err_pl, res_pl = curves_for_plot
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.0))
+    ax1.plot(eta_pl, err_pl, "o-", ms=3, color="C3", label="pose error [mm]")
+    ax1.axhline(tau_mm, ls="--", color="C3", alpha=0.6, label=f"tolerance {tau_mm:g} mm")
+    ax1b = ax1.twinx()
+    ax1b.plot(eta_pl, res_pl, "s-", ms=3, color="C0", label="flag statistic")
+    ax1b.axhline(T_flag, ls=":", color="C0", alpha=0.7, label="flag threshold (1% FA)")
+    ax1.set_xlabel("distortion fraction $\\eta$ [%]"); ax1.set_ylabel("pose error [mm]", color="C3")
+    ax1b.set_ylabel("flag statistic (NIS-like)", color="C0")
+    ax1.set_title("Error vs single-residual flag onset (+z distorter)")
+    ax2.plot(fpr, tpr, "-", color="C2"); ax2.plot([0, 1], [0, 1], "--", color="gray", alpha=0.5)
+    ax2.set_xlabel("false-alarm rate"); ax2.set_ylabel("detection rate")
+    ax2.set_title(f"Flag ROC, worst dir '{worst}' (AUC={auc:.3f})")
+    fig.tight_layout(); fig.savefig(FIG / "ch33_distortion_flag_roc.png", dpi=140); plt.close(fig)
+
+    margins_pct = [round(m * 100, 3) for m in margins]
+    res = {
+        "tau_mm": tau_mm, "sigma_meas_frac": 1e-3, "flag_threshold_1pct_FA": round(T_flag, 2),
+        "by_direction": per_dir,
+        "margin_range_pct": [min(margins_pct), max(margins_pct)],
+        "any_negative_margin": bool(min(margins) < 0),
+        "roc_auc_worst_dir": round(auc, 3), "worst_direction": worst,
+        "note": "A single-sensor residual (redundant 9>6 measurement, Ch.27) detects only the "
+        "part of distortion INCONSISTENT with the dipole model; distortion that mimics a 6-DOF "
+        "pose shift inflates error but not the residual. The detection margin (eta_danger - "
+        "eta_flag) is therefore GEOMETRY-DEPENDENT and can be NEGATIVE (flag fires AFTER the "
+        "error is dangerous). Conclusion: a single residual flag is necessary but NOT sufficient "
+        "-> independent redundancy (witness sensor Ch.27.3, 2nd generator Ch.9.8, fusion Ch.21.9) "
+        "is required, and flag latency/false-alarm MUST be measured per the proposed Ch.33 §33.9 "
+        "benchmark, not assumed.",
+    }
+    (DATA / "distortion_flag_roc.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["distortion_flag_roc"] = res
+    print("[sim12] distortion flag ROC:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -501,8 +689,26 @@ def write_results_md() -> None:
         " (Cu value matches the Ch. 6 §6.2 hand calculation).",
         "- pulsed-DC settling figure is an illustrative single-τ model (labelled as such).",
         "",
+        "## Sim 11 — Deep-volume CRLB & the moment lever (Ch. 29 §29.10, Ch. 24/37)",
+        f"- usable depth (σ ≤ {d['deep_volume']['target_mm']} mm) by moment: "  # type: ignore[index]
+        f"{d['deep_volume']['zmax_m_by_moment']} m",  # type: ignore[index]
+        f"- σ ∝ m_t^{d['deep_volume']['sigma_vs_moment_exponent']} and "  # type: ignore[index]
+        f"z_max ∝ m_t^{d['deep_volume']['depth_vs_moment_exponent']} → a 16× moment buys only "  # type: ignore[index]
+        "~2× depth; doubling depth needs ~16× power (Ch. 37 thermal wall) → multi-generator (Ch. 9.8).",
+        "",
+        "## Sim 12 — Dynamic-distortion flag ROC (Ch. 33 §33.9, Ch. 27)",
+        f"- single-residual flag detection margin is GEOMETRY-DEPENDENT: "
+        f"{d['distortion_flag_roc']['margin_range_pct']} % across distorter directions, "  # type: ignore[index]
+        f"and NEGATIVE for pose-mimicking distortion → flag fires AFTER the error exceeds "
+        f"τ={d['distortion_flag_roc']['tau_mm']} mm.",  # type: ignore[index]
+        "- conclusion: a single residual flag is necessary but not sufficient; independent",
+        "  redundancy (witness/2nd-generator/fusion) is required, and flag latency/false-alarm",
+        "  must be MEASURED (the §33.9 benchmark), not assumed.",
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
+        "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
+        "- `figures/ch33_distortion_flag_roc.png` — distortion flag error-onset & ROC",
         "- `figures/ch06_skin_depth.png`, `ch06_pulsed_dc_settling.png` — eddy/skin (Ch. 6)",
         "- `figures/ch04_dipole_vs_loop_error.png` — approximation error vs r/a",
         "- `figures/ch24_crlb_map.png`, `figures/ch24_crlb_vs_range.png` — CRLB",
@@ -525,6 +731,8 @@ def main() -> None:
     sim_closed_form_init()
     sim_dual_coil_obs()
     sim_6dof_crlb()
+    sim_deep_volume()
+    sim_distortion_flag_roc()
     write_results_md()
 
 

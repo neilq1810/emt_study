@@ -1,0 +1,12 @@
+{
+  "sigma_B_T": 1e-09,
+  "target_mm": 1.0,
+  "zmax_m_by_moment": {
+    "m_t=1": 0.554,
+    "m_t=4": 0.783,
+    "m_t=16": 1.108
+  },
+  "sigma_vs_moment_exponent": -1.0,
+  "depth_vs_moment_exponent": 0.25,
+  "note": "CRLB sigma_pos ~ 1/m_t (exponent ~-1) at fixed range, so usable depth z_max(tau) ~ m_t^0.25: a 16x moment buys only ~2x depth. Doubling usable depth needs ~16x moment (~16x power -> Ch.37 thermal wall) -> multi-generator (Ch.9.8) is the practical deep-volume/bariatric route, not brute moment."
+}
