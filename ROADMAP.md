@@ -216,9 +216,9 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.24** Uncertainty communication & navigation-confidence display *(Ch. 46 §46.6)* — 🟢 DONE: χ²₃,₀.₉₅ ellipsoid/cone on the **orientation-marginalized** §24.6 covariance (optimistic block under-draws ~2.95×), TRE quadrature, τ-relative GREEN/AMBER/RED state; +fda_hf2016, iec60601_1_6
 - [x] **T2.16+T2.15** Regulatory pathways & quality systems *(NEW Ch. 48)* — 🟢 DONE: intended-use→classification; US 510(k)/De Novo/PMA; EU MDR GSPR/Rule 11/CER; ISO 13485 + 21 CFR 820/QMSR design controls; **V&V master plan** (design-input→standard→test→acceptance matrix); standards-to-evidence map. +iso13485,cfr820,eu_mdr,fda_510k,fda_denovo
 - [x] **T2.17** Clinical evaluation & preclinical study design *(NEW Ch. 49)* — 🟢 DONE: evidence V-model (bench→phantom→cadaver→animal→human→PMCF); preclinical-model trade table; **surrogate-vs-clinical endpoint** (NAVIGATE); GCP study design/powering/bias; navigation-specific pitfalls (GT circularity, surrogate trap, learning curve). +iso14155
-- [ ] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(new)*
-- [ ] **T2.25** EMT in MRI / hybrid OR / image-guided radiotherapy *(new)*
-- [ ] **T2.26** Pediatric, bariatric & deep-volume constraints *(new; ties Ch. 29)*
+- [x] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(Ch. 29 §29.8)* — 🟢 DONE: passive sensors don't contend (one field, many receivers) → cost is channels×compute not signal; active-beacon case → FDM/TDM/CDM (Ch.19); identity/frame management + N-vs-latency trade
+- [x] **T2.25** EMT in MRI / hybrid OR / image-guided radiotherapy *(Ch. 29 §29.9)* — 🟢 DONE: MRI bore incompatible (B0 saturation/force, gradient+RF+eddy) → micro-coil tracking instead; hybrid-OR dynamic C-arm distortion; IGRT beam-on motion tracking/gating w/ fail-safe
+- [x] **T2.26** Pediatric, bariatric & deep-volume constraints *(Ch. 29 §29.10)* — 🟢 DONE: pediatric (small tools/targets, no-radiation driver); bariatric/deep = z⁴ SNR/conditioning limit (not tissue distortion); mitigations (moment/multi-gen/integration/under-table); usable-volume = region under clinical tolerance
 
 **Cluster C — Industry/operations (consolidated 9→3)**
 - [ ] **T2.C1** Manufacturing & Production (production test/end-of-line + factory cal at scale/golden-units/cal-transfer + cost/BOM/design-to-cost) *(was T2.5+T2.6+T2.13)*
