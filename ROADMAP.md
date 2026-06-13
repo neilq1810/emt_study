@@ -214,8 +214,8 @@ measurement and the book currently models only absolute generator-frame tracking
 
 **Cluster B — Clinical & safety completers**
 - [x] **T2.24** Uncertainty communication & navigation-confidence display *(Ch. 46 §46.6)* — 🟢 DONE: χ²₃,₀.₉₅ ellipsoid/cone on the **orientation-marginalized** §24.6 covariance (optimistic block under-draws ~2.95×), TRE quadrature, τ-relative GREEN/AMBER/RED state; +fda_hf2016, iec60601_1_6
-- [ ] **T2.16+T2.15** Regulatory pathways & quality systems (510(k)/De Novo/PMA; EU MDR/GSPR; V&V; ISO 13485 / 21 CFR 820) *(merged; Part XX; ties Ch. 29)*
-- [ ] **T2.17** Clinical evaluation, preclinical (phantom/cadaver/animal) & study design *(new; ties Ch. 29/33)*
+- [x] **T2.16+T2.15** Regulatory pathways & quality systems *(NEW Ch. 48)* — 🟢 DONE: intended-use→classification; US 510(k)/De Novo/PMA; EU MDR GSPR/Rule 11/CER; ISO 13485 + 21 CFR 820/QMSR design controls; **V&V master plan** (design-input→standard→test→acceptance matrix); standards-to-evidence map. +iso13485,cfr820,eu_mdr,fda_510k,fda_denovo
+- [x] **T2.17** Clinical evaluation & preclinical study design *(NEW Ch. 49)* — 🟢 DONE: evidence V-model (bench→phantom→cadaver→animal→human→PMCF); preclinical-model trade table; **surrogate-vs-clinical endpoint** (NAVIGATE); GCP study design/powering/bias; navigation-specific pitfalls (GT circularity, surrogate trap, learning curve). +iso14155
 - [ ] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(new)*
 - [ ] **T2.25** EMT in MRI / hybrid OR / image-guided radiotherapy *(new)*
 - [ ] **T2.26** Pediatric, bariatric & deep-volume constraints *(new; ties Ch. 29)*

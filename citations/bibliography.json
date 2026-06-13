@@ -2427,6 +2427,149 @@
       "relevance": 6,
       "confidence": "high",
       "notes": "Collateral usability standard that points to IEC 62366-1 as the means of compliance; ties the HF process (Ch. 46) into the 60601 safety framework (Ch. 17/45)."
+    },
+    {
+      "id": "iso13485",
+      "type": "standard",
+      "title": "ISO 13485:2016 Medical devices — Quality management systems — Requirements for regulatory purposes",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2016,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/59752.html",
+      "source_type": "standard",
+      "keywords": [
+        "QMS",
+        "quality management system",
+        "design controls",
+        "ISO 13485",
+        "regulatory"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "The medical-device QMS standard; clause 7.3 design & development controls are the backbone of Ch. 48. Recognized for CE marking and harmonized with the US QMSR (2026)."
+    },
+    {
+      "id": "cfr820",
+      "type": "regulation",
+      "title": "21 CFR Part 820 — Quality System Regulation (amended by the Quality Management System Regulation, QMSR, final rule 2024)",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2024,
+      "venue": "U.S. Code of Federal Regulations",
+      "publisher": "U.S. FDA",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-H/part-820",
+      "source_type": "regulation",
+      "keywords": [
+        "Quality System Regulation",
+        "QSR",
+        "design controls",
+        "820.30",
+        "QMSR",
+        "design history file"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "US device QMS rule; 820.30 design controls. QMSR final rule (89 FR 7496, published 2024-02-02) incorporates ISO 13485 by reference, effective 2026-02-02 - harmonizing US QMS with ISO 13485."
+    },
+    {
+      "id": "eu_mdr",
+      "type": "regulation",
+      "title": "Regulation (EU) 2017/745 of the European Parliament and of the Council on medical devices (Medical Device Regulation, MDR)",
+      "authors": [
+        "European Parliament and Council of the European Union"
+      ],
+      "year": 2017,
+      "venue": "Official Journal of the European Union",
+      "publisher": "European Union",
+      "url": "https://eur-lex.europa.eu/eli/reg/2017/745/oj",
+      "source_type": "regulation",
+      "keywords": [
+        "EU MDR",
+        "GSPR",
+        "Annex I",
+        "classification rules",
+        "conformity assessment",
+        "notified body",
+        "CE mark",
+        "clinical evaluation"
+      ],
+      "relevance": 8,
+      "confidence": "high",
+      "notes": "EU MDR; General Safety and Performance Requirements (Annex I), classification rules (Annex VIII, incl. software Rule 11), conformity assessment (Annexes IX-XI), clinical evaluation (Annex XIV). Date of application 2021-05-26."
+    },
+    {
+      "id": "fda_510k",
+      "type": "report",
+      "title": "The 510(k) Program: Evaluating Substantial Equivalence in Premarket Notifications [510(k)] — Guidance for Industry and FDA Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2014,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/510k-program-evaluating-substantial-equivalence-premarket-notifications-510k",
+      "source_type": "guidance",
+      "keywords": [
+        "510(k)",
+        "substantial equivalence",
+        "predicate device",
+        "premarket notification",
+        "intended use"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "FDA guidance defining the substantial-equivalence decision logic for 510(k); the dominant pathway for Class II navigation systems with a predicate."
+    },
+    {
+      "id": "fda_denovo",
+      "type": "report",
+      "title": "De Novo Classification Process (Evaluation of Automatic Class III Designation) — Guidance for Industry and FDA Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2021,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/de-novo-classification-process-evaluation-automatic-class-iii-designation",
+      "source_type": "guidance",
+      "keywords": [
+        "De Novo",
+        "novel device",
+        "Class I/II without predicate",
+        "FD&C Act 513(f)(2)",
+        "special controls"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "Pathway for novel low/moderate-risk devices lacking a predicate (statute: FD&C Act 513(f)(2)); establishes a new device type + special controls that later devices can use as a predicate."
+    },
+    {
+      "id": "iso14155",
+      "type": "standard",
+      "title": "ISO 14155:2020 Clinical investigation of medical devices for human subjects — Good clinical practice",
+      "authors": [
+        "International Organization for Standardization"
+      ],
+      "year": 2020,
+      "venue": "ISO",
+      "publisher": "International Organization for Standardization",
+      "url": "https://www.iso.org/standard/71690.html",
+      "source_type": "standard",
+      "keywords": [
+        "clinical investigation",
+        "good clinical practice",
+        "GCP",
+        "clinical evidence",
+        "ISO 14155",
+        "ethics"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "GCP standard for device clinical investigations; the methodological backbone for the clinical-evaluation chapter (study conduct, ethics, data integrity). Recognized under EU MDR Annex XV and complementary to FDA IDE (21 CFR 812)."
     }
   ],
   "to_research": [

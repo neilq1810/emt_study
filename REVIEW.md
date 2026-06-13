@@ -169,3 +169,6 @@ end-to-end (moment→field→σ_B→CRLB→RSS error budget→latency budget), g
 
 ## User-review queue
 - [ ] Ch. 19–25 — awaiting review (batch)
+
+| 48 | Regulatory pathways & quality systems | 🟢 DRAFT → review | **NEW chapter** [T2.16+T2.15]: intended-use→class; US 510(k)/De Novo/PMA + EU MDR GSPR/Rule 11/CER; ISO 13485 + 21 CFR 820/QMSR design controls (input→output→V&V→DHF); V&V master plan matrix; standards-to-evidence map. +iso13485,cfr820,eu_mdr,fda_510k,fda_denovo |
+| 49 | Clinical evaluation & preclinical | 🟢 DRAFT → review | **NEW chapter** [T2.17]: evidence V-model; preclinical-model trade table (phantom/cadaver/animal: realism vs control vs ground-truth); surrogate-vs-clinical endpoint (NAVIGATE); GCP design/powering/bias; navigation pitfalls (GT circularity, surrogate trap). +iso14155 |
