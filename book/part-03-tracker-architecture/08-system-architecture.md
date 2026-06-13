@@ -17,8 +17,9 @@ each block.
 ## 8.1 The reference signal chain
 
 Every electromagnetic tracker, regardless of vendor, instantiates the same
-canonical chain. Read left to right as the flow of information; the chapter
-pointers show where each block is developed in depth.
+canonical chain (schematic: `figures/ch08_system_block_diagram.png`). Read left to
+right as the flow of information; the chapter pointers show where each block is
+developed in depth.
 
 ```
                           (magnetic near field, 1/r^3)

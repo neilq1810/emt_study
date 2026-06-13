@@ -46,7 +46,8 @@ $$
 $$
 
 i.e. the demodulator $g_k$ responds only to channel $k$. The three schemes are
-three constructions of $\{I_i, g_i\}$ satisfying (19.2); they differ entirely in
+three constructions of $\{I_i, g_i\}$ satisfying (19.2) — TDM, FDM, and pulsed-DC
+(waveform schematic: `figures/ch19_excitation_schemes.png`); they differ entirely in
 *how* the orthogonality is realized and in *how it breaks* under non-ideal
 hardware (§§19.2–19.4). The proportionality constant $\kappa_i$ (which depends on
 drive amplitude and, for AC, on frequency) is absorbed by calibration (Ch. 26),

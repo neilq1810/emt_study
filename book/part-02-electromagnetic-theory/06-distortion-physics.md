@@ -9,7 +9,8 @@ near-field magnetic coupling that lets EMT see through tissue also couples into
 any nearby **conductor** (inducing eddy currents) or **ferromagnetic** object
 (concentrating flux). Both perturb the field the sensor measures, corrupting the
 pose estimate in ways that are *spatially structured* and therefore not
-removable by simple averaging. This chapter develops the physics of the two
+removable by simple averaging (mechanism schematic:
+`figures/ch06_distortion_mechanism.png`). This chapter develops the physics of the two
 distortion mechanisms, explains the **AC-vs-pulsed-DC** architectural response,
 and frames what calibration (Part X) can and cannot fix. The headline practical
 fact, repeatedly confirmed in the literature, is that **AC systems are more
