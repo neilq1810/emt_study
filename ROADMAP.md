@@ -213,7 +213,7 @@ measurement and the book currently models only absolute generator-frame tracking
 - [x] **T2.4** Nonlinear observability (Lie/Hermann–Krener) & dipole hemisphere/parity ambiguity *(Ch. 24 §24.7)* — 🟢 DONE: Hermann–Krener rank condition / Lie derivatives; local-vs-global; **hemisphere/parity ambiguity** (r̂→−r̂ invariance → global un-identifiability) + resolutions (asymmetric generator/half-space prior/continuity/fusion). +hermann1977
 
 **Cluster B — Clinical & safety completers**
-- [ ] **T2.24** Uncertainty communication & navigation-confidence display *(new; ties Ch. 24/T1.10)*
+- [x] **T2.24** Uncertainty communication & navigation-confidence display *(Ch. 46 §46.6)* — 🟢 DONE: χ²₃,₀.₉₅ ellipsoid/cone on the **orientation-marginalized** §24.6 covariance (optimistic block under-draws ~2.95×), TRE quadrature, τ-relative GREEN/AMBER/RED state; +fda_hf2016, iec60601_1_6
 - [ ] **T2.16+T2.15** Regulatory pathways & quality systems (510(k)/De Novo/PMA; EU MDR/GSPR; V&V; ISO 13485 / 21 CFR 820) *(merged; Part XX; ties Ch. 29)*
 - [ ] **T2.17** Clinical evaluation, preclinical (phantom/cadaver/animal) & study design *(new; ties Ch. 29/33)*
 - [ ] **T2.2** Multi-tool / simultaneous multi-catheter tracking *(new)*

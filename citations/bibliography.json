@@ -2380,6 +2380,53 @@
       "relevance": 7,
       "confidence": "high",
       "notes": "Foundational nonlinear observability: the observability rank condition via Lie derivatives of the output; local weak observability. Distinguishes local (linear, J-rank) from global observability in Ch. 24.7. DOI verified; IEEE TAC 22(5):728-740."
+    },
+    {
+      "id": "fda_hf2016",
+      "type": "report",
+      "title": "Applying Human Factors and Usability Engineering to Medical Devices: Guidance for Industry and Food and Drug Administration Staff",
+      "authors": [
+        "U.S. Food and Drug Administration"
+      ],
+      "year": 2016,
+      "venue": "U.S. FDA / CDRH",
+      "publisher": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/applying-human-factors-and-usability-engineering-medical-devices",
+      "source_type": "guidance",
+      "keywords": [
+        "human factors",
+        "usability",
+        "critical tasks",
+        "use error",
+        "summative validation",
+        "FDA guidance"
+      ],
+      "relevance": 7,
+      "confidence": "high",
+      "notes": "FDA HF/usability guidance (issued 2016-02-03): critical-task analysis, formative/summative human-factors validation, use-related risk. Companion to IEC 62366 for §46 and the US regulatory pathway (Ch. 48)."
+    },
+    {
+      "id": "iec60601_1_6",
+      "type": "standard",
+      "title": "IEC 60601-1-6 Medical electrical equipment - Part 1-6: General requirements for basic safety and essential performance - Collateral standard: Usability",
+      "authors": [
+        "International Electrotechnical Commission"
+      ],
+      "year": 2010,
+      "venue": "IEC",
+      "publisher": "International Electrotechnical Commission",
+      "url": "https://webstore.iec.ch/publication/2599",
+      "source_type": "standard",
+      "keywords": [
+        "usability",
+        "collateral standard",
+        "IEC 60601",
+        "basic safety",
+        "essential performance"
+      ],
+      "relevance": 6,
+      "confidence": "high",
+      "notes": "Collateral usability standard that points to IEC 62366-1 as the means of compliance; ties the HF process (Ch. 46) into the 60601 safety framework (Ch. 17/45)."
     }
   ],
   "to_research": [
