@@ -1,0 +1,7 @@
+{
+  "square_demod_slope": -0.49,
+  "sine_lockin_slope": -0.5,
+  "square_vs_sine_err_ratio": 0.997,
+  "offset_rejection_ratio": 0.993,
+  "note": "An induction coil differentiates, so a TRIANGULAR field gives a SQUARE-WAVE sensor EMF (NDI/Ascension patent). Square-wave synchronous demod (sign-flip-and-average) recovers the coupling with error ~1/sqrt(N) - the same matched-filter SNR as a sine lock-in on an equal-RMS sine (err ratio ~1) - so the choice is IMPLEMENTATION, not SNR. Its concrete win: the +/-1 reference has zero mean, so a large DC/baseline OFFSET is rejected (offset_rejection_ratio ~1), the built-in benefit of the polarity-inverting scheme. (Ch. 9 \u00a79.9, Ch. 20.)"
+}

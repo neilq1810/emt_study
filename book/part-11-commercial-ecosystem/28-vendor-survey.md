@@ -109,6 +109,16 @@ story of Parts IX–X).
   (conf: med — generational details vary; verify per product.)
 - **Boston Scientific Rhythmia.** EP mapping using a combination of **magnetic and
   impedance** localization with a high-density mapping catheter. (conf: med.)
+- **Medtronic Affera (Sphere-9).** The newest entrant: the **Affera Mapping &
+  Ablation System** localizes its **Sphere-9** catheter with a **hybrid magnetic +
+  impedance** scheme — per the FDA device description it uses "the catheter's
+  **electromagnetic location sensor** to determine… the 3-dimensional location,"
+  with impedance localization of the electrodes — placing it squarely in the
+  magnetic-EM-tracking family alongside CARTO/EnSite/Rhythmia. Distinctively, Sphere-9
+  is a **dual-energy** (pulsed-field + RF) high-density mapping/ablation catheter for
+  persistent AF and CTI flutter. **Medtronic acquired Affera in 2022** (up to ~\$1B);
+  **FDA approval 24 Oct 2024**, plus CE mark [@affera2024]. (conf: high on the
+  magnetic+impedance localization and corporate facts; per-generation detail to refine.)
 
 These illustrate a key ecosystem point: in EP, **pure-EM and impedance-based (and
 hybrid)** localization compete, and "EM tracking" in the cath lab often means a

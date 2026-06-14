@@ -134,7 +134,7 @@ export const FIGURES: FigureMeta[] = [
     title: 'Excitation / channel-separation schemes (schematic)',
     chapter: 'Ch. 19',
     chapterSlug: 'part-07-dsp/19-excitation-channel-separation',
-    caption: 'Schematic waveforms: TDM (one axis at a time), FDM (simultaneous tones), and pulsed-DC (energize, wait for eddy settling, sample).',
+    caption: 'Schematic waveforms: TDM (one axis at a time), FDM (simultaneous tones), CDM (simultaneous, orthogonal Hadamard codes), and pulsed-DC (energize, wait for eddy settling, sample).',
   },
   {
     file: 'ch24_hemisphere_ambiguity.png',
@@ -184,5 +184,19 @@ export const FIGURES: FigureMeta[] = [
     chapter: 'Ch. 57',
     chapterSlug: 'part-23-digital-twin/57-system-twin-vv',
     caption: 'End-to-end target error by source: the tracker is ~0.2% of the variance; registration + motion are ~93% — a sub-mm tracker is not a sub-mm system.',
+  },
+  {
+    file: 'ch09_triangle_square_demod.png',
+    title: 'Triangle excitation → square sensor output & demod',
+    chapter: 'Ch. 9 §9.9',
+    chapterSlug: 'part-03-tracker-architecture/09-field-generators-sensor-coils',
+    caption: 'A triangular field gives a square-wave sensor EMF (the coil differentiates); square-wave demod matches the sine lock-in SNR (∝1/√N) but rejects a DC offset via its ±1 reference.',
+  },
+  {
+    file: 'ch20_quadrature_distortion.png',
+    title: 'Quadrature distortion signature: eddy vs ferromagnetic',
+    chapter: 'Ch. 20 §20.10',
+    chapterSlug: 'part-07-dsp/20-synchronous-detection-filtering',
+    caption: 'A conductive (eddy) distorter is quadrature-dominated at ωτ<1 and rotates to in-phase; a ferromagnetic distorter stays in-phase (Q≈0) — so the lock-in Q channel flags conductive distortion selectively.',
   },
 ];

@@ -241,6 +241,44 @@ Multi-generator coverage is therefore the *architectural* alternative to brute-f
 for large volumes: when thermal limits (§37.5) cap a single generator, add generators and
 fuse through the overlap.
 
+## 9.9 Excitation waveform shape and the differentiating sensor
+
+An AC system has one more design choice beyond frequency and geometry: the **shape** of the
+drive waveform. It matters because an **induction-coil sensor differentiates** — its EMF is
+$\varepsilon=-N A\,\dot B$ (Ch. 5), so the *sensor output is the time-derivative of the
+excitation*. The shape of what the receiver sees is therefore set at the transmitter:
+
+- **Sinusoidal** drive → sinusoidal field → **sinusoidal** sensor EMF (90° shifted); the
+  classic continuous-AC tracker (Polhemus, §28.1), detected by a sine lock-in (Ch. 20).
+- **Triangular** drive → triangular field → a **square-wave** sensor EMF: a triangle has
+  *constant slope*, so $\dot B$ is piecewise-constant and the pickup is a bipolar square wave
+  of amplitude $\propto N A\,(4fB_\text{pk})$. An NDI/Ascension patent describes exactly this
+  family — transmit fields of "trapezoidal, **triangular**, half sinusoid, exponential, or
+  square" shape with a sensor "responsive to the **time-derivative component**" and a
+  **polarity inverter** [@ndi_waveform_patent].
+- **Pulsed-DC / step** drive → an impulse-then-zero $\dot B$; the sensor sees the transient,
+  and one waits for eddy decay to read the settled *static* field (Ch. 6 §6.4, §28.2).
+
+The **triangular→square** choice has a real rationale: the square-wave EMF has **flat,
+constant-amplitude segments**, so the amplitude is read by averaging over a flat top —
+high-SNR and **insensitive to exact sample timing** within the segment — and the
+**polarity-inversion** between half-cycles is a built-in synchronous demodulation (sign-flip-
+and-average) that cancels offset/baseline. It is "true AC" (zero-mean, no DC-offset or slow-
+drift issues) yet uses a simpler ramp power stage than a precise sinusoid, and — unlike
+pulsed-DC — keeps the conductor at a *constant* $\dot B$ during each ramp (a steady eddy
+response rather than a decaying transient, Ch. 6). The detection consequence ties to Ch. 20
+§20.4: when the signal is *deliberately* a square wave, a **square-wave reference** lock-in is
+its **matched filter** — the odd-harmonic content §20.4 flags as a penalty for square-wave
+detection of a *sine* becomes exactly the signal energy here. **Computed (Phase-5,
+`figures/ch09_triangle_square_demod.png`):** square-wave synchronous demod of the
+square sensor EMF recovers the coupling with error $\propto N^{-0.49}$ — the *same*
+matched-filter SNR as a sine lock-in on an equal-RMS sine (error ratio $\approx1.0$),
+confirming the choice is **implementation, not SNR** — while the zero-mean $\pm1$
+reference **rejects a 5× DC/baseline offset** (residual ratio $\approx1.0$), the
+built-in advantage of the polarity-inverting scheme. (conf: high — the differentiating-
+sensor physics and the patent's waveform list are primary; which shape a specific shipping
+product uses is not asserted.)
+
 ---
 
 ## Open questions / to verify

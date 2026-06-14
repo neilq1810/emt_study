@@ -160,6 +160,10 @@ CONTRACT = [
      ["-0.23", "+0.07", "independent redundancy"]),
     ("System twin: tracker is not the dominant term (Ch.57)", "**/57-*.md",
      ["0.2", "93", "1.87"]),
+    ("Triangle->square demod equals sine SNR + offset reject (Ch.9)", "**/09-*.md",
+     ["N^{-0.49}", "implementation, not SNR"]),
+    ("Quadrature distortion signature eddy vs ferro (Ch.20)", "**/20-*.md",
+     ["3.3", "quadrature-dominated", "in-phase"]),
 ]
 
 

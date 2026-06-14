@@ -11,8 +11,8 @@ change.
 | 1     | Repository structure + master outline + roadmap          | ✅ Done        |
 | 2     | Bibliography & source database (seed → comprehensive)    | 🟡 In progress |
 | 3     | Chapter-by-chapter content (Parts I–XIV)                 | ✅ Drafted (review pending) |
-| 4     | Figures & visualizations                                 | 🟢 21 figures: 13 computed + 8 schematic; all in gallery |
-| 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 16 sims incl. 6-DOF FIM, flag-ROC, twin identification/noise, witness divergence, system budget) |
+| 4     | Figures & visualizations                                 | 🟢 23 figures: 15 computed + 8 schematic; all in gallery + rendered inline |
+| 5     | Simulations                                              | 🟡 Suite done (emtrack lib + 18 sims incl. 6-DOF FIM, flag-ROC, twin suite, triangle/square demod, quadrature-distortion signature) |
 | 6     | Interactive website (digital textbook + tools)           | ✅ Scaffold + 21 tools; sim↔site linked (/results, /figures); **figures now render inline in chapters** (remark-figures plugin) |
 | 7     | Cross-referencing pass                                   | 🟢 §-ref integrity verified (849 §-refs → 349 sections, 0 dangling) + permanent verifier guard |
 | 8     | Technical review                                         | ⬜ Not started |
