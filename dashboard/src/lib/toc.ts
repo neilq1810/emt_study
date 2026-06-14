@@ -45,6 +45,7 @@ function partLabel(key: string): { label: string; order: number } {
   const m = key.match(/^part-(\d+)-(.+)$/);
   if (!m) return { label: titleCase(key), order: 999 };
   const num = parseInt(m[1], 10);
+  if (num === 0) return { label: titleCase(m[2]), order: 0 }; // front matter (no "Part 0")
   const roman = ROMAN[num] ?? String(num);
   return { label: `Part ${roman} · ${titleCase(m[2])}`, order: num };
 }
