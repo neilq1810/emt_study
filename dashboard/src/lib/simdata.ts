@@ -199,4 +199,11 @@ export const FIGURES: FigureMeta[] = [
     chapterSlug: 'part-07-dsp/20-synchronous-detection-filtering',
     caption: 'A conductive (eddy) distorter is quadrature-dominated at ωτ<1 and rotates to in-phase; a ferromagnetic distorter stays in-phase (Q≈0) — so the lock-in Q channel flags conductive distortion selectively.',
   },
+  {
+    file: 'readers_dependency_map.png',
+    title: "Reader's dependency map (Part × Part cross-references)",
+    chapter: "Reader's Guide",
+    chapterSlug: 'part-00-front-matter/readers-guide',
+    caption: 'Inter-part cross-reference heatmap derived from the manuscript\'s own Ch. N references; Parts II/III/VII are the load-bearing foundations.',
+  },
 ];

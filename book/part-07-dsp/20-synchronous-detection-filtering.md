@@ -303,8 +303,9 @@ behaviour is regime-dependent, Ch. 6.)
   reference makes the canceller erode the signal.
 
 ## Open questions / to verify
-- Add the explicit one-sided ENBW derivation (boxcar and RC) to Appendix C and
-  reconcile with the Σ-Δ decimation-filter ENBW (Ch. 18) to avoid double-counting.
+- ✅ **Resolved:** the one-sided ENBW derivation (boxcar $1/2T$, RC $1/4\tau$) is now in
+  the **Reference → Appendix §A.1**. Remaining: reconcile with the Σ-Δ decimation-filter
+  ENBW (Ch. 18) to avoid double-counting.
 - Source a primary description of a *specific* pulsed-DC matched-filter / window
   (vendor or peer-reviewed) to ground §20.6 (currently general principle).
 - Build a Phase-5 notebook for the Rician low-SNR magnitude bias and the

@@ -297,6 +297,32 @@ measurement and the book currently models only absolute generator-frame tracking
   XV–XX into the narrative; audit every `Ch. X §Y` and `[@key]`; convert in-chapter
   "open questions" from a to-do list into resolved text or a single tracked appendix.
 
+### Front/back matter (✅ added)
+- **Reader's Guide** (`part-00-front-matter/`): scope, the 8 reading arcs, role-based reader
+  pathways, the computed **dependency map** (`figures/readers_dependency_map.png`,
+  `scripts/chapter_graph.py`), conventions, and the methodology/honesty contract.
+- **Reference part** (`part-24-reference/`): **Notation** (symbols table), **Glossary**
+  (acronyms + terms of art), **Appendix — Derivations** (ENBW [the promised "Appendix C"],
+  dipole field, the 4:1:1 eigenstructure, the 6-DOF FIM/Schur marginalization), and
+  **Decision Frameworks** (excitation-mode table; standards→evidence quick-reference).
+
+### Planned structural revision (Phase 8 — deliberate, scripted, verifier-guarded)
+The 23 parts grew iteratively: 8 are single-chapter, related themes are split across
+non-adjacent parts, and one numbering wart exists (wireless **Ch. 47** reads after Ch. 48/49).
+**Target: re-home all 57 chapters into 8 thematic Parts and renumber 1→57 monotonically.**
+- I Foundations & History (1–3) · II Electromagnetic Theory (4–7) · III The Instrument
+  (8–18, 35–37, 47) · IV Signal Processing & Pose Estimation (19–24) · V Accuracy: Errors,
+  Calibration & Characterization (25–27, 33–34) · VI The Clinical System (29, 38–43) ·
+  VII Product, Dependability & Lifecycle (28, 44–46, 48–52) · VIII Synthesis & Frontiers
+  (30–32, 53–57).
+- **Why deferred / scripted:** a full renumber touches **~850 §-references** and every
+  `Ch. N`; it must be one scripted pass (renumber high→low to avoid double-mapping, update
+  filenames + headers + cross-refs + contract assertions + gallery slugs + ROADMAP/REVIEW),
+  with `scripts/verify_manuscript.py` as the before/after gate. The lone Ch. 47 wart is
+  intrinsic to this reorg (it cannot be fixed "minimally" without the cascade renumber).
+- **Done now instead (low-risk):** the front/back matter above, plus the consolidation tables
+  (Decision Frameworks). The reorg awaits an explicit go-ahead.
+
 ### Recommended working sequence
 1. **T1.1 → T1.3 → T1.4** (the differential/registration/motion pillar — the verdict-breaking gap), then **T1.5, T1.7**.
 2. **T1.8 → T1.9 → T1.10** (dependability/compliance) + **T1.6** (wireless transponders).
