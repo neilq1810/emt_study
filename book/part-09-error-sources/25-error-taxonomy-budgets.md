@@ -13,7 +13,8 @@ budget — the scorecard (with the latency budget of Ch. 12) by which a design i
 judged. We organize errors into **stochastic**, **deterministic**, and
 **environmental** classes, give explicit lines for the often-overlooked
 mechanisms (including **Barkhausen noise, generator noise, ambient/EM
-susceptibility, and bias-reference noise in biased sensors such as TMR**), then
+susceptibility, bias-reference noise in biased sensors such as TMR, and
+signal-dependent nonlinearity/harmonic distortion**), then
 show how to combine them via **sensitivity matrices** and **Monte Carlo**.
 
 ---
@@ -88,6 +89,30 @@ one to attack.
    (Ch. 15 §15.5).
 6. **Numerical error** — ill-conditioned solves, finite precision (Ch. 22 §22.4,
    Ch. 24 §24.2).
+7. **Sensor & front-end nonlinearity → harmonic/intermodulation distortion.** The
+   chain is *assumed* linear (measured amplitude $\propto M_{ij}$), but no element is:
+   a **ferrite-cored** pickup approaches B–H saturation/hysteresis in strong field
+   (near the generator); an **MR/TMR** sensor has an intrinsically **nonlinear
+   transfer curve** — linear only over a bias-set span, saturating beyond (Ch. 14.3);
+   the **AFE** has finite THD/IP3 (Ch. 16); the **ADC** has INL (Ch. 18); and the
+   **generator drive** has its own THD (Ch. 37 §37.2). It hurts the pose two ways:
+   (i) **amplitude compression** — the apparent coupling no longer scales correctly
+   with field, biasing inferred range/bearing; and (ii) **harmonic & intermodulation
+   generation** — energy at $2\omega_0,3\omega_0,\dots$ and at FDM sum/difference
+   tones that **folds into other channels** (the crosstalk of item 4, Ch. 19 §19.2)
+   and **biases the lock-in** (a square-wave reference detects the odd harmonics,
+   Ch. 20 §20.4). What makes it worse than an ordinary calibratable bias is that it is
+   **signal-amplitude-dependent**, and the signal swings $\sim1/r^3$ (≈60 dB) across
+   the volume (Ch. 9 §9.6): a transfer-curve correction fit near the generator
+   **mis-corrects at the edge**, so it is a *pose-dependent* bias needing an
+   amplitude-aware (2-D) calibration — or, better, operation kept within the linear
+   region (gain ranging / signal scaling, Ch. 16 §16.4), a low-THD drive and a
+   **sine** reference with band-limiting (Ch. 20 §20.4), and FDM frequency planning
+   that keeps no channel on another's harmonic (Ch. 19 §19.2). Usefully, the
+   **harmonic content is itself a saturation/nonlinearity flag** the detect-and-flag
+   layer can watch (Ch. 27), complementary to the quadrature distortion signature of
+   Ch. 20 §20.10. (conf: high — mechanism standard; per-device THD / MR-curve
+   magnitudes to be sourced.)
 
 Deterministic errors do **not** average away and may not cancel across DOF; they
 are budgeted as (often signed) biases and propagated through the same Jacobian.
@@ -207,6 +232,7 @@ combination rule:
 | Tolerance / model mismatch | deterministic | Ch. 7, 15 | bias | calibration (Ch. 26) |
 | Crosstalk / leakage | deterministic | Ch. 19, 20 | bias (correlated) | TDM, guard bands, coherent sampling |
 | Thermal drift | deterministic | Ch. 15 | bias (drifting) | stability, recalibration |
+| Nonlinearity / harmonic distortion | deterministic (signal-dependent) | Ch. 14/16/18/20, 25.3 | bias (amplitude-/pose-dependent) + harmonic crosstalk | linear region, gain ranging, low-THD drive, sine ref, FDM plan |
 | Field distortion | environmental | Ch. 6 | bias + outliers | mapping, fusion, flagging (Ch. 27, 21) |
 | Ambient EM / susceptibility | environmental | 25.4, Ch. 17 | RSS (usually small) | shielding/band-select, EMC (60601-1-2) |
 | Generator noise | environmental | 25.4, Ch. 9 | correlated (not RSS) | low-noise drive, ratiometric |
@@ -333,9 +359,10 @@ of Ch. 31: the budget is both a *scorecard* and a *requirements generator*.
   using the Phase-5 CRLB mapping. Remaining: drive it from a Phase-5 Monte-Carlo
   run (not first-order) and replace the illustrative per-line magnitudes with
   sourced/measured values.
-- Source EMT-specific *magnitudes* for Barkhausen, generator-side, and
-  bias-reference noise (currently mechanism-cited; magnitudes device/system
-  specific) — candidate dedicated MTJ noise-vs-bias and vortex free-layer studies.
+- Quantify the **nonlinearity / harmonic-distortion** line (§25.3 item 7): a Phase-5
+  sim of amplitude compression vs range and harmonic folding into FDM channels for a
+  representative sensor THD / MR-curve, to replace the mechanism-only treatment with a
+  pose-error magnitude (ties Ch. 14/16/19/20).
 - Confirm Poulin & Amiot figures (8.4 mm / 166°; 0.15 mm ambient) against the
   primary text and add the exact measurement conditions [@poulin2002].
 
