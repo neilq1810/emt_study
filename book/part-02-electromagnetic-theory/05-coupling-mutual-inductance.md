@@ -199,7 +199,10 @@ DC**, with no factor of $\omega$ and no differentiation; the $N_sA_s$ scale is r
 the sensor's field-to-output gain. The **geometry is common to both** ($\mathbf{K}$,
 $\mathbf{R}$, the $4{:}1{:}1$ eigenstructure, observability), but the readout differs in
 ways that ripple through the book: the coil's $\propto\omega$ sensitivity favours a *higher*
-excitation frequency and gives a **passive, offset-free, highly linear** element, whereas
+excitation frequency and gives a **passive, offset-free**, and — for an **air core** —
+**highly linear, hysteresis-free** element (a soft *ferrite* core trades a little
+linearity/hysteresis for sensitivity, kept small by weak-field operation and the
+demagnetization-clamped geometry of Ch. 14.2), whereas
 the field sensor buys **DC capability and chip-scale miniaturisation** at the cost of a
 **1/f noise floor, offset, hysteresis, nonlinearity, and a bias reference** (Ch. 14.3,
 16, 25.2–25.3, 37 §37.4). Both ultimately deliver the *same* $\mathbf{M}$ to the solver —

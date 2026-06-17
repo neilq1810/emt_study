@@ -32,7 +32,16 @@ $N_sA_s$** within a size budget, while controlling self-resonance and noise
   (Ch. 5 §5.1) — a stubby core wastes most of its $\mu_r$. This is precisely *why*
   the gold-standard catheter coil is long and thin (conf: high — the demag
   argument; the 10–20× ratio is reported design practice). The core both boosts
-  signal and defines the sensitive axis.
+  signal and defines the sensitive axis. Because the demagnetizing factor clamps
+  $\mu_\text{app}\to1/D$ — a **geometric**, not material, constant — the slender core is
+  also **more linear and more stable** than its raw $\mu_r$ implies: it desensitizes the
+  sensor to the core's intrinsic B–H nonlinearity and to $\mu_r(T)$ drift. A ferrite core
+  is *not* perfectly linear, though — it has a nonlinear B–H curve and a (narrow,
+  soft-material) **hysteresis loop**, so a cored coil shows mild **saturation/compression
+  in strong field** (near the generator, or under a large DC/ambient bias) and
+  **Barkhausen / hysteresis** effects (Ch. 25 §25.2–§25.3) — all kept small by the soft
+  material, weak-field operation, and the demag clamp, and **absent entirely for an
+  air-cored coil** (which forgoes them along with the $\mu_\text{app}$ sensitivity boost).
 - **PCB / planar coils.** Spiral traces on (multilayer) PCB. Highly
   reproducible, cheap at volume, and easy to make *orthogonal triads* by
   stacking/arranging layers — but limited area-turns and thus lower sensitivity
