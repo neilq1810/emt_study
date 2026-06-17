@@ -13,8 +13,9 @@ budget — the scorecard (with the latency budget of Ch. 12) by which a design i
 judged. We organize errors into **stochastic**, **deterministic**, and
 **environmental** classes, give explicit lines for the often-overlooked
 mechanisms (including **Barkhausen noise, generator noise, ambient/EM
-susceptibility, bias-reference noise in biased sensors such as TMR, and
-signal-dependent nonlinearity/harmonic distortion**), then
+susceptibility, bias-reference noise in biased sensors such as TMR,
+signal-dependent nonlinearity/harmonic distortion, and the field-sensor-specific
+offset, cross-axis, and hysteresis terms**), then
 show how to combine them via **sensitivity matrices** and **Monte Carlo**.
 
 ---
@@ -113,6 +114,46 @@ one to attack.
    layer can watch (Ch. 27), complementary to the quadrature distortion signature of
    Ch. 20 §20.10. (conf: high — mechanism standard; per-device THD / MR-curve
    magnitudes to be sourced.)
+
+8. **Cross-axis (transverse) sensitivity & non-orthogonality.** A sense axis
+   responding to fields *off* its nominal axis — **geometric** (triad coils not
+   exactly orthogonal, cf. item 1) or **intrinsic** (an MR element's transverse
+   sensitivity, Ch. 14.3). It appears as **off-diagonal terms in the $3\times3$
+   sensor response matrix**, mixing the coupling across DOF. Largely removed by
+   calibrating the full sensor matrix (Ch. 26/55); the residual and its drift remain.
+9. **Sensor offset & offset drift.** A passive coil reads $\dot B$ and has **no**
+   zero-field output, but a **field sensor (MR/TMR/Hall)** has a DC **offset** (bridge
+   imbalance) and, worse, **offset drift** with temperature, time, and magnetic
+   history. The static offset calibrates out; the drift/history-dependence is the
+   residual, mitigated at the device level by **set/reset flipping and chopping**
+   (Ch. 14.3). Architecture matters: **AC (lock-in) and pulsed-DC (step-differencing)
+   detection both reject a *static* offset** — and the DC geomagnetic background —
+   so offset chiefly bites where the static field is read directly and imperfectly
+   rejected.
+10. **Hysteresis (history-dependent bias).** Ferrite cores and MR free layers are
+    hysteretic: the output depends on the magnetic *history*, not only the present
+    field. This **breaks the calibratable-bias assumption** — one cannot subtract a
+    single value that depends on the path taken — so hysteresis appears as a
+    *non-repeatable* bias (the deterministic sibling of Barkhausen noise, §25.2 item 2).
+    Mitigation is device-level: soft / low-remanence materials, set/reset, and staying
+    on the small-signal linear minor loop (away from the saturating regime of item 7).
+11. **Amplifier gain & offset error.** Distinct from AFE *noise* (the voltage/current
+    noise $e_n,i_n$ of §25.2 item 4): a finite, possibly drifting **gain error**
+    (multiplicative → a range bias, cube-root-forgiving, calibrated per channel — the
+    gain identification of Ch. 55 §55.3) and a DC **offset** (additive). As in item 9,
+    a lock-in **rejects** static amplifier offset (Ch. 20), so offset matters mainly in
+    DC-coupled paths; gain error and its drift remain a deterministic line.
+
+**A coil-vs-field-sensor note.** Items 9–10 (offset, hysteresis) and the *intrinsic*
+part of item 8 are largely **absent for an air-cored induction coil** — inherently
+linear, DC-blind, and offset-free — and **present for MR/TMR/Hall field sensors** (and,
+mildly, ferrite-cored coils). The error *profile* therefore shifts with the sensor
+technology of Ch. 13–14, and the AC-vs-pulsed-DC architecture sets which of these the
+detection rejects for free. *(Less-common further sources, for completeness:
+**magnetostriction / stress sensitivity** of a cored sensor under catheter flex; the
+**DC geomagnetic background** an unprotected field sensor must reject; and hard
+**overload / clipping** near the generator or from an interferer — the saturating limit
+of item 7 and the dynamic-reserve bound of Ch. 20 §20.4.)*
 
 Deterministic errors do **not** average away and may not cancel across DOF; they
 are budgeted as (often signed) biases and propagated through the same Jacobian.
@@ -233,6 +274,10 @@ combination rule:
 | Crosstalk / leakage | deterministic | Ch. 19, 20 | bias (correlated) | TDM, guard bands, coherent sampling |
 | Thermal drift | deterministic | Ch. 15 | bias (drifting) | stability, recalibration |
 | Nonlinearity / harmonic distortion | deterministic (signal-dependent) | Ch. 14/16/18/20, 25.3 | bias (amplitude-/pose-dependent) + harmonic crosstalk | linear region, gain ranging, low-THD drive, sine ref, FDM plan |
+| Cross-axis / non-orthogonality | deterministic | Ch. 14/15, 25.3 | bias (off-diagonal, mixes DOF) | 3×3 sensor-matrix calibration |
+| Sensor offset & drift (field sensors) | deterministic | Ch. 14.3, 25.3 | bias (additive, drifting) | set/reset, chopping; AC & pulsed-DC reject static offset |
+| Hysteresis | deterministic (history-dep.) | Ch. 14, 25.3 | non-repeatable bias | soft materials, set/reset, linear minor loop |
+| Amplifier gain / offset | deterministic | Ch. 16, 25.3 | gain = mult. bias; offset rejected by AC lock-in | per-channel gain cal |
 | Field distortion | environmental | Ch. 6 | bias + outliers | mapping, fusion, flagging (Ch. 27, 21) |
 | Ambient EM / susceptibility | environmental | 25.4, Ch. 17 | RSS (usually small) | shielding/band-select, EMC (60601-1-2) |
 | Generator noise | environmental | 25.4, Ch. 9 | correlated (not RSS) | low-noise drive, ratiometric |
