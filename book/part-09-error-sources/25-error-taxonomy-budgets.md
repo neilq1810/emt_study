@@ -33,7 +33,9 @@ shrinks with averaging; **deterministic** error sets accuracy and must be
 *calibrated* (Part X), not averaged; **environmental** error is the wild card that
 defeats both unless detected and handled (Ch. 21, 27). A budget that lumps them
 together is misleading — the same RMS number means very different things depending
-on class.
+on class. *(For a flat, one-row-per-source lookup of every mechanism below — class,
+scaling, combination rule, mitigation — see the **Reference → Error-Source Catalog**;
+this chapter explains the* why *behind each row.)*
 
 ## 25.2 Stochastic error sources (the noise floor)
 
@@ -62,14 +64,30 @@ Ch. 24):
    itself improve the field-referred floor, and an *unstable* bias injects
    correlated multiplicative error. The practical lesson: a biased sensor needs a
    **low-noise, stable voltage/current reference**, and its noise must appear as
-   an explicit budget line absent for passive coils. (conf: med — per
-   [@monteblanco2021]; magnitudes device-specific.)
+   an explicit budget line absent for passive coils. (MTJs also carry **shot noise**
+   $\propto\sqrt{I}$ at higher bias, adding to the bias-dependent floor.) (conf: med —
+   per [@monteblanco2021]; magnitudes device-specific.)
 4. **AFE noise.** LNA $e_n$ and $i_n|Z_s|$ (Ch. 16 eq. 16.1), kept below the
    sensor floor [@horowitz_hill].
 5. **ADC quantization + thermal.** Below the floor with adequate ENOB/oversampling
-   (Ch. 18); dithered to stay white [@walden1999; @ieee1241].
+   (Ch. 18); dithered to stay white [@walden1999; @ieee1241]. **Caveat:**
+   *undithered* quantization is **not** white but **signal-correlated** (harmonic
+   spurs) — a deterministic distortion (cf. §25.3 item 7); dither, or an adequately
+   "busy" signal, is what *makes* quantization behave stochastically.
 6. **Clock/jitter noise.** Aperture jitter (Ch. 10/18 eq. 18.3) — typically
    negligible at EMT frequencies.
+7. **RTS / popcorn (burst) noise (MTJ/MR).** Discrete, multi-level switching from
+   individual defects or domain states — **non-Gaussian and bursty**, a microscopic
+   contributor to (and sometimes distinct from) the magnetic/electronic 1/f of item 1.
+   It matters for the **Monte-Carlo tails** (§25.6), not just the variance, and is
+   reduced by larger junctions, averaging, and set/reset [@davies2021]. (conf: med —
+   mechanism standard for MTJs; EMT-specific magnitude device-specific.)
+8. **Cable microphonic & dielectric noise.** Mechanical vibration or flex of the
+   sensor cable modulates its capacitance and, via triboelectric/piezoelectric charge,
+   injects a **random, vibration-driven** component onto the µV signal — the
+   *stochastic* sibling of the deterministic cable drift of §25.4 item 5. Mitigated by
+   low-noise / low-triboelectric cable, strain relief, and bonding/guarding
+   (Ch. 16 §16.3, Ch. 17 §17.2).
 
 These combine (when independent) in **root-sum-square**; the largest term is the
 one to attack.
@@ -244,7 +262,7 @@ approximate normality) — the form a clinical/regulatory accuracy claim should 
 ## 25.6 Monte Carlo uncertainty analysis
 
 Linear sensitivity propagation (25.5) is a first-order approximation that breaks
-down with strong nonlinearity, non-Gaussian noise (Barkhausen!), ambiguities, or
+down with strong nonlinearity, non-Gaussian noise (Barkhausen, RTS/popcorn), ambiguities, or
 large distortion. The general tool is **Monte Carlo**:
 
 1. Sample each error source from its modeled distribution (with correct
@@ -270,6 +288,8 @@ combination rule:
 | Barkhausen / domain noise | stochastic(+hyst.) | Ch. 14.3, 25.2 | RSS (+bias) | single-domain/vortex layer, set/reset |
 | Bias-reference noise (TMR) | stochastic(×bias) | 25.2 | RSS, multiplicative | stable low-noise reference |
 | AFE / ADC noise | stochastic | Ch. 16, 18 | RSS | keep below sensor floor |
+| RTS / popcorn noise (MTJ) | stochastic (non-Gaussian) | Ch. 14.3, 25.2 | RSS (+ tails) | larger junction, set/reset, averaging |
+| Cable microphonic / dielectric | stochastic | Ch. 16/17, 25.2 | RSS | low-tribo cable, strain relief, guarding |
 | Tolerance / model mismatch | deterministic | Ch. 7, 15 | bias | calibration (Ch. 26) |
 | Crosstalk / leakage | deterministic | Ch. 19, 20 | bias (correlated) | TDM, guard bands, coherent sampling |
 | Thermal drift | deterministic | Ch. 15 | bias (drifting) | stability, recalibration |
