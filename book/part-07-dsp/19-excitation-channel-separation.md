@@ -32,6 +32,13 @@ $$
 \tag{19.1}
 $$
 
+(For a **field sensor** rather than a coil the per-axis measurement is the *field*
+$b_j(t)=\sum_i M_{ij}I_i(t)$ itself — not its derivative — so the separation conditions
+below are **identical in form**, with $I_i$ in place of $\dot I_i$. The practical difference
+is the *frequency rationale* (Ch. 5 §5.4): a coil's $\propto\omega$ sensitivity rewards a
+higher excitation frequency, whereas a DC-flat field sensor gains nothing from frequency and
+so equally admits **low-frequency, quasi-static, or pulsed-DC** operation.)
+
 summed over all $C$ active transmit channels, with $n_j$ the receiver noise
 (Parts IV–VI). The estimator must recover the $C$ unknowns $\{M_{ij}\}_i$ for
 each sensor axis $j$ from the single scalar stream $\varepsilon_j(t)$. This is

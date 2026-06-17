@@ -28,8 +28,12 @@ digital-lock-in EMT realization [@jaeger2017].
 Let the signal on a sensor channel be
 $v(t) = A\cos(\omega_0 t + \phi) + n(t)$, with $\omega_0$ the (known) excitation
 frequency, $A\propto M_{ij}$ the coupling we want (Ch. 5), $\phi$ a fixed
-channel/propagation phase, and $n(t)$ broadband noise. Multiply by two reference
-waveforms in quadrature [@scofield1994]:
+channel/propagation phase, and $n(t)$ broadband noise. (This model — and the whole
+lock-in — applies to *any* sensor delivering an **AC-modulated** coupling: a pickup coil,
+or a **field sensor under AC excitation**. A field sensor read **quasi-statically** — DC or
+pulsed-DC, Ch. 5 §5.4 — has no carrier, so its optimal estimator is the settled-field
+matched filter of §20.6 instead, and the phase channel of §20.10 is specific to the AC
+case.) Multiply by two reference waveforms in quadrature [@scofield1994]:
 
 $$
 v(t)\cos\omega_0 t = \tfrac{A}{2}\cos\phi + \underbrace{\tfrac{A}{2}\cos(2\omega_0 t + \phi)}_{\text{rejected by LPF}} + n(t)\cos\omega_0 t,
