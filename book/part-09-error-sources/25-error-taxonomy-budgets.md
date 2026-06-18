@@ -411,6 +411,105 @@ Ch. 26), ≤0.7 mm environmental (sets the distortion-compensation requirement,
 Ch. 27) — then RSS the allocations back to the target. This closes the design loop
 of Ch. 31: the budget is both a *scorecard* and a *requirements generator*.
 
+## 25.8 Deep dive: source → impact → mitigation, by scheme and sensor
+
+§§25.1–25.7 are the *conceptual* layer (classes, propagation, combination) and the
+back-matter **Error-Source Catalog** is the *lookup* layer (one row per source). This
+section is the *deep* layer: a per-source treatment on a fixed template —
+
+> **Source** (the physical origin) · **Impact** (how it maps to pose error, with scaling)
+> · **Mitigation** · **Modulation dependence** (sine-AC / triangle→square / pulsed-DC,
+> Ch. 9 §9.9, Ch. 19–20) · **Sensor dependence** (air-cored coil / ferrite-cored coil /
+> TMR field sensor, Ch. 13–14).
+
+The two dependences are what a single RMS number hides, so two cross-cutting matrices come
+first; the deep entries then elaborate the highest-impact sources (the rest follow the same
+template and the catalog).
+
+**Matrix A — how the *modulation scheme* changes each source.**
+
+| Source | Sine AC | Triangle → square | Pulsed-DC |
+|---|---|---|---|
+| Nonlinearity / harmonics | harmonics **out-of-band** → lock-in rejects (a calibratable gain); FDM IMD is the only in-band risk | **worst:** the signal *is* odd harmonics, all in the square-demod passband → they intermodulate **in-band** (sim 19) | static-field **compression** + transfer-curve; no continuous IMD |
+| Eddy (conductive) distortion | present; sits in **quadrature** → a selective flag (§20.10) | steady eddy during each constant-$\dot B$ ramp | **rejected** by waiting out the transient (the scheme's purpose, Ch. 6 §6.4) |
+| Ferromagnetic distortion | in-phase bias — **not** rejected | in-phase — not rejected | in-phase — not rejected |
+| Stochastic noise | up-converts the signal **above the sensor 1/f corner** (huge for TMR); narrow ENBW | same up-conversion, spread over harmonics (slightly wider noise bw) | sits **in** the low-freq 1/f region — penalises a 1/f sensor unless chopped |
+| Static offset / DC background | rejected (synchronous demod) | rejected (polarity inversion) | rejected (step differencing) |
+| Motion / intra-frame skew | FDM simultaneous → no inter-axis skew; TDM → skew | as sine | per-axis sequential settling → intra-frame skew |
+
+**Matrix B — how the *sensor type* changes each source.**
+
+| Source | Air-cored coil | Ferrite-cored coil | TMR field sensor |
+|---|---|---|---|
+| Self-noise | white Johnson (favours higher $f$) | + Barkhausen | **1/f** magnetic + bias-reference + shot (favours AC up-conversion) |
+| Nonlinearity | ~none (linear) | mild (saturation in strong field) | **strong** (transfer curve) — often the dominant determinism |
+| Offset / drift | none | none (AC-blind to DC) | **yes** + drift (set/reset, chop) |
+| Hysteresis | none | mild (soft loop) | yes (free layer) |
+| Cross-axis | geometric (non-orthogonality) | geometric | geometric **+ intrinsic transverse** |
+| DC capability | no ($\propto\omega$, DC-blind) | no | **yes** (enables DC / pulsed-DC) |
+| Power | passive | passive | **active** (bias, reference, self-heat) |
+| Size vs sensitivity | $\propto N_sA_s\omega$ — small ⇒ insensitive | core boosts small coils | chip-scale, sensitive when small, but 1/f-floored |
+
+**Deep entry — nonlinearity & harmonic/intermodulation distortion** *(the entry that
+motivated this section).*
+- **Source.** No element is perfectly linear: cored-coil B–H saturation (Ch. 14.2), the
+  MR/TMR transfer curve (Ch. 14.3), AFE THD/IP3 (Ch. 16), ADC INL (Ch. 18), drive THD
+  (Ch. 37). Model the mildest case as a cubic, $y=x-a_3x^3$.
+- **Impact.** Two effects: amplitude **compression** (a range/bearing bias) and **harmonic +
+  intermodulation** generation. Compression is largely a per-channel *gain* (calibratable);
+  the harmful, *uncalibratable* part is the IMD, and whether it lands **in the demodulator's
+  passband** depends entirely on the modulation.
+- **Mitigation.** Keep the chain in its linear region (gain ranging / dynamic reserve,
+  Ch. 16 §16.4); low-THD drive and a **sine** reference with band-limiting (Ch. 20 §20.4);
+  FDM frequency planning so no channel sits on another's harmonic or 3rd-order IMD product
+  (Ch. 19 §19.2); and use the **harmonic content as a saturation flag** (Ch. 27).
+- **Modulation dependence (computed, sim 19, `figures/ch25_nonlinearity_waveform.png`).** A
+  cubic on a single tone makes a **~1.3 %** third harmonic; a **sine lock-in rejects** it (out
+  of band) but a **triangle→square demod sums** it (3f₀ is inside the square's passband) — so
+  *the same nonlinearity is benign for sine detection yet in-band for a square/triangle
+  system*. And with multiple frequencies — an FDM plan, **or the square's own harmonic comb** —
+  the cubic produces 3rd-order IMD products ($2f_i-f_j$, $f_i+f_j-f_l$) that fall **in-band on
+  other channels**: a worst case of **~9 %** of a tone for three tones, versus **~0 %** for a
+  single tone. This is exactly why a **harmonic-rich (triangle/square) excitation makes
+  nonlinearity materially harder to manage** than a clean sine, and why a square-wave system
+  leans harder on front-end linearity and frequency planning.
+- **Sensor dependence.** Air-cored coil: negligible (linear) — the residual is AFE/ADC/drive.
+  Ferrite coil: + mild core compression near the generator. **TMR: the dominant source** — the
+  transfer curve is intrinsically nonlinear and saturates at modest field, demanding
+  feedback/flux-nulling linearisation (Ch. 14.3.3). A TMR sensor in a triangle/square system is
+  therefore the **worst pairing** for this error, and a clean-sine + air-coil system the best.
+
+**Deep entry — field distortion (eddy + ferromagnetic).** **Source:** secondary fields from
+room conductors and ferromagnetics (Ch. 6) — the dominant *environmental* term. **Impact:**
+spatially-structured bias + outliers (up to 8.4 mm RMS, [@poulin2002]); not averaged away.
+**Mitigation:** keep distorters away, map static distortion (Ch. 26), witness/redundancy and
+fusion, detect-and-flag (Ch. 27). **Modulation dependence:** the eddy part is **rejected by
+pulsed-DC** (wait out the transient) and shows up **in quadrature under AC** (a selective flag,
+§20.10), while **ferromagnetic** distortion is in-phase and rejected by no scheme. **Sensor
+dependence:** essentially sensor-agnostic for the field perturbation — but a DC field sensor
+also sees the *static* magnetisation of a ferromagnet that a DC-blind coil ignores.
+
+**Deep entry — the stochastic noise floor.** **Source:** sensor self-noise + AFE + ADC
+(§25.2). **Impact:** the precision floor, $\propto1/\sqrt{T}$ (averages away). **Mitigation:**
+moment/area, integration time, low-noise design. **Modulation dependence:** all schemes buy
+$1/\sqrt T$, but **AC up-converts the measurement above the sensor's 1/f corner** — a large win
+for a 1/f-limited sensor, lost by DC/pulsed-DC unless chopped. **Sensor dependence:** the
+*shape* differs — a coil is **white** (Johnson) so it gains SNR at higher excitation frequency
+(sensitivity $\propto\omega$), whereas a **TMR is 1/f-dominated**, which is precisely why AC
+operation (or chopping) matters far more for TMR than for a coil.
+
+**Deep entry — offset & drift.** **Source:** field-sensor zero-field output + its temperature/
+time/history drift (§25.3 item 9); a coil has none. **Impact:** an additive bias (offset) and a
+slow bias (drift → recalibration driver). **Mitigation:** set/reset and chopping (Ch. 14.3),
+stability spec and recalibration interval (Ch. 26). **Modulation dependence:** a **static**
+offset is rejected by **every** AC and pulsed-DC scheme (synchronous demod / step
+differencing); only direct DC readout suffers it — so offset is a *DC-field-sensing* problem.
+**Sensor dependence:** absent for any coil; present (and a leading error) for **TMR/MR/Hall**.
+
+*(The remaining sources — crosstalk, thermal drift, generator noise, motion/latency,
+cross-axis, hysteresis, RTS, cable — follow the same template; their one-line summaries are in
+the Error-Source Catalog, and their scheme/sensor dependence is captured in Matrices A–B.)*
+
 ---
 
 ## Open questions / to verify

@@ -79,8 +79,12 @@ and the CRLB is a usable design predictor (Ch. 24).
 ## Sim 18 — Quadrature distortion signature (Ch. 20 §20.10, Ch. 6/27)
 - eddy (conductive) distortion is quadrature-dominated at omega*tau<1 (Q/I=3.33 at omega*tau=0.3, phase -106.7 deg); ferromagnetic is in-phase (Q~0) -> the lock-in Q channel flags CONDUCTIVE distortion selectively.
 
+## Sim 19 — Nonlinearity x excitation waveform (Ch. 25 §25.8)
+- cubic NL makes a 1.3% 3rd harmonic a sine lock-in rejects but a square/triangle demod sums; with FDM it makes 9.23% in-band IMD crosstalk (vs 0.0% single-tone) -> harmonic-rich excitation is harder.
+
 ## Figures
 - `figures/ch04_dipole_field.png` — dipole field streamlines
+- `figures/ch25_nonlinearity_waveform.png` — nonlinearity vs waveform & FDM IMD
 - `figures/ch09_triangle_square_demod.png` — triangle->square excitation & demod
 - `figures/ch20_quadrature_distortion.png` — eddy vs ferromagnetic I/Q signature
 - `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever

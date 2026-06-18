@@ -1076,6 +1076,79 @@ def sim_quadrature_distortion() -> None:
     print("[sim18] quadrature distortion signature:", res)
 
 
+# ---------------------------------------------------------------------------
+# Sim 19 — nonlinearity x excitation waveform: a harmonic-rich (triangle/square)
+#          signal suffers MORE in-band distortion than a clean sine, and a cubic
+#          nonlinearity creates FDM intermodulation crosstalk (Ch. 25 §25.8, Ch. 19/20)
+# ---------------------------------------------------------------------------
+def sim_nonlinearity_waveform() -> None:
+    from scipy import signal as sig
+
+    n = 1 << 16
+    t = np.arange(n) / n           # fs = n -> 1 Hz bins; integer cycles = coherent
+    f0 = 64
+    nl = lambda x, a3: x - a3 * x**3   # compressive cubic nonlinearity
+
+    # unit-fundamental-amplitude waveforms
+    sine = np.sin(2 * np.pi * f0 * t)                       # fundamental amplitude 1
+    sq_ref = sig.square(2 * np.pi * f0 * t)                 # +/-1 square (= triangle's dB/dt)
+    sqr = (np.pi / 4) * sq_ref                              # scale so its fundamental amplitude = 1
+
+    def spec(x):
+        return np.abs(np.fft.rfft(x)) / (n / 2)            # coherent amplitude spectrum
+
+    a3 = 0.05
+    Ss, Sq = spec(nl(sine, a3)), spec(nl(sqr, a3))
+    # (1) the cubic's 3rd harmonic of a single tone: a sine lock-in REJECTS it (out of its
+    #     narrow band); a square/triangle demod SUMS it (3f0 is inside the square passband).
+    third_harm_pct = float(Ss[3 * f0] / Ss[f0] * 100)
+
+    # (2) FDM intermodulation crosstalk: three equal non-harmonic tones through the cubic
+    k = [50, 64, 83]
+    multi = sum(np.sin(2 * np.pi * ki * t) for ki in k)
+    X = spec(nl(multi, a3)); tone_amp = float(np.mean([X[ki] for ki in k]))
+    imd_bins = {b for i in k for j in k for l in k
+                for b in (2 * i - j, i + j - l) if 0 < b < n // 2 and b not in k}
+    worst_imd = float(max(X[b] for b in imd_bins))
+    single = spec(nl(np.sin(2 * np.pi * 64 * t), a3))
+    single_imd = float(max((single[b] for b in imd_bins), default=0.0))   # ~0: no partner tones
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 4.0))
+    fr = np.arange(len(Ss)) / f0
+    sel = fr <= 9.5
+    a1.plot(fr[sel], 20 * np.log10(Sq[sel] + 1e-9), color="#b91c1c", lw=1.0, label="square (∝ triangle)")
+    a1.plot(fr[sel], 20 * np.log10(Ss[sel] + 1e-9), color="#166534", lw=1.0, label="sine")
+    a1.axvspan(0.8, 1.2, color="#94a3b8", alpha=0.25)
+    a1.text(1.0, 5, "lock-in\nband", ha="center", fontsize=7, color="#475569")
+    a1.set_xlabel("frequency / $f_0$"); a1.set_ylabel("amplitude [dB]"); a1.set_ylim(-80, 10)
+    a1.set_title("After cubic NL: square fills the odd-harmonic\nbins a square-demod sums")
+    a1.grid(True, alpha=0.3); a1.legend(fontsize=8)
+    a2.bar(["single sine", "3-tone FDM"], [single_imd / tone_amp * 100, worst_imd / tone_amp * 100],
+           color=["#166534", "#b91c1c"])
+    a2.set_ylabel("worst in-band IMD product [% of tone]")
+    a2.set_title(f"Cubic IMD crosstalk ($a_3$={a3})"); a2.grid(True, axis="y", alpha=0.3)
+    fig.tight_layout(); fig.savefig(FIG / "ch25_nonlinearity_waveform.png", dpi=150); plt.close(fig)
+
+    res = {
+        "a3": a3,
+        "third_harmonic_pct": round(third_harm_pct, 2),
+        "fdm_worst_imd_pct_of_tone": round(worst_imd / tone_amp * 100, 2),
+        "single_tone_imd_pct": round(single_imd / tone_amp * 100, 3),
+        "note": "A compressive cubic y=x-a3 x^3 on a single tone makes a 3rd harmonic "
+        f"(~{round(third_harm_pct,1)}% at a3={a3}) that a SINE lock-in REJECTS (out of its narrow "
+        "band) but a SQUARE/triangle demod SUMS (3f0 is inside its passband) - so the same "
+        "nonlinearity is benign for sine detection yet in-band for a square/triangle system. With "
+        "MULTIPLE frequencies (FDM, or the square's own harmonics) the cubic makes 3rd-order IMD "
+        "products (2fi-fj, fi+fj-fl) landing IN-BAND on other channels = crosstalk (worst "
+        f"~{round(worst_imd/tone_amp*100,1)}% of a tone for 3 tones; ~0 for one). Hence a "
+        "harmonic-rich (triangle/square) excitation makes nonlinearity materially harder to "
+        "manage (Ch. 25 §25.8, Ch. 19 §19.2, Ch. 20 §20.4).",
+    }
+    (DATA / "nonlinearity_waveform.json").write_text(json.dumps(res, indent=2))
+    SUMMARY["nonlinearity_waveform"] = res
+    print("[sim19] nonlinearity x waveform:", res)
+
+
 def write_results_md() -> None:
     d = SUMMARY
     dv = d["dipole_vs_loop"]["rows"]  # type: ignore[index]
@@ -1188,8 +1261,15 @@ def write_results_md() -> None:
         f"{d['quadrature_distortion']['eddy_phase_deg_at_op']} deg); ferromagnetic is in-phase "  # type: ignore[index]
         f"(Q~0) -> the lock-in Q channel flags CONDUCTIVE distortion selectively.",
         "",
+        "## Sim 19 — Nonlinearity x excitation waveform (Ch. 25 §25.8)",
+        f"- cubic NL makes a {d['nonlinearity_waveform']['third_harmonic_pct']}% 3rd harmonic a sine "  # type: ignore[index]
+        "lock-in rejects but a square/triangle demod sums; with FDM it makes "
+        f"{d['nonlinearity_waveform']['fdm_worst_imd_pct_of_tone']}% in-band IMD crosstalk (vs "  # type: ignore[index]
+        f"{d['nonlinearity_waveform']['single_tone_imd_pct']}% single-tone) -> harmonic-rich excitation is harder.",  # type: ignore[index]
+        "",
         "## Figures",
         "- `figures/ch04_dipole_field.png` — dipole field streamlines",
+        "- `figures/ch25_nonlinearity_waveform.png` — nonlinearity vs waveform & FDM IMD",
         "- `figures/ch09_triangle_square_demod.png` — triangle->square excitation & demod",
         "- `figures/ch20_quadrature_distortion.png` — eddy vs ferromagnetic I/Q signature",
         "- `figures/ch29_deep_volume_crlb.png` — deep-volume CRLB & moment lever",
@@ -1225,6 +1305,7 @@ def main() -> None:
     sim_system_twin_budget()
     sim_triangle_square_demod()
     sim_quadrature_distortion()
+    sim_nonlinearity_waveform()
     write_results_md()
 
 
