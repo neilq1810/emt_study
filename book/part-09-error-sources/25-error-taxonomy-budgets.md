@@ -423,8 +423,8 @@ section is the *deep* layer: a per-source treatment on a fixed template —
 > TMR field sensor, Ch. 13–14).
 
 The two dependences are what a single RMS number hides, so two cross-cutting matrices come
-first; the deep entries then elaborate the highest-impact sources (the rest follow the same
-template and the catalog).
+first; the deep entries then work through each source on that template, ordered roughly by
+impact.
 
 **Matrix A — how the *modulation scheme* changes each source.**
 
@@ -506,9 +506,104 @@ offset is rejected by **every** AC and pulsed-DC scheme (synchronous demod / ste
 differencing); only direct DC readout suffers it — so offset is a *DC-field-sensing* problem.
 **Sensor dependence:** absent for any coil; present (and a leading error) for **TMR/MR/Hall**.
 
-*(The remaining sources — crosstalk, thermal drift, generator noise, motion/latency,
-cross-axis, hysteresis, RTS, cable — follow the same template; their one-line summaries are in
-the Error-Source Catalog, and their scheme/sensor dependence is captured in Matrices A–B.)*
+**Deep entry — channel crosstalk / leakage.** **Source:** imperfect orthogonality between
+excitation channels — spectral leakage from non-coherent sampling (FDM, Ch. 19 §19.2),
+settling-tail bleed between time slots (TDM), residual code cross-correlation (CDM). **Impact:**
+one axis's signal contaminates another → **off-diagonal error in the coupling matrix** → a
+pose bias that masquerades as geometry (the estimator cannot tell leakage from real coupling).
+**Mitigation:** coherent (bin-centred) sampling and guard bands; orthogonal codes and longer
+integration; per-channel deskew. **Modulation dependence:** FDM → spectral leakage + the
+nonlinearity-fed IMD of the entry above (a channel landing on another's $2f_i{-}f_j$); TDM →
+inter-slot settling bleed (worse with high-Q drive, Ch. 37); CDM → code cross-correlation
+residual that **grows when a nonlinearity breaks code orthogonality**. **Sensor dependence:**
+largely sensor-agnostic (it is an excitation/demod property) — *except* that a nonlinear sensor
+(TMR) **manufactures crosstalk via IMD even with perfectly orthogonal drive**, so the worst
+case is again TMR + a harmonic-rich scheme.
+
+**Deep entry — thermal drift.** **Source:** temperature coefficients along the whole chain —
+generator coil geometry/copper resistance, sensor sensitivity, bias/reference, AFE gain, ADC
+reference (Ch. 16, 18, 37). **Impact:** a slow **multiplicative gain drift** (pose scale) plus
+an **additive offset drift** (pose bias) over a procedure → the principal *recalibration*
+driver (Ch. 26). **Mitigation:** ratiometric drive normalised to a current sense (cancels the
+generator's copper tempco, Ch. 37); temperature sensing + compensation; chopping for the offset
+term; warm-up and periodic re-zero. **Modulation dependence:** gain drift is scheme-agnostic,
+but the **offset-drift component is rejected by every AC and pulsed-DC scheme** (synchronous
+demod / step differencing) and bites only a direct-DC readout. **Sensor dependence:** a coil's
+drift is geometric + copper — modest and stable; a ferrite core adds a permeability tempco; a
+**TMR carries a large sensitivity tempco *and* bias/offset drift**, making it the dominant
+thermal contributor and the reason TMR systems lean on on-chip temperature compensation.
+
+**Deep entry — generator (drive) noise.** **Source:** drive-current amplitude and **phase**
+noise, DAC/amplifier spurs, supply ripple (Ch. 37). **Impact:** a **common multiplicative**
+perturbation on the field ($\delta B/B = \delta I/I$); phase noise smears the lock-in
+(reciprocal mixing), and spurs alias into FDM channels. **Mitigation:** **ratiometric**
+normalisation to a clean current reference (turns a field error into a common-mode that
+divides out); low-noise / low-spur drive; spectral planning so spurs miss the channels.
+**Modulation dependence:** an AC lock-in is sensitive to drive **phase** noise (carrier smear);
+FDM spreads spurs across channels; pulsed-DC is sensitive instead to plateau **droop/settling**
+of the current step. **Sensor dependence:** source-side and therefore sensor-agnostic — but the
+ratiometric rescue needs a faithful current sense regardless of which sensor reads the field.
+
+**Deep entry — motion & latency skew.** **Source:** the target moves *during* the measurement
+frame, and processing/transport adds end-to-end lag (Ch. 12, 21). **Impact:** two distinct
+errors — **intra-frame skew** (axes sampled at different instants → a sheared/biased pose) and
+**display lag** (the shown pose trails reality, a dynamic bias ∝ velocity). **Mitigation:**
+simultaneous excitation, short frames, motion **prediction/extrapolation**, a hard latency
+budget, and timestamp alignment across the transform graph (Ch. 43). **Modulation dependence:**
+**FDM excites all axes at once → no inter-axis skew**; **TDM and pulsed-DC sample axes
+sequentially → skew ∝ velocity × slot-time**; longer integration trades noise floor for more
+skew. **Sensor dependence:** intrinsic to neither type, but a **more sensitive sensor permits a
+shorter frame at equal SNR**, indirectly cutting skew — so a higher-$f$ coil or a low-noise
+design buys motion robustness (the trade analysed for the coil-swap question, Ch. 13).
+
+**Deep entry — cross-axis / transverse sensitivity & non-orthogonality.** **Source:** geometric
+misalignment of the sensor/generator triads (non-orthogonality) **plus** the intrinsic
+transverse response of a field sensor (§25.3 item 8). **Impact:** off-diagonal terms in the
+sensitivity matrix → a systematic position **and** orientation bias that a scalar budget hides.
+**Mitigation:** a **full 3×3 matrix calibration** per sensor (not just three gains); mechanical
+orthogonality control; an intrinsic-transverse spec. **Modulation dependence:** scheme-agnostic
+(it is geometry/material, not timing). **Sensor dependence:** a **coil's cross-axis is purely
+geometric** — a stable, calibratable $\cos$-law off-axis pickup; a **TMR adds an intrinsic
+transverse sensitivity** (the free layer responds to in-plane orthogonal fields) on top of the
+geometry, so it is larger and *requires* the full-matrix calibration rather than a diagonal one.
+
+**Deep entry — hysteresis.** **Source:** history-dependent magnetisation — a ferrite core's
+soft B–H loop and a TMR free layer's switching hysteresis (Ch. 14). **Impact:** a bias that
+depends on the **field history**, which **breaks the calibratable-static-bias assumption** (the
+calibration is single-valued; the device is not). **Mitigation:** minimise soft-magnetic
+material (air-core where the sensitivity budget allows), **set/reset (degauss) cycling**, and
+operate on the linear minor-loop region. **Modulation dependence:** AC continuously traverses a
+**minor loop** → a roughly repeatable loss/phase term (partly calibratable); **DC/pulsed-DC can
+park on different branches** → worst case, demanding a set/reset before each read. **Sensor
+dependence:** **none for an air coil**; mild soft-loop for a ferrite coil; **present for TMR**
+(free-layer hysteresis), where set/reset is standard practice.
+
+**Deep entry — RTS / popcorn noise.** **Source:** discrete trap capture–emission in an MTJ (or
+semiconductor front-end) producing random-telegraph two-level switching (§25.2 item 7).
+**Impact:** **non-Gaussian jumps** in the bias → outlier pose estimates that are *not* averaged
+away like white noise and that violate the Gaussian assumption baked into the estimator
+(Ch. 24). **Mitigation:** device screening; **larger junction area** (averages more traps);
+bias-point selection; and outlier-robust estimation (Ch. 27). **Modulation dependence:** AC
+up-converts it like 1/f, but the discrete steps survive as transient jumps; pulsed-DC/DC leaves
+it in-band. **Sensor dependence:** a **coil has none** (no traps); it is intrinsic to **small
+TMR/MTJ** and semiconductor inputs — yet another reason a tiny TMR junction trades noise for
+size.
+
+**Deep entry — cable & connector (microphonic / triboelectric / contact).** **Source:** cable
+flex generates triboelectric and microphonic charge, connector contact-resistance varies, and
+the cable/connector is the **#1 field-failure item** (Ch. 44). **Impact:** **motion-correlated**
+additive noise and spikes (pernicious because it correlates with the very motion being tracked)
+plus intermittent dropouts. **Mitigation:** low-noise/low-tribo cable, strain relief, shield
+**guard-driving** and charge-amp design (Ch. 16), and rated connectors. **Modulation
+dependence:** an AC lock-in rejects out-of-band microphonic energy but **not** energy at the
+carrier; broadband spikes leak into any scheme. **Sensor dependence:** a **passive coil's
+µV-level, high-impedance signal makes the cable a large relative contributor** (charge-sensitive
+front-end); a **buffered/active TMR** drives a low-impedance line → far less microphonic, at the
+cost of active conductors and patient-leakage limits at the tip (Ch. 17) — a genuine
+sensor-architecture trade, not a clear win for either side.
+
+*(Their one-line summaries also appear in the back-matter Error-Source Catalog, and their
+scheme/sensor dependence is captured in Matrices A–B above.)*
 
 ---
 
