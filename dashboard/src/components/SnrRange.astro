@@ -1,0 +1,175 @@
+---
+// Field-referred SNR vs distance (Ch. 8 link budget / Ch. 24). Given a sensor's
+// equivalent input field noise in nT_rms and a generator dipole moment, how does
+// the signal-to-noise ratio fall with range — and how does sensor ORIENTATION
+// (which the CRLB triad bound hides) gate it via the cos(phi) projection null.
+---
+<div class="not-prose rounded-lg border border-slate-200 bg-white p-4">
+  <div class="mb-3 grid grid-cols-1 gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+    <label class="flex items-center gap-2">moment m:
+      <input id="snr-m" type="range" min="-2" max="2" step="0.02" value="0" />
+      <span id="snr-m-v" class="tabular-nums w-20">1.0 A·m²</span></label>
+    <label class="flex items-center gap-2">noise σₙ:
+      <input id="snr-n" type="range" min="-2" max="2" step="0.02" value="0" />
+      <span id="snr-n-v" class="tabular-nums w-20">1.0 nT</span></label>
+    <label class="flex items-center gap-2">field point θ:
+      <input id="snr-th" type="range" min="0" max="90" step="1" value="0" />
+      <span id="snr-th-v" class="tabular-nums w-20">0° (axial)</span></label>
+    <label class="flex items-center gap-2">sensor tilt φ:
+      <input id="snr-ph" type="range" min="0" max="90" step="1" value="0" />
+      <span id="snr-ph-v" class="tabular-nums w-20">0° (aligned)</span></label>
+    <label class="flex items-center gap-2">target SNR:
+      <input id="snr-t" type="range" min="0" max="60" step="1" value="20" />
+      <span id="snr-t-v" class="tabular-nums w-20">20 dB</span></label>
+    <label class="flex items-center gap-2">
+      <input id="snr-3ax" type="checkbox" /> show 3-axis (|B|) sensor</label>
+  </div>
+  <canvas id="snr-canvas" width="560" height="340" class="w-full max-w-[600px] rounded"></canvas>
+  <div id="snr-out" class="mt-3 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
+  <p class="mt-1 text-xs text-slate-400">
+    |B(r,θ)| = (μ₀m/4πr³)·√(1+3cos²θ); a single-axis sensor reads |B|·cos φ
+    (φ = angle to the local field), so SNR = |B·n̂|/σₙ. SNR ∝ m/(r³σₙ): a decade
+    of range costs 60 dB. The cos φ null (φ→90°) zeroes a 1-axis sensor at <em>any</em>
+    distance — the orientation effect the triad CRLB bound (Ch. 24) assumes away. A
+    3-axis sensor reads |B| and is φ-invariant.
+  </p>
+</div>
+
+<script>
+  import { MU0, dipoleField, bMag, type Vec3 } from '../lib/physics';
+
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const mS = $('snr-m'), nS = $('snr-n'), thS = $('snr-th'),
+        phS = $('snr-ph'), tS = $('snr-t'), axC = $('snr-3ax');
+  const cv = document.getElementById('snr-canvas') as HTMLCanvasElement;
+  const ctx = cv.getContext('2d')!;
+  const out = document.getElementById('snr-out')!;
+
+  const padL = 50, padB = 34, padT = 12, padR = 14;
+  const rLo = Math.log10(0.04), rHi = Math.log10(1.2);   // distance [m], log
+  const yLo = -20, yHi = 90;                              // SNR [dB]
+  const px = (lr: number) => padL + ((lr - rLo) / (rHi - rLo)) * (cv.width - padL - padR);
+  const py = (db: number) => padT + (1 - (db - yLo) / (yHi - yLo)) * (cv.height - padT - padB);
+  const REF = 0.3; // reference distance [m]
+
+  // |B| [T] from a generator dipole of moment m (along z) at distance r, field-point angle theta.
+  function fieldMag(r: number, m: number, thetaDeg: number): number {
+    const th = (thetaDeg * Math.PI) / 180;
+    const pos: Vec3 = [r * Math.sin(th), 0, r * Math.cos(th)];
+    return bMag(dipoleField([0, 0, m], pos)); // Tesla
+  }
+  // SNR in dB. proj=true applies the single-axis cos(phi); else |B| (3-axis).
+  function snrDb(r: number, m: number, thetaDeg: number, phiDeg: number, sigNanoT: number, proj: boolean): number {
+    const B = fieldMag(r, m, thetaDeg);                       // T
+    const sig = proj ? B * Math.cos((phiDeg * Math.PI) / 180) : B;
+    const ratio = Math.abs(sig) / (sigNanoT * 1e-9);
+    return 20 * Math.log10(Math.max(ratio, 1e-9));
+  }
+
+  function plotCurve(m: number, theta: number, phi: number, sig: number, proj: boolean,
+                     color: string, width: number, dash: number[] = []) {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash); ctx.beginPath();
+    for (let i = 0; i <= 120; i++) {
+      const lr = rLo + (i / 120) * (rHi - rLo);
+      const Y = py(snrDb(Math.pow(10, lr), m, theta, phi, sig, proj));
+      i === 0 ? ctx.moveTo(px(lr), Y) : ctx.lineTo(px(lr), Y);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // range [m] where the selected single-axis curve crosses the target threshold (decreasing)
+  function usableRange(m: number, theta: number, phi: number, sig: number, thr: number): number | null {
+    let prev = snrDb(Math.pow(10, rLo), m, theta, phi, sig, true);
+    if (prev < thr) return null;            // already below threshold at the nearest distance
+    for (let i = 1; i <= 600; i++) {
+      const lr = rLo + (i / 600) * (rHi - rLo);
+      const cur = snrDb(Math.pow(10, lr), m, theta, phi, sig, true);
+      if (cur < thr) {                      // linear interp in log-r
+        const f = (prev - thr) / (prev - cur);
+        return Math.pow(10, rLo + ((i - 1 + f) / 600) * (rHi - rLo));
+      }
+      prev = cur;
+    }
+    return Math.pow(10, rHi);               // still above threshold at the far edge
+  }
+
+  function draw() {
+    const m = Math.pow(10, +mS.value);
+    const sig = Math.pow(10, +nS.value);
+    const theta = +thS.value, phi = +phS.value, thr = +tS.value, show3 = axC.checked;
+    $('snr-m-v').textContent = `${m.toFixed(m < 1 ? 2 : 1)} A·m²`;
+    $('snr-n-v').textContent = `${sig.toFixed(sig < 1 ? 2 : 1)} nT`;
+    $('snr-th-v').textContent = theta === 0 ? '0° (axial)' : theta === 90 ? '90° (equatorial)' : `${theta}°`;
+    $('snr-ph-v').textContent = phi === 0 ? '0° (aligned)' : phi === 90 ? '90° (null)' : `${phi}°`;
+    $('snr-t-v').textContent = `${thr} dB`;
+
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.font = '10px system-ui';
+
+    // y gridlines (dB)
+    ctx.fillStyle = '#94a3b8'; ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+    for (let db = yLo; db <= yHi; db += 20) {
+      const y = py(db); ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(cv.width - padR, y); ctx.stroke();
+      ctx.fillText(`${db}`, 6, y + 3);
+    }
+    ctx.fillText('SNR [dB]', 6, padT - 1);
+    // x gridlines (distance)
+    for (const r of [0.05, 0.1, 0.2, 0.3, 0.5, 1.0]) {
+      const x = px(Math.log10(r)); ctx.strokeStyle = '#eef2f6'; ctx.beginPath();
+      ctx.moveTo(x, padT); ctx.lineTo(x, cv.height - padB); ctx.stroke();
+      ctx.fillStyle = '#94a3b8'; ctx.fillText(`${r}`, x - 7, cv.height - 20);
+    }
+    ctx.fillText('distance r [m]', cv.width / 2 - 30, cv.height - 4);
+
+    // aligned field-geometry band: equatorial (x1) .. axial (x2), single-axis aligned (phi=0)
+    ctx.fillStyle = 'rgba(59,130,246,0.10)'; ctx.beginPath();
+    for (let i = 0; i <= 120; i++) { const lr = rLo + (i / 120) * (rHi - rLo);
+      const Y = py(snrDb(Math.pow(10, lr), m, 0, 0, sig, true)); i === 0 ? ctx.moveTo(px(lr), Y) : ctx.lineTo(px(lr), Y); }
+    for (let i = 120; i >= 0; i--) { const lr = rLo + (i / 120) * (rHi - rLo);
+      const Y = py(snrDb(Math.pow(10, lr), m, 90, 0, sig, true)); ctx.lineTo(px(lr), Y); }
+    ctx.closePath(); ctx.fill();
+
+    // threshold + 0 dB reference lines
+    ctx.strokeStyle = '#16a34a'; ctx.setLineDash([5, 4]); ctx.beginPath();
+    ctx.moveTo(padL, py(thr)); ctx.lineTo(cv.width - padR, py(thr)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#16a34a'; ctx.fillText(`target ${thr} dB`, cv.width - padR - 70, py(thr) - 3);
+    if (yLo <= 0) { ctx.strokeStyle = '#f87171'; ctx.setLineDash([2, 3]); ctx.beginPath();
+      ctx.moveTo(padL, py(0)); ctx.lineTo(cv.width - padR, py(0)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#f87171'; ctx.fillText('0 dB (SNR=1)', padL + 4, py(0) - 3); }
+
+    // 3-axis |B| curve (phi-invariant) at selected theta
+    if (show3) plotCurve(m, theta, phi, sig, false, '#a855f7', 2, [6, 3]);
+    // selected single-axis curve
+    plotCurve(m, theta, phi, sig, true, '#0f172a', 2.5);
+
+    // reference-distance marker
+    const xref = px(Math.log10(REF));
+    ctx.strokeStyle = '#cbd5e1'; ctx.setLineDash([2, 3]); ctx.beginPath();
+    ctx.moveTo(xref, padT); ctx.lineTo(xref, cv.height - padB); ctx.stroke(); ctx.setLineDash([]);
+
+    // readout
+    const Bref = fieldMag(REF, m, theta);
+    const snrRef = snrDb(REF, m, theta, phi, sig, true);
+    const range = usableRange(m, theta, phi, sig, thr);
+    const range3 = (() => { // 3-axis range ignores phi
+      let prev = snrDb(Math.pow(10, rLo), m, theta, 0, sig, false); if (prev < thr) return null;
+      for (let i = 1; i <= 600; i++) { const lr = rLo + (i / 600) * (rHi - rLo);
+        const cur = snrDb(Math.pow(10, lr), m, theta, 0, sig, false);
+        if (cur < thr) { const f = (prev - thr) / (prev - cur); return Math.pow(10, rLo + ((i - 1 + f) / 600) * (rHi - rLo)); } prev = cur; }
+      return Math.pow(10, rHi); })();
+    const row = (l: string, v: string, c = '#0f172a') =>
+      `<div class="flex justify-between"><span>${l}</span><b style="color:${c}">${v}</b></div>`;
+    const fmtR = (r: number | null) => r == null ? 'below target at all r' : r >= Math.pow(10, rHi) ? `> ${(1.2).toFixed(1)} m` : `${(r * 1000).toFixed(0)} mm`;
+    const Bnt = Bref * 1e9;
+    out.innerHTML =
+      row(`|B| at ${REF} m`, Bnt >= 1000 ? `${(Bnt / 1000).toFixed(1)} µT` : `${Bnt.toFixed(1)} nT`) +
+      row(`1-axis SNR at ${REF} m`, `${snrRef.toFixed(1)} dB  (×${Math.pow(10, snrRef / 20).toFixed(0)})`, phi >= 89 ? '#dc2626' : '#0f172a') +
+      row(`usable range (1-axis, ≥ ${thr} dB)`, fmtR(range), '#0f172a') +
+      (show3 ? row(`usable range (3-axis, ≥ ${thr} dB)`, fmtR(range3), '#a855f7') : '') +
+      (phi >= 89 ? `<div class="text-red-600">φ = 90°: the single-axis sensor is in a null — no range at any noise. A 3-axis sensor still works.</div>` : '');
+  }
+
+  [mS, nS, thS, phS, tS].forEach((el) => el.addEventListener('input', draw));
+  axC.addEventListener('change', draw);
+  draw();
+</script>

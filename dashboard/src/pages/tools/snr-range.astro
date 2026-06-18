@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BookLayout from '../../layouts/BookLayout.astro';
+import { buildToc } from '../../lib/toc';
+import SnrRange from '../../components/SnrRange.astro';
+const toc = buildToc(await getCollection('book'));
+---
+<BookLayout title="SNR vs distance" toc={toc}>
+  <h1>SNR vs distance (field-referred)</h1>
+  <p>
+    Give a sensor's equivalent input field noise in nT<sub>rms</sub> and a
+    generator dipole moment <em>m</em> = N<sub>g</sub>I A<sub>g</sub>, and this tool
+    shows how the signal-to-noise ratio falls with range. Working in the
+    field domain (nT) instead of volts collapses turns, area, gain and frequency
+    into one comparison — <em>how much field the sensor sees</em> versus
+    <em>how much field-noise it has</em> — so the same plot serves a coil or a TMR
+    sensor (Ch. 8 §8.1, Ch. 15–16).
+  </p>
+  <p>
+    The signal scales as SNR ∝ <em>m</em>/(r³σ<sub>n</sub>): a decade of range costs
+    <strong>60 dB</strong>, which is the 1/r³ wall behind every working-volume limit
+    (Ch. 9). Two orientation effects sit on top of it. The shaded band is the
+    <strong>field-point anisotropy</strong>: |B| runs from ×1 on the equator to ×2 on
+    the dipole axis. The decisive one is the <strong>sensor projection</strong>: a
+    single-axis coil or field sensor reads |B|·cos φ, so as its axis tilts toward
+    broadside (φ → 90°) the signal — and the usable range — collapses to a
+    <strong>null at any distance</strong>.
+  </p>
+  <p>
+    This is precisely the orientation dependence the triad CRLB bound (the
+    <a href="../crlb/">CRLB explorer</a>, Ch. 24) assumes away: that bound reports how
+    well a <em>fully-observed</em> pose can be localized, not whether a given sensor
+    axis can see the field at all. Tick <em>show 3-axis</em> to compare against a
+    sensor that reads |B| directly — it is φ-invariant, so the null disappears, which
+    is the design argument for a triad over a single coil (Ch. 13).
+  </p>
+  <SnrRange />
+  <p class="text-sm text-slate-500">
+    Uses the same validated dipole field (<code>dipoleField</code>) as the rest of the
+    suite. For the volts-domain view (Johnson noise, induced EMF), see the
+    <a href="../noise-budget/">noise-budget calculator</a>; for the resulting pose
+    uncertainty, the <a href="../crlb/">CRLB explorer</a> and
+    <a href="../working-volume/">working-volume optimizer</a>.
+  </p>
+</BookLayout>
