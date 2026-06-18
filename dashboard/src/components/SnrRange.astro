@@ -97,7 +97,8 @@
     const m = Math.pow(10, +mS.value);
     const sig = Math.pow(10, +nS.value);
     const theta = +thS.value, phi = +phS.value, thr = +tS.value, show3 = axC.checked;
-    $('snr-m-v').textContent = `${m.toFixed(m < 1 ? 2 : 1)} A·m²`;
+    const mTypical = m >= 0.1 && m <= 10; // ~0.1-few A·m² is the practical EMT range (Ch. 9)
+    $('snr-m-v').textContent = `${m.toFixed(m < 1 ? 2 : 1)} A·m²${mTypical ? '' : ' ⚠'}`;
     $('snr-n-v').textContent = `${sig.toFixed(sig < 1 ? 2 : 1)} nT`;
     $('snr-th-v').textContent = theta === 0 ? '0° (axial)' : theta === 90 ? '90° (equatorial)' : `${theta}°`;
     $('snr-ph-v').textContent = phi === 0 ? '0° (aligned)' : phi === 90 ? '90° (null)' : `${phi}°`;
@@ -162,6 +163,8 @@
     const fmtR = (r: number | null) => r == null ? 'below target at all r' : r >= Math.pow(10, rHi) ? `> ${(1.2).toFixed(1)} m` : `${(r * 1000).toFixed(0)} mm`;
     const Bnt = Bref * 1e9;
     out.innerHTML =
+      row('generator moment', `${m.toFixed(m < 1 ? 2 : 1)} A·m²  (typical EMT ≈ 1, ~0.1–few)`, mTypical ? '#0f172a' : '#d97706') +
+      (mTypical ? '' : `<div class="text-amber-600">⚠ above ~10 A·m² is rarely practical: coil heat (P=I²R, ~24 W already at m=1) and amplifier voltage cap the moment (Ch. 9 §9.1/§9.4); usable depth grows only as m^0.25 (Ch. 29).</div>`) +
       row(`|B| at ${REF} m`, Bnt >= 1000 ? `${(Bnt / 1000).toFixed(1)} µT` : `${Bnt.toFixed(1)} nT`) +
       row(`1-axis SNR at ${REF} m`, `${snrRef.toFixed(1)} dB  (×${Math.pow(10, snrRef / 20).toFixed(0)})`, phi >= 89 ? '#dc2626' : '#0f172a') +
       row(`usable range (1-axis, ≥ ${thr} dB)`, fmtR(range), '#0f172a') +

@@ -36,6 +36,17 @@ const toc = buildToc(await getCollection('book'));
   </p>
   <SnrRange />
   <p class="text-sm text-slate-500">
+    <strong>What moment is realistic?</strong> The manuscript's canonical generator is
+    <strong>m ≈ 1 A·m²</strong> (N = 100 turns, A = 10⁻³ m², I = 10 A; Ch. 4 §4.7,
+    Ch. 9 §9.4) — already ~24 W of coil heat and a Q ≈ 210 resonant tank. Real systems
+    sit around <strong>0.1 to a few A·m²</strong>. The moment is capped not by patient
+    exposure (EMT runs at µT, far below ICNIRP/CIED thresholds — Ch. 42 §42.5) but by
+    <strong>coil heating (P = I²R) and amplifier voltage</strong> (the reactive ωL term,
+    Ch. 9 §9.1), the <strong>60 dB near/far dynamic range</strong> (Ch. 9 §9.6), and
+    sharply diminishing returns — usable depth grows only as m<sup>0.25</sup>, so 16×
+    the moment buys ~2× the range before hitting the thermal wall (Ch. 29, Ch. 37 §37.5).
+  </p>
+  <p class="text-sm text-slate-500">
     Uses the same validated dipole field (<code>dipoleField</code>) as the rest of the
     suite. For the volts-domain view (Johnson noise, induced EMF), see the
     <a href="../noise-budget/">noise-budget calculator</a>; for the resulting pose
