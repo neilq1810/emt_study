@@ -23,15 +23,26 @@
       <span id="snr-t-v" class="tabular-nums w-20">20 dB</span></label>
     <label class="flex items-center gap-2">
       <input id="snr-3ax" type="checkbox" /> show 3-axis (|B|) sensor</label>
+    <label class="flex items-center gap-2">
+      <input id="snr-grad" type="checkbox" /> show field gradient (position sensitivity)</label>
   </div>
   <canvas id="snr-canvas" width="560" height="340" class="w-full max-w-[600px] rounded"></canvas>
+  <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+    <span><span class="inline-block h-2 w-4 align-middle" style="background:#0f172a"></span> 1-axis field SNR (∝1/r³, −60 dB/dec)</span>
+    <span id="lg-3ax" class="hidden"><span class="inline-block h-2 w-4 align-middle" style="background:#a855f7"></span> 3-axis |B|</span>
+    <span id="lg-grad" class="hidden"><span class="inline-block h-2 w-4 align-middle" style="background:#ea580c"></span> gradient SNR, per-mm (∝1/r⁴, −80 dB/dec)</span>
+  </div>
   <div id="snr-out" class="mt-3 space-y-1 rounded bg-slate-50 p-3 text-sm tabular-nums"></div>
   <p class="mt-1 text-xs text-slate-400">
     |B(r,θ)| = (μ₀m/4πr³)·√(1+3cos²θ); a single-axis sensor reads |B|·cos φ
     (φ = angle to the local field), so SNR = |B·n̂|/σₙ. SNR ∝ m/(r³σₙ): a decade
     of range costs 60 dB. The cos φ null (φ→90°) zeroes a 1-axis sensor at <em>any</em>
     distance — the orientation effect the triad CRLB bound (Ch. 24) assumes away. A
-    3-axis sensor reads |B| and is φ-invariant.
+    3-axis sensor reads |B| and is φ-invariant. <strong>Position is inferred from the
+    field <em>gradient</em></strong>, |∂B/∂r| = 3|B|/r ∝ 1/r⁴, so it falls one power of
+    r <em>faster</em> than the field (80 vs 60 dB/decade) — the gradient curve is the
+    per-mm displacement SNR, and σ<sub>pos</sub> ≈ σₙ/|∂B/∂r| ∝ r⁴ <em>is</em> the
+    CRLB z⁴ law (Ch. 24).
   </p>
 </div>
 
@@ -40,7 +51,8 @@
 
   const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
   const mS = $('snr-m'), nS = $('snr-n'), thS = $('snr-th'),
-        phS = $('snr-ph'), tS = $('snr-t'), axC = $('snr-3ax');
+        phS = $('snr-ph'), tS = $('snr-t'), axC = $('snr-3ax'), grC = $('snr-grad');
+  const DELTA = 1e-3; // reference displacement [m] for the per-mm gradient SNR
   const cv = document.getElementById('snr-canvas') as HTMLCanvasElement;
   const ctx = cv.getContext('2d')!;
   const out = document.getElementById('snr-out')!;
@@ -64,6 +76,12 @@
     const sig = proj ? B * Math.cos((phiDeg * Math.PI) / 180) : B;
     const ratio = Math.abs(sig) / (sigNanoT * 1e-9);
     return 20 * Math.log10(Math.max(ratio, 1e-9));
+  }
+  // Per-mm displacement (gradient) SNR in dB: a move DELTA produces |dB/dr|*DELTA of
+  // signal change. For a dipole |dB/dr| = 3|B|/r, so this is the field SNR shifted by
+  // 20log10(3*DELTA/r) — one extra power of r => 1/r^4, an 80 dB/decade slope.
+  function gradSnrDb(r: number, m: number, thetaDeg: number, phiDeg: number, sigNanoT: number): number {
+    return snrDb(r, m, thetaDeg, phiDeg, sigNanoT, true) + 20 * Math.log10((3 * DELTA) / r);
   }
 
   function plotCurve(m: number, theta: number, phi: number, sig: number, proj: boolean,
@@ -140,6 +158,16 @@
 
     // 3-axis |B| curve (phi-invariant) at selected theta
     if (show3) plotCurve(m, theta, phi, sig, false, '#a855f7', 2, [6, 3]);
+    // gradient (per-mm position-sensitivity) curve — steeper 1/r^4 falloff
+    const showGrad = grC.checked;
+    if (showGrad) {
+      ctx.strokeStyle = '#ea580c'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.beginPath();
+      for (let i = 0; i <= 120; i++) { const lr = rLo + (i / 120) * (rHi - rLo);
+        const Y = py(gradSnrDb(Math.pow(10, lr), m, theta, phi, sig)); i === 0 ? ctx.moveTo(px(lr), Y) : ctx.lineTo(px(lr), Y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    document.getElementById('lg-3ax')!.classList.toggle('hidden', !show3);
+    document.getElementById('lg-grad')!.classList.toggle('hidden', !showGrad);
     // selected single-axis curve
     plotCurve(m, theta, phi, sig, true, '#0f172a', 2.5);
 
@@ -169,10 +197,16 @@
       row(`1-axis SNR at ${REF} m`, `${snrRef.toFixed(1)} dB  (×${Math.pow(10, snrRef / 20).toFixed(0)})`, phi >= 89 ? '#dc2626' : '#0f172a') +
       row(`usable range (1-axis, ≥ ${thr} dB)`, fmtR(range), '#0f172a') +
       (show3 ? row(`usable range (3-axis, ≥ ${thr} dB)`, fmtR(range3), '#a855f7') : '') +
+      (grC.checked ? (() => {
+        const gradNtPerMm = (3 * Bref / REF) * Math.cos((phi * Math.PI) / 180) * 1e9 * DELTA; // nT per mm
+        const sigPosMm = gradNtPerMm > 0 ? (sig / gradNtPerMm) : Infinity;                     // sigma_pos = sigma_n / |grad|
+        return row(`gradient at ${REF} m`, `${gradNtPerMm.toFixed(2)} nT/mm  (per-mm SNR ${gradSnrDb(REF, m, theta, phi, sig).toFixed(1)} dB)`, '#ea580c') +
+          row(`→ position resolution σ_pos ≈ σₙ/|∂B/∂r|`, isFinite(sigPosMm) ? `${sigPosMm.toFixed(sigPosMm < 1 ? 3 : 2)} mm (∝ r⁴)` : 'null', '#ea580c');
+      })() : '') +
       (phi >= 89 ? `<div class="text-red-600">φ = 90°: the single-axis sensor is in a null — no range at any noise. A 3-axis sensor still works.</div>` : '');
   }
 
   [mS, nS, thS, phS, tS].forEach((el) => el.addEventListener('input', draw));
-  axC.addEventListener('change', draw);
+  [axC, grC].forEach((el) => el.addEventListener('change', draw));
   draw();
 </script>

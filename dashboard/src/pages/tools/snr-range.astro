@@ -34,6 +34,19 @@ const toc = buildToc(await getCollection('book'));
     sensor that reads |B| directly — it is φ-invariant, so the null disappears, which
     is the design argument for a triad over a single coil (Ch. 13).
   </p>
+  <p>
+    <strong>Why the gradient compounds the problem.</strong> Position is not read from
+    the field magnitude but from how the field <em>changes</em> with position: a small
+    displacement δr produces a signal change δB = (∂B/∂r)·δr, so the estimator's
+    sensitivity is set by the <em>gradient</em>, not the level. For a dipole the radial
+    gradient is |∂B/∂r| = 3|B|/r ∝ 1/r⁴ — one power of r steeper than the field itself.
+    So while the field SNR falls at 60 dB/decade, the position-bearing gradient SNR falls
+    at <strong>80 dB/decade</strong>, and the implied resolution σ<sub>pos</sub> ≈
+    σ<sub>n</sub>/|∂B/∂r| grows as <strong>r⁴</strong> — which is exactly the CRLB z⁴ law
+    of Ch. 24. Tick <em>show field gradient</em> to overlay the per-mm displacement SNR
+    (orange): it sits below the field curve and drops faster, the quantitative reason a
+    sensor that still has plenty of amplitude SNR can already be too deep to localize well.
+  </p>
   <SnrRange />
   <p class="text-sm text-slate-500">
     <strong>What moment is realistic?</strong> The manuscript's canonical generator is
