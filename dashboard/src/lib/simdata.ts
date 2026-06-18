@@ -200,6 +200,13 @@ export const FIGURES: FigureMeta[] = [
     caption: 'A conductive (eddy) distorter is quadrature-dominated at ωτ<1 and rotates to in-phase; a ferromagnetic distorter stays in-phase (Q≈0) — so the lock-in Q channel flags conductive distortion selectively.',
   },
   {
+    file: 'ch25_nonlinearity_waveform.png',
+    title: 'Nonlinearity × waveform: harmonics & in-band IMD',
+    chapter: 'Ch. 25 §25.8',
+    chapterSlug: 'part-09-error-sources/25-error-taxonomy-budgets',
+    caption: 'A cubic nonlinearity makes a ~1.3% third harmonic: a sine lock-in rejects it (out of band) while a square/triangle demod sums it. With multiple tones the cubic\'s 3rd-order IMD lands in-band (~9% of a tone vs ~0% single-tone) — harmonic-rich excitation makes nonlinearity materially harder to manage.',
+  },
+  {
     file: 'readers_dependency_map.png',
     title: "Reader's dependency map (Part × Part cross-references)",
     chapter: "Reader's Guide",

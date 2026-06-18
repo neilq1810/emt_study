@@ -187,6 +187,28 @@ factorization is the conceptual heart of EMT decoding:
 - The measured $\mathbf{M}$ is their product, contaminated by noise and
   distortion.
 
+**Two readouts of one coupling — induction vs field sensing.** Equations (5.5)–(5.6)
+are about *geometry*; how a sensor turns $\mathbf{M}$ into a signal is a second,
+independent choice (Ch. 13–14). An **induction coil** measures the *rate*: by Faraday
+(§5.2) its EMF is $\varepsilon_j=-\dot\Phi_j=-\sum_i M_{ij}\dot I_i$, so it reads
+$\mathbf{M}$ **scaled by $\omega$**, responds only to a *changing* field (AC, or the
+transient of pulsed-DC), and carries the area-turns $N_sA_s$ of (5.6). A **field sensor**
+(TMR/GMR/AMR, fluxgate, Hall) instead reads the *field projection itself* — the
+$j$-component of $\mathbf{R}^{\!\top}\mathbf{K}\,$ at its location — **directly and down to
+DC**, with no factor of $\omega$ and no differentiation; the $N_sA_s$ scale is replaced by
+the sensor's field-to-output gain. The **geometry is common to both** ($\mathbf{K}$,
+$\mathbf{R}$, the $4{:}1{:}1$ eigenstructure, observability), but the readout differs in
+ways that ripple through the book: the coil's $\propto\omega$ sensitivity favours a *higher*
+excitation frequency and gives a **passive, offset-free**, and — for an **air core** —
+**highly linear, hysteresis-free** element (a soft *ferrite* core trades a little
+linearity/hysteresis for sensitivity, kept small by weak-field operation and the
+demagnetization-clamped geometry of Ch. 14.2), whereas
+the field sensor buys **DC capability and chip-scale miniaturisation** at the cost of a
+**1/f noise floor, offset, hysteresis, nonlinearity, and a bias reference** (Ch. 14.3,
+16, 25.2–25.3, 37 §37.4). Both ultimately deliver the *same* $\mathbf{M}$ to the solver —
+which is why the estimation, calibration, and error machinery (Ch. 23–26) is written in
+terms of $\mathbf{M}$, not of EMF.
+
 The eigenstructure of $\mathbf{K}$ is instructive: its eigenvalues are
 $\propto\{2,-1,-1\}/r^3$ with the "+2" eigenvector along $\hat{\mathbf{r}}$.
 Thus measuring $\mathbf{M}$ and removing $\mathbf{R}$ (e.g. by forming the

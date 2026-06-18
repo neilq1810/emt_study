@@ -164,6 +164,8 @@ CONTRACT = [
      ["N^{-0.49}", "implementation, not SNR"]),
     ("Quadrature distortion signature eddy vs ferro (Ch.20)", "**/20-*.md",
      ["3.3", "quadrature-dominated", "in-phase"]),
+    ("Nonlinearity x waveform: harmonic-rich harder, in-band IMD (Ch.25)", "**/25-*.md",
+     ["1.3", "in-band", "harmonic-rich"]),
 ]
 
 

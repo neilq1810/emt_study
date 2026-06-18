@@ -51,6 +51,18 @@ coil front ends. This is a point routinely missed by designers who reflexively
 reach for the lowest-$e_n$ part. (conf: high — direct from (16.1) with inductive
 $Z_s$.)
 
+**The field-sensor twist — a biased resistive source.** A **TMR/MR** sensor is not an
+inductive pickup but a **resistive bridge** of moderate, largely-real $|Z_s|$
+(k$\Omega$-scale), so the $i_n|Z_s|$ term recedes and the budget returns to the
+$e_n$-vs-$4k_BT\,\mathrm{Re}(Z_s)$ balance of the resistive case above — *but* with two
+field-sensor-specific lines a coil never has. (i) It is read **ratiometrically against its
+bias**, so **bias-reference noise multiplies into the signal** (Ch. 25 §25.2, Ch. 37 §37.4).
+(ii) Its **own 1/f magnetic noise usually dominates the AFE** (Ch. 14.3), which *inverts the
+design priority*: for a coil you chase the lowest-$e_n$/$i_n$ amplifier and a clean inductive
+match, whereas for a TMR you chase a **quiet, stable bias** and accept that the *sensor*, not
+the front end, sets the floor — and there is **no $\omega L_s$ to fight** (the source is flat
+to DC). (conf: high — direct from (16.1) with a resistive vs inductive $Z_s$.)
+
 **Worked bipolar-vs-JFET choice.** Take a sensor coil with $R_s=50\,\Omega$ and
 inductive reactance giving $|Z_s|\approx300\,\Omega$ at the operating frequency,
 rising to several k$\Omega$ near self-resonance (§16.3). Compare two LNA inputs

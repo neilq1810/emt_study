@@ -242,5 +242,12 @@
     "eddy_Q_over_I_at_op": 3.33,
     "ferro_phase_deg": 176.2,
     "note": "Single-pole eddy model (Ch. 6 tau_e): the conductive secondary field is QUADRATURE-dominated at low omega*tau (phase -> -90 deg; Q/I = 3.3 at omega*tau=0.3) and rotates to in-phase (anti, -180 deg) at high omega*tau. A FERROMAGNETIC distorter is reactive and in-phase (Q ~ 0). So at a typical EMT operating point (omega*tau<1) the QUADRATURE channel of the lock-in flags CONDUCTIVE distortion selectively while ferromagnetic distortion is invisible in Q (caught only by the in-phase residual). Phase-sensitive detect-and-flag, near-free from the dual-phase lock-in (Ch. 20 \u00a720.10, Ch. 27)."
+  },
+  "nonlinearity_waveform": {
+    "a3": 0.05,
+    "third_harmonic_pct": 1.3,
+    "fdm_worst_imd_pct_of_tone": 9.23,
+    "single_tone_imd_pct": 0.0,
+    "note": "A compressive cubic y=x-a3 x^3 on a single tone makes a 3rd harmonic (~1.3% at a3=0.05) that a SINE lock-in REJECTS (out of its narrow band) but a SQUARE/triangle demod SUMS (3f0 is inside its passband) - so the same nonlinearity is benign for sine detection yet in-band for a square/triangle system. With MULTIPLE frequencies (FDM, or the square's own harmonics) the cubic makes 3rd-order IMD products (2fi-fj, fi+fj-fl) landing IN-BAND on other channels = crosstalk (worst ~9.2% of a tone for 3 tones; ~0 for one). Hence a harmonic-rich (triangle/square) excitation makes nonlinearity materially harder to manage (Ch. 25 \u00a725.8, Ch. 19 \u00a719.2, Ch. 20 \u00a720.4)."
   }
 }
