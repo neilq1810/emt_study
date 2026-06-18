@@ -28,9 +28,13 @@ const home = base.endsWith('/') ? base : base + '/';
   </head>
   <body>
     <div class="mx-auto flex max-w-[110rem]">
-      <!-- Sidebar -->
+      <!-- Mobile nav backdrop -->
+      <div id="nav-backdrop" class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden"></div>
+
+      <!-- Sidebar (slide-in drawer on mobile, static on desktop) -->
       <aside
-        class="sticky top-0 hidden h-screen w-[var(--sidebar-w)] shrink-0 overflow-y-auto border-r border-slate-200 bg-white px-5 py-6 lg:block"
+        id="sidebar"
+        class="fixed inset-y-0 left-0 z-40 h-screen w-[18rem] max-w-[85vw] shrink-0 -translate-x-full overflow-y-auto border-r border-slate-200 bg-white px-5 py-6 transition-transform duration-200 lg:sticky lg:top-0 lg:z-auto lg:w-[var(--sidebar-w)] lg:max-w-none lg:translate-x-0"
       >
         <a href={home} class="block text-sm font-bold uppercase tracking-wide text-accent">
           EM-Tracking<br />Definitive Guide
@@ -129,7 +133,18 @@ const home = base.endsWith('/') ? base : base + '/';
 
       <!-- Content -->
       <div class="min-w-0 flex-1">
-        <header class="border-b border-slate-200 bg-white/80 px-6 py-3 backdrop-blur lg:hidden">
+        <header class="sticky top-0 z-20 flex items-center gap-3 border-b border-slate-200 bg-white/80 px-4 py-3 backdrop-blur lg:hidden">
+          <button
+            id="nav-toggle"
+            type="button"
+            aria-label="Open navigation"
+            aria-expanded="false"
+            class="-ml-1 rounded p-1.5 text-slate-700 hover:bg-slate-100"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
           <a href={home} class="text-sm font-bold text-accent">EM-Tracking Definitive Guide</a>
         </header>
         <main class="px-6 py-10 lg:px-12">
@@ -143,5 +158,34 @@ const home = base.endsWith('/') ? base : base + '/';
         </footer>
       </div>
     </div>
+
+    <script>
+      const btn = document.getElementById('nav-toggle');
+      const sb = document.getElementById('sidebar');
+      const bd = document.getElementById('nav-backdrop');
+      const isMobile = () => window.matchMedia('(max-width: 1023px)').matches;
+      function openNav() {
+        sb?.classList.remove('-translate-x-full');
+        sb?.classList.add('translate-x-0');
+        bd?.classList.remove('hidden');
+        btn?.setAttribute('aria-expanded', 'true');
+      }
+      function closeNav() {
+        sb?.classList.add('-translate-x-full');
+        sb?.classList.remove('translate-x-0');
+        bd?.classList.add('hidden');
+        btn?.setAttribute('aria-expanded', 'false');
+      }
+      btn?.addEventListener('click', () =>
+        sb?.classList.contains('-translate-x-full') ? openNav() : closeNav()
+      );
+      bd?.addEventListener('click', closeNav);
+      // tapping a nav link on mobile closes the drawer
+      sb?.querySelectorAll('a').forEach((a) =>
+        a.addEventListener('click', () => { if (isMobile()) closeNav(); })
+      );
+      // reset drawer state when crossing the breakpoint
+      window.matchMedia('(min-width: 1024px)').addEventListener('change', closeNav);
+    </script>
   </body>
 </html>
